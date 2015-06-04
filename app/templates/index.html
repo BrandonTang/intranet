@@ -12,4 +12,7 @@
 <div class="pagination">
     {{ macros.pagination_widget(pagination, '.index') }}
 </div>
+<div class="page-footer">
+    <li><a href="{{ url_for('main.newpost') }}">Add New Post</a></li>
+</div>
 {% endblock %}
