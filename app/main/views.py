@@ -32,7 +32,7 @@ def newpost():
             db.session.add(post)
             db.session.commit()
         return redirect(url_for('.index'))
-    return render_template('newpost.html', form=form)
+    return render_template('new_post.html', form=form)
 
 @main.route('/post/<int:id>')
 def post(id):
@@ -43,8 +43,7 @@ def post(id):
 @login_required
 def edit(id):
     post = Post.query.get_or_404(id)
-    if current_user != post.author and \
-            not current_user.can(Permission.ADMINISTER):
+    if current_user != post.author and not current_user.can(Permission.ADMINISTER):
         abort(403)
     form = PostForm()
     if form.validate_on_submit():
@@ -56,3 +55,23 @@ def edit(id):
     form.title.data = post.title
     form.text.data = post.text
     return render_template('edit_post.html', form=form)
+
+@main.route('/citytime')
+def citytime():
+    return render_template('citytime.html')
+
+@main.route('/nycaps')
+def nycaps():
+    return render_template('nycaps.html')
+
+@main.route('/recordstimeclock')
+def recordstimeclock():
+    return render_template('records_timeclock.html')
+
+@main.route('/cityshare')
+def cityshare():
+    return render_template('cityshare.html')
+
+@main.route('/mis')
+def mis():
+    return render_template('mis.html')
