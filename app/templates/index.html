@@ -1,22 +1,23 @@
 {% extends "base.html" %}
 
-<link rel="stylesheet" href="{{ url_for('static.css', filename='stylesheet.css') }}" type="text/css">
-
 {% block title %}Intranet{% endblock %}
 
 {% import "_macros.html" as macros %}
 
+<div class="section">
 {% block page_content %}
 <div class="page-header">
-    <h1>Submissions</h1>
+    <h2>Submissions</h2>
 </div>
-<div class="page-body">
+<div id="page-body">
     {% include '_posts.html' %}
 </div>
-<div class="pagination">
+<div id="newpost">
+    <h3><a href="{{ url_for('main.newpost') }}">Add Post</a></h3>
+</div>
+<div id="pagination">
     {{ macros.pagination_widget(pagination, '.index') }}
 </div>
-<div class="page-footer">
-    <h3><a href="{{ url_for('main.newpost') }}">Add New Post</a></h3>
 </div>
 {% endblock %}
+</div>

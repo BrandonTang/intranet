@@ -27,7 +27,6 @@ def newpost():
     if form.validate_on_submit():
         post = Post.query.filter_by(text=form.text.data).first()
         if post is None:
-            print form.title.data
             post = Post(title = form.title.data, text = form.text.data, time = datetime.now(), author=current_user._get_current_object())
             db.session.add(post)
             db.session.commit()
