@@ -7,3 +7,6 @@ class PostForm(Form):
     title = StringField('Title', validators=[Required()])
     text = PageDownField('Text', validators=[Required()])
     submit = SubmitField('Submit')
+
+class DeleteForm(Form):
+	confirm = SubmitField('Yes')

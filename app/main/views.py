@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, abort, flash, request, cur
 from flask.ext.login import login_required, current_user
 from flask.ext.sqlalchemy import get_debug_queries
 from . import main
-from .forms import PostForm
+from .forms import PostForm, DeleteForm
 from .. import db
 from ..models import Role, User, Post, Permission
 from datetime import datetime
@@ -54,6 +54,20 @@ def edit(id):
     form.title.data = post.title
     form.text.data = post.text
     return render_template('edit_post.html', form=form)
+
+@main.route('/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete(id):
+    post = Post.query.get_or_404(id)
+    if current_user != post.author and not current_user.can(Permission.ADMINISTER):
+        abort(403)
+    form = DeleteForm()
+    if form.validate_on_submit():
+        db.session.delete(post)
+        db.session.commit()
+        flash('The post has been deleted.')
+        return redirect(url_for('.index'))
+    return render_template('delete_post.html', form=form)
 
 @main.route('/citytime')
 def citytime():
