@@ -87,14 +87,15 @@ login_manager.anonymous_user = AnonymousUser
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
+    tag = db.Column(db.String(64))
     title = db.Column(db.String(64), unique=True)
-    text = db.Column(db.String(1024), unique=True)
+    text = db.Column(db.String(500), unique=True)
     time = db.Column(db.DateTime)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     text_html = db.Column(db.Text)
 
     def __repr__(self):
-        return '<Post %r><Post %r><Post %r>' % (self.title, self.text, self.time)
+        return '<Post %r><Post %r>' % (self.tag, self.title)
 
     @staticmethod
     def on_changed_text(target, value, oldvalue, initiator):

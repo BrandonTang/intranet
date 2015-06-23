@@ -7,12 +7,15 @@
     {% if post.text_html %}
         {{ post.text_html | safe }}
     {% else %}
-        {{ post.text }}
+        {{ markdown2.markdown(post.text) }}
     {% endif %}
     </h5>
     <div class="post-footer">
         <a href="{{ url_for('.post', id=post.id) }}">
             <span class="label label-default">Permalink</span>
+        </a>
+        <a href="{{ url_for('.tag', tag=post.tag) }}">
+            <span class="label label-primary">{{ post.tag }}</span>
         </a>
         {% if current_user == post.author %}
             <a href="{{ url_for('.edit', id=post.id) }}">
