@@ -74,13 +74,12 @@ def delete(id):
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
 def tag(tag):
-    post = Post.query.all()
-    print post
-    for posts in Post.query.all():
-        print posts.tag, tag
-        if posts.tag != tag:
-            post.remove(posts)
-    return render_template('tagged_posts.html', posts=post)
+    posts = Post.query.all()
+    for post in Post.query.all():
+        if post.tag != tag:
+            posts.remove(post)
+    posts.sort(reverse=True)
+    return render_template('tagged_posts.html', posts=posts)
 
 @main.route('/mis')
 def mis():
