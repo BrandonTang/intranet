@@ -6,7 +6,6 @@ from .forms import PostForm, DeleteForm
 from .. import db
 from ..models import Role, User, Post, Permission
 from datetime import datetime
-import markdown2
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
