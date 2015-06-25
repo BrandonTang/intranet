@@ -1,0 +1,219 @@
+* {
+	font-family: Georgia, serif;
+}
+
+li > a {
+	color: white;
+}
+
+li a:hover, .page-footer > h3 > a {
+    text-decoration: none;
+    color: #ffae19;
+}
+
+.nav {
+	position: fixed;
+    background-color: #62009b;
+    width: 100%;
+    z-index: 1;
+}
+
+.aside {
+	background-color: #62009b;
+	width: 15%;
+	height: 100%;
+    float: left;
+    position: fixed;
+    margin-top: 77px;
+    padding-top: 10px;
+}
+
+.aside .menu {
+	float: left;
+}
+
+.aside .menu li {
+	margin: 5px 0px 5px 0px;
+}
+
+.section {
+	padding: 10px 0px 0px 0px;
+	margin-top: 6%;
+	margin-left: 50px;
+	position: relative;
+	width: 85%;
+	float: right;
+}
+
+.section h6 {
+	font-size: 15px;
+}
+
+div ul li {
+	font-size: 20px;
+	list-style-type: none;
+}
+
+div > h2 {
+	font-size: 40px;
+	margin-left: 30px;
+}
+
+div > h3 > a {
+	font-size: 30px;
+}
+
+.section #page-body ul {
+	margin-right: 40px;
+}
+
+#page-body > h4 {
+	margin-left: 30px;
+}
+
+#page-body > h6 {
+	margin-left: 30px;
+}
+
+#page-body form {
+	margin-left: 30px;
+}
+
+h12 {
+    color: white;
+}
+
+ul > h10 {
+	font-size: 16px;
+}
+
+#nav-right {
+	margin: 10px 20px 0px 0px;
+	float: right;
+}
+
+#navbar-brand {
+	margin-left: 20px;
+	font-size: 40px;
+	color: #ffae19;
+	text-decoration: none;
+}
+
+#desc {
+	margin-left: 20px;
+}
+
+#showuser {
+	float: right;
+	font-size: 16px;
+}
+
+.posts .post-footer a {
+	text-decoration: none;
+}
+
+.section {
+	margin-right: 50px;
+	width: 80%;
+	position: relative;
+}
+
+#newpost {
+	margin-top: 40px;
+	margin-left: 40px;
+}
+
+#newpost h3 a {
+	-moz-box-shadow: 0px 10px 14px -7px #7a00c1;
+	-webkit-box-shadow: 0px 10px 14px -7px #7a00c1;
+	box-shadow: 0px 10px 14px -7px #7a00c1;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #8200ce), color-stop(1, #62009b));
+	background:-moz-linear-gradient(top, #8200ce 5%, #62009b 100%);
+	background:-webkit-linear-gradient(top, #8200ce 5%, #62009b 100%);
+	background:-o-linear-gradient(top, #8200ce 5%, #62009b 100%);
+	background:-ms-linear-gradient(top, #8200ce 5%, #62009b 100%);
+	background:linear-gradient(to bottom, #8200ce 5%, #62009b 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#8200ce', endColorstr='#62009b',GradientType=0);
+	background-color:#8200ce;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:20px;
+	font-weight:bold;
+	padding:13px 32px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #3d768a;
+}
+#newpost h3 a:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #62009b), color-stop(1, #8200ce));
+	background:-moz-linear-gradient(top, #62009b 5%, #8200ce 100%);
+	background:-webkit-linear-gradient(top, #62009b 5%, #8200ce 100%);
+	background:-o-linear-gradient(top, #62009b 5%, #8200ce 100%);
+	background:-ms-linear-gradient(top, #62009b 5%, #8200ce 100%);
+	background:linear-gradient(to bottom, #62009b 5%, #8200ce 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#62009b', endColorstr='#8200ce',GradientType=0);
+	background-color:#62009b;
+}
+#newpost h3 a:active {
+	position: relative;
+	top: 1px;
+}
+
+.section #page-header h1 {
+	margin-left: 50px;
+}
+
+.section div form {
+	margin-left: 50px;
+}
+
+#pagination {
+	position: relative;
+}
+
+.section #pagination .pagination {
+	position: relative;
+    float: right;
+}
+
+.section #pagination .pagination li > a {
+	color: #ffae19;
+}
+
+.section #pagination .pagination li a:hover {
+	background-color: #62009b;
+}
+
+.section #pagination .pagination li a:active {
+	background-color: #62009b;
+}
+
+.section .section {
+	float: left;
+}
+
+.section form {
+	margin-left: 50px;
+}
+
+.section .alert {
+	margin-left: 40px;
+	width: 95%;
+}
+
+.section .page-header {
+	margin-left: 0px;
+}
+
+#page-header {
+	margin-left: -20px;
+}
+
+.pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
+	background-color: #62009b !important;
+	border-color: #007F3B !important;
+}
