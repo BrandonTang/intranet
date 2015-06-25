@@ -89,7 +89,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String(64))
     title = db.Column(db.String(64), unique=True)
-    text = db.Column(db.String(500), unique=True)
+    text = db.Column(db.Text)
     time = db.Column(db.DateTime)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     text_html = db.Column(db.Text)
