@@ -11,7 +11,8 @@
     <form name="input" class="form-horizontal" id="submitPost" method="post">
         <div class="lead">Tag
             <div class="control-group">
-                <select name="input_tag">
+                <select name="input_tag" required>
+                    <option selected disabled hidden value=''></option>
 	                <option value="1">1</option>
 	 			    <option value="2">2</option>
 	 			    <option value="3">3</option>
@@ -23,12 +24,12 @@
         </div>
         <div class="lead">Title
             <div class="control-group">
-                <input class="input-block-level" name="input_title" title="input_title" name="Title"/>
+                <input class="input-block-level" name="input_title" name="Title" required>
             </div>
         </div>
         <div class="lead">Text
             <div class="control-group">
-                <textarea id="editor1" name="editor1"></textarea>
+                <textarea id="editor1" name="editor1" required></textarea>
             </div>
         </div>
         <div id="requestButton" class="control-group">

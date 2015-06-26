@@ -14,12 +14,18 @@ def index():
     posts = pagination.items
     return render_template('index.html', posts=posts, pagination=pagination)
 
+@main.route('/error', methods=['GET', 'POST'])
+def error():
+    return render_template('error.html')
+
 @main.route('/newpost', methods=['GET', 'POST'])
 @login_required
 def newpost(data=None):
     if data or request.method == 'POST':
         data = request.form.copy()
         post = Post.query.filter_by(text=data['editor1']).first()
+        if data['editor1'] == "":
+            return render_template('error.html', message="Please fill out the text!")
         if post is None:
             tag = data['input_tag']
             title = data['input_title']
