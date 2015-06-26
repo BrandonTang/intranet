@@ -8,11 +8,42 @@
     <h2>Edit Post</h2>
 </div>
 <div id="page-body">
-    {{ wtf.quick_form(form) }}
+    <form name="input" class="form-horizontal" id="submitPost" method="post">
+        <div class="lead">Tag
+            <div class="control-group">
+                <select name="input_tag">
+                    <option selected="selected" disabled="disabled">{{ post.tag }}</option>
+	                <option value="1">1</option>
+	 			    <option value="2">2</option>
+	 			    <option value="3">3</option>
+	 			    <option value="4">4</option>
+	 			    <option value="5">5</option>
+	 			    <option value="6">6</option>
+			    </select>
+            </div>
+        </div>
+        <div class="lead">Title
+            <div class="control-group">
+                <input value="{{ post.title }}" class="input-block-level" name="input_title" title="input_title" name="Title"/>
+            </div>
+        </div>
+        <div class="lead">Text
+            <div class="control-group">
+                <textarea id="editor1" name="editor1">{{ post.text }}</textarea>
+            </div>
+        </div>
+        <div id="requestButton" class="control-group">
+            <div>
+                <button type="submit" title="submit_post" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
-{{ pagedown.include_pagedown() }}
+<script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+<script type="text/javascript">
+    CKEDITOR.replace( 'editor1' );
+</script>
 {% endblock %}
