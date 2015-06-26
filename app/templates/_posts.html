@@ -3,13 +3,7 @@
     <h5>
     <h1>{{ post.title }}</h1>
     <h10>{{ post.time.strftime("%B %d, %Y %l:%M%p %Z") }}</h10>
-    <h5>
-    {% if post.text_html %}
-        {{ post.text_html | safe }}
-    {% else %}
-        {{ post.text }}
-    {% endif %}
-    </h5>
+    <div class="well">{{ post.text | safe }}</div>
     <div class="post-footer">
         <a href="{{ url_for('.post', id=post.id) }}">
             <span class="label label-default">Permalink</span>
