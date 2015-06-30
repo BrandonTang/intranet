@@ -22,6 +22,11 @@
 			    </select>
             </div>
         </div>
+        <div class="lead">Categories
+            <div class="control-group">
+                <input type="text" name="input_category" id="categories" value="archives,events" tabindex="-1" style="display: block;">
+            </div>
+        </div>
         <div class="lead">Title
             <div class="control-group">
                 <input class="input-block-level" name="input_title" name="Title" required>
@@ -40,8 +45,31 @@
     </form>
 </div>
 {% endblock %}
+
 {% block scripts %}
-<script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+<script>
+var data = {{ categories }};
+var items = data.map(function(x) { return { item: x }; });
+
+$('#categories').selectize({
+    delimiter: ',',
+    persist: false,
+    options: items,
+    labelField: "item",
+    valueField: "item",
+    sortField: 'item',
+    searchField: 'item',
+    create: function(input) {
+        return {
+            value: input,
+            text: input
+        }
+    }
+});
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/selectize.min.js') }}"></script>
+<script type="text/javascript" src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
 <script type="text/javascript">
     CKEDITOR.replace( 'editor1' );
 </script>

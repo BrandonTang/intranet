@@ -88,6 +88,7 @@ class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String(64))
+    categories = db.relationship('Category', backref='categorypost', lazy='dynamic')
     title = db.Column(db.String(64), unique=True)
     text = db.Column(db.UnicodeText)
     time = db.Column(db.DateTime)
@@ -108,3 +109,12 @@ db.event.listen(Post.text, 'set', Post.on_changed_text)
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+class Category(db.Model):
+    __tablename__ = 'categories'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    posts = db.Column(db.Integer, db.ForeignKey('posts.id'))
+
+    def __repr__(self):
+        return '<Post %r>' % (self.name)

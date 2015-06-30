@@ -4,8 +4,7 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/quill.snow.css') }}" type="text/css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/quill.base.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/selectize.css') }}" type="text/css">
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='nycgov.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='nycgov.ico') }}" type="image/x-icon">
@@ -62,8 +61,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/quill.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/quill.js') }}"></script>
 {{ super() }}
 {{ moment.include_moment() }}
 {% endblock %}

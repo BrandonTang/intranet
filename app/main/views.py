@@ -4,7 +4,7 @@ from flask.ext.sqlalchemy import get_debug_queries
 from . import main
 from .forms import PostForm, DeleteForm
 from .. import db
-from ..models import Role, User, Post, Permission
+from ..models import Role, User, Post, Category, Permission
 from datetime import datetime
 
 @main.route('/', methods=['GET', 'POST'])
@@ -28,10 +28,15 @@ def newpost(data=None):
             return render_template('error.html', message="Please fill out the text!")
         if post is None:
             tag = data['input_tag']
+            categories = data['input_category']
             title = data['input_title']
             text = data['editor1']
             post = Post(tag=tag, title=title, text=text, time=datetime.now(), author=current_user._get_current_object())
             db.session.add(post)
+            categories = categories.split(',')
+            for eachcategory in categories:
+                category = Category(name=eachcategory, categorypost=post)
+                db.session.add(category)
             db.session.commit()
         return redirect(url_for('.index'))
     return render_template('new_post.html')
@@ -50,6 +55,7 @@ def edit(id):
     if request.method == 'POST':
         data = request.form.copy()
         post.tag = data['input_tag']
+        post.category = data['input_category']
         post.title = data['input_title']
         post.text = data['editor1']
         db.session.add(post)
@@ -80,6 +86,16 @@ def tag(tag):
             posts.remove(post)
     posts.sort(reverse=True)
     return render_template('tagged_posts.html', posts=posts)
+
+@main.route('/category/<string:category>', methods=['GET', 'POST'])
+def category(category):
+    posts = Posts.query.all()
+    for post in Post.query.all():
+        for eachcategory in post.categories:
+            if eachcategory != category:
+                posts.remove(post)
+    posts.sort(reverse=True)
+    return render_template('categorized_posts.html', posts=posts)
 
 @main.route('/mis')
 def mis():

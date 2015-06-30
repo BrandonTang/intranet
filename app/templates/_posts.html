@@ -11,6 +11,11 @@
         <a href="{{ url_for('.tag', tag=post.tag) }}">
             <span class="label label-primary">{{ post.tag }}</span>
         </a>
+        {% for category in categories %}
+        <a href="{{ url_for('.category', category=category.name) }}">
+            <span class="label label-primary">{{ category }}</span>
+        </a>
+        {% endfor %}
         {% if current_user == post.author %}
             <a href="{{ url_for('.edit', id=post.id) }}">
                 <span class="label label-primary">Edit</span>
