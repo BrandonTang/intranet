@@ -8,13 +8,13 @@
         <a href="{{ url_for('.post', id=post.id) }}">
             <span class="label label-default">Permalink</span>
         </a>
-        <a href="{{ url_for('.tag', tag=post.tag) }}">
-            <span class="label label-primary">{{ post.tag }}</span>
+        <a href="{{ url_for('.post', id=post.id) }}#comments">
+            <span class="label label-primary">{{ post.comments.count() }} Comments</span>
         </a>
-        {% for category in categories %}
-        <a href="{{ url_for('.category', category=category.name) }}">
-            <span class="label label-primary">{{ category }}</span>
-        </a>
+        {% for tag in tags %}
+            <a href="{{ url_for('.tag', tag=tag.name) }}">
+                <span class="label label-primary">{{ tag }}</span>
+            </a>
         {% endfor %}
         {% if current_user == post.author %}
             <a href="{{ url_for('.edit', id=post.id) }}">

@@ -217,3 +217,11 @@ ul > h10 {
 	background-color: #62009b !important;
 	border-color: #007F3B !important;
 }
+
+#moderate-comments > a > span {
+	margin-left: 40px;
+}
+
+#comment > h3 {
+	margin-left: 35px;
+}

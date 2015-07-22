@@ -9,17 +9,9 @@
 </div>
 <div id="page-body">
     <form name="input" class="form-horizontal" id="submitPost" method="post">
-        <div class="lead">Tag
+        <div class="lead">Tags
             <div class="control-group">
-                <select name="input_tag" required>
-                    <option selected="selected" disabled="disabled">{{ post.tag }}</option>
-	                <option value="1">1</option>
-	 			    <option value="2">2</option>
-	 			    <option value="3">3</option>
-	 			    <option value="4">4</option>
-	 			    <option value="5">5</option>
-	 			    <option value="6">6</option>
-			    </select>
+                <input type="text" name="input_tag" id="tags" value="{{ post.tags }}" tabindex="-1" style="display: block;">
             </div>
         </div>
         <div class="lead">Title
@@ -42,7 +34,33 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/selectize.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/selectize.js') }}"></script>
+<script type="text/javascript">
+var data = {{ tags | safe }};
+var items = data.map(function(x) { return { item: x }; });
+
+$(document).ready(function() {
+$('#tags').selectize({
+    delimiter: ', ',
+    persist: false,
+    options: items,
+    labelField: "item",
+    valueField: "item",
+    sortField: 'item',
+    searchField: 'item',
+    create: function(input) {
+        return {
+            value: input,
+            text: input
+        }
+    },
+    create: true
+});
+});
+</script>
+<script type="text/javascript" src="//cdn.ckeditor.com/4.4.7/full/ckeditor.js"></script>
 <script type="text/javascript">
     CKEDITOR.replace( 'editor1' );
 </script>

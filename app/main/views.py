@@ -2,17 +2,20 @@ from flask import render_template, redirect, url_for, abort, flash, request, cur
 from flask.ext.login import login_required, current_user
 from flask.ext.sqlalchemy import get_debug_queries
 from . import main
-from .forms import PostForm, DeleteForm
+from .forms import DeleteForm, CommentForm
 from .. import db
-from ..models import Role, User, Post, Category, Permission
+from ..models import Role, User, Post, Tag, Permission, PostTag, Comment
 from datetime import datetime
+from ..decorators import admin_required, permission_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
+    tagList = Tag.query.with_entities(Tag.name).all()
+    tagList = [r[0].encode('utf-8') for r in tagList]
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
-    return render_template('index.html', posts=posts, pagination=pagination)
+    return render_template('index.html', posts=posts, pagination=pagination, tags=tagList)
 
 @main.route('/error', methods=['GET', 'POST'])
 def error():
@@ -21,30 +24,62 @@ def error():
 @main.route('/newpost', methods=['GET', 'POST'])
 @login_required
 def newpost(data=None):
+    tagList = Tag.query.with_entities(Tag.name).all()
+    tagList = [r[0].encode('utf-8') for r in tagList]
+    print tagList
     if data or request.method == 'POST':
         data = request.form.copy()
         post = Post.query.filter_by(text=data['editor1']).first()
         if data['editor1'] == "":
             return render_template('error.html', message="Please fill out the text!")
         if post is None:
-            tag = data['input_tag']
-            categories = data['input_category']
             title = data['input_title']
+            print "title:", title
             text = data['editor1']
-            post = Post(tag=tag, title=title, text=text, time=datetime.now(), author=current_user._get_current_object())
+            print "text:", text
+            print "time:", datetime.now()
+            print "author:", current_user._get_current_object()
+            post = Post(title=title, text=text, time=datetime.now(), author_id=current_user._get_current_object())
             db.session.add(post)
-            categories = categories.split(',')
-            for eachcategory in categories:
-                category = Category(name=eachcategory, categorypost=post)
-                db.session.add(category)
+            tags = data['input_tag'].split(', ')
+            for eachtag in tags:
+                print eachtag
+                if eachtag not in tagList:
+                    newtag = Tag(name=eachtag)
+                    db.session.add(newtag)
+                    posttag = PostTag(post_id=post.id, tag_id=newtag.id)
+                else:
+                    newtag = Tag(name=eachtag)
+                    db.session.add(newtag)
+                    posttag = PostTag(post_id=post.id, tag_id=eachtag.id)
+                db.session.add(newtag)
+                db.session.add(posttag)
             db.session.commit()
         return redirect(url_for('.index'))
-    return render_template('new_post.html')
+    return render_template('new_post.html', tags=tagList)
 
-@main.route('/post/<int:id>')
+@main.route('/post/<int:id>', methods=['GET', 'POST'])
 def post(id):
     post = Post.query.get_or_404(id)
-    return render_template('post.html', posts=[post])
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(body=form.body.data,
+                          post=post,
+                          author=current_user._get_current_object())
+        db.session.add(comment)
+        flash('Your comment has been published.')
+        db.session.commit()
+        return redirect(url_for('.post', id=post.id, page=-1))
+    page = request.args.get('page', 1, type=int)
+    if page == -1:
+        page = (post.comments.count() - 1) / \
+               current_app.config['COMMENTS_PER_PAGE'] + 1
+    pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
+        page, per_page=current_app.config['COMMENTS_PER_PAGE'],
+        error_out=False)
+    comments = pagination.items
+    return render_template('post.html', posts=[post], form=form,
+                           comments=comments, pagination=pagination)
 
 @main.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -54,8 +89,6 @@ def edit(id):
         abort(403)
     if request.method == 'POST':
         data = request.form.copy()
-        post.tag = data['input_tag']
-        post.category = data['input_category']
         post.title = data['input_title']
         post.text = data['editor1']
         db.session.add(post)
@@ -82,20 +115,11 @@ def delete(id):
 def tag(tag):
     posts = Post.query.all()
     for post in Post.query.all():
-        if post.tag != tag:
-            posts.remove(post)
-    posts.sort(reverse=True)
-    return render_template('tagged_posts.html', posts=posts)
-
-@main.route('/category/<string:category>', methods=['GET', 'POST'])
-def category(category):
-    posts = Posts.query.all()
-    for post in Post.query.all():
-        for eachcategory in post.categories:
-            if eachcategory != category:
+        for eachtag in Tag.query.all():
+            if eachtag != tag:
                 posts.remove(post)
     posts.sort(reverse=True)
-    return render_template('categorized_posts.html', posts=posts)
+    return render_template('tagged_posts.html', posts=posts)
 
 @main.route('/mis')
 def mis():
@@ -104,3 +128,35 @@ def mis():
 @main.route('/lmt')
 def lmt():
     return render_template('lmt.html')
+
+@main.route('/moderate')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(
+        page, per_page=current_app.config['COMMENTS_PER_PAGE'],
+        error_out=False)
+    comments = pagination.items
+    return render_template('moderate.html', comments=comments,
+                           pagination=pagination, page=page)
+
+@main.route('/moderate/enable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_enable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = False
+    db.session.add(comment)
+    return redirect(url_for('.moderate',
+                            page=request.args.get('page', 1, type=int)))
+
+@main.route('/moderate/disable/<int:id>')
+@login_required
+@permission_required(Permission.MODERATE_COMMENTS)
+def moderate_disable(id):
+    comment = Comment.query.get_or_404(id)
+    comment.disabled = True
+    db.session.add(comment)
+    return redirect(url_for('.moderate',
+                            page=request.args.get('page', 1, type=int)))

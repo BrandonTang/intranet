@@ -1,7 +1,23 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
 {% block title %}Post{% endblock %}
 
 {% block page_content %}
+<div id="moderate-comments">
+	{% if current_user.can(Permission.MODERATE_COMMENTS) %}
+	<a href="{{ url_for('main.moderate') }}">
+		<span class="label label-danger">Moderate Comments</span>
+	</a>
+	{% endif %}
+</div>
 {% include '_posts.html' %}
+<div id="comment">
+    <h2>Comments<h2>
+    <h3>Enter your comment</h3>
+	{% if current_user.can(Permission.COMMENT) %}
+		{{ wtf.quick_form(form) }}
+	{% endif %}
+</div>
 {% endblock %}
