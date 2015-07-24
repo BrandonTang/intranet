@@ -16,7 +16,8 @@ def index():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
-    #Select tag for all tags with post_id = Post.id
+    # Select tag for all tags with post_id = Post.id
+    # Creating instance for looking for tags with a certain post id
     # cnx = mysql.connector.connect(host='localhost', port=3306, user='root', database='intranet')
     # cursor = cnx.cursor()
     # query = ("SELECT tag_id FROM posttag"
@@ -66,6 +67,7 @@ def newpost(data=None):
                 db.session.commit()
             # else:
             #     print "2"
+            # Creating instance where tag already exists
             #     cnx = mysql.connector.connect(host='localhost', port=3306, user='root', database='intranet')
             #     cursor = cnx.cursor()
             #     query = ("SELECT id FROM tags"
@@ -107,6 +109,8 @@ def post(id):
 @main.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
+    tagList = Tag.query.with_entities(Tag.name).all()
+    tagList = [r[0].encode('utf-8') for r in tagList]
     post = Post.query.get_or_404(id)
     if current_user != post.author and not current_user.can(Permission.ADMINISTER):
         abort(403)
@@ -118,7 +122,7 @@ def edit(id):
         db.session.commit()
         flash('The post has been updated.')
         return redirect(url_for('.post', id=post.id))
-    return render_template('edit_post.html', post=post)
+    return render_template('edit_post.html', post=post, tagList=tagList)
 
 @main.route('/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
