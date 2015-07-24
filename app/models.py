@@ -129,6 +129,9 @@ class PostTag(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey(Post.id), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey(Tag.id), primary_key=True)
 
+def find_tag(tag_id):
+    return Tag.query.get(int(tag_id))
+
 class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
