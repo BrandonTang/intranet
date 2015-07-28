@@ -123,7 +123,6 @@ def tag(tag):
         print "posts:", posts
     posts.reverse()
     for post in posts:
-        print "post in for loop:", post
         id = post.id
         title = post.title
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
@@ -132,8 +131,6 @@ def tag(tag):
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
-            print post, ':', tag
-            print tag.tag_id
             name = Tag.query.filter_by(id=tag.tag_id).first().name
             tags.append([tag.tag_id, name])
         page_posts.append([id, title, time, text, comments, tags])
@@ -144,17 +141,19 @@ def tag(tag):
 def edit(id):
     tagList = Tag.query.with_entities(Tag.name).all()
     tagList = [r[0].encode('utf-8') for r in tagList]
-    print "tagList:", tagList
-    previousTagList = ""
+    previousTagString = ""
+    previousTagList = []
     postids = PostTag.query.filter_by(post_id=id).all()
     for postid in postids:
         print "tag_id:", postid.tag_id
         tagid = postid.tag_id
         print "tag_name:", Tag.query.filter_by(id=tagid).first().name
         tagname = Tag.query.filter_by(id=tagid).first().name
-        previousTagList += tagname
-        previousTagList += ", "
-    previousTagList = previousTagList[:-2]
+        previousTagList.append(tagname)
+        previousTagString += tagname
+        previousTagString += ", "
+    previousTagString = previousTagString[:-2]
+    print "previousTagString:", previousTagString
     print "previousTagList:", previousTagList
     post = Post.query.get_or_404(id)
     if current_user != post.author and not current_user.can(Permission.ADMINISTER):
@@ -165,9 +164,44 @@ def edit(id):
         post.text = data['editor1']
         db.session.add(post)
         db.session.commit()
+        print "newtags:", data['input_tag']
+        tagsplit = data['input_tag'].split(', ')
+        print "tagsplit:", tagsplit
+        for eachtag in tagsplit:
+            print "eachtag:", eachtag
+            if eachtag not in tagList:
+                print "1"
+                newtag = Tag(name=eachtag)
+                db.session.add(newtag)
+                db.session.commit()
+                posttag = PostTag(post_id=post.id, tag_id=newtag.id)
+                print "posttag.post_id:", posttag.post_id
+                print "posttag.tag_id:", posttag.tag_id
+                db.session.add(posttag)
+                db.session.commit()
+            elif eachtag not in previousTagList:
+                print "2"
+                oldtag = Tag.query.filter_by(name=eachtag).first().id
+                print "oldtag", oldtag
+                posttag = PostTag(post_id=post.id, tag_id=oldtag)
+                print "posttag.post_id:", posttag.post_id
+                print "posttag.tag_id:", posttag.tag_id
+                db.session.add(posttag)
+                db.session.commit()
+        for eachtag in previousTagList:
+            if eachtag not in tagsplit:
+                print "3"
+                oldtag = Tag.query.filter_by(name=eachtag).first().id
+                print "oldtag", oldtag
+                print "post_id", post.id
+                posttag = PostTag(post_id=post.id, tag_id=oldtag)
+                print "posttag.post_id:", posttag.post_id
+                print "posttag.tag_id:", posttag.tag_id
+                db.session.delete(posttag)
+                db.session.commit()
         flash('The post has been updated.')
         return redirect(url_for('.post', id=post.id))
-    return render_template('edit_post.html', post=post, tagList=tagList, previousTagList=previousTagList)
+    return render_template('edit_post.html', post=post, tagList=tagList, previousTagString=previousTagString)
 
 @main.route('/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
