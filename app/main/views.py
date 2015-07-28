@@ -12,9 +12,7 @@ from ..decorators import admin_required, permission_required
 def index():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
-    print "pagination:", pagination
     posts = pagination.items
-    print "posts:", posts
     page_posts = []
     for post in posts:
         id = post.id
@@ -25,8 +23,6 @@ def index():
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
-            print post, ':', tag
-            print tag.tag_id
             name = Tag.query.filter_by(id=tag.tag_id).first().name
             tags.append([tag.tag_id, name])
         page_posts.append([id, title, time, text, comments, tags])
@@ -74,7 +70,6 @@ def newpost(data=None):
                 print "2"
                 oldtag = Tag.query.filter_by(name=eachtag).first().id
                 print oldtag
-                # Creating instance where tag already exists
                 posttag = PostTag(post_id=post.id, tag_id=oldtag)
                 print "posttag.post_id:", posttag.post_id
                 print "posttag.tag_id:", posttag.tag_id
@@ -126,6 +121,7 @@ def tag(tag):
         post = Post.query.filter_by(id=posttag.post_id).first()
         posts.append(post)
         print "posts:", posts
+    posts.reverse()
     for post in posts:
         print "post in for loop:", post
         id = post.id
@@ -148,6 +144,18 @@ def tag(tag):
 def edit(id):
     tagList = Tag.query.with_entities(Tag.name).all()
     tagList = [r[0].encode('utf-8') for r in tagList]
+    print "tagList:", tagList
+    previousTagList = ""
+    postids = PostTag.query.filter_by(post_id=id).all()
+    for postid in postids:
+        print "tag_id:", postid.tag_id
+        tagid = postid.tag_id
+        print "tag_name:", Tag.query.filter_by(id=tagid).first().name
+        tagname = Tag.query.filter_by(id=tagid).first().name
+        previousTagList += tagname
+        previousTagList += ", "
+    previousTagList = previousTagList[:-2]
+    print "previousTagList:", previousTagList
     post = Post.query.get_or_404(id)
     if current_user != post.author and not current_user.can(Permission.ADMINISTER):
         abort(403)
@@ -159,7 +167,7 @@ def edit(id):
         db.session.commit()
         flash('The post has been updated.')
         return redirect(url_for('.post', id=post.id))
-    return render_template('edit_post.html', post=post, tagList=tagList)
+    return render_template('edit_post.html', post=post, tagList=tagList, previousTagList=previousTagList)
 
 @main.route('/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
