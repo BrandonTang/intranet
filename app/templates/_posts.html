@@ -11,10 +11,10 @@
         <a href="{{ url_for('.post', id=post.id) }}#comments">
             <span class="label label-primary">{{ post.comments.count() }} Comments</span>
         </a>
-        {% for tag in tagList %}
-            <a href="{{ url_for('.tag', tag=tag.name) }}">
-                <span class="label label-primary">{{ tag }}</span>
-            </a>
+        {% for tag in PostTag.query.filter_by(post_id=post.id).all() %}
+        <a href="{{ url_for('.tag', tag=post.id) }}">
+            <span class="label label-primary">{{ Tag.query.filter_by(id=tag.tag_id).first().name }}</span>
+        </a>
         {% endfor %}
         {% if current_user == post.author %}
             <a href="{{ url_for('.edit', id=post.id) }}">

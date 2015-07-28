@@ -7,27 +7,25 @@ from .. import db
 from ..models import Role, User, Post, Tag, Permission, PostTag, Comment
 from datetime import datetime
 from ..decorators import admin_required, permission_required
-import mysql.connector
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
     tagList = Tag.query.with_entities(Tag.name).all()
     tagList = [r[0].encode('utf-8') for r in tagList]
+    print "tagList:", tagList
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    print "pagination:", pagination
     posts = pagination.items
+    print "posts:", posts
     # Select tag for all tags with post_id = Post.id
     # Creating instance for looking for tags with a certain post id
-    # cnx = mysql.connector.connect(host='localhost', port=3306, user='root', database='intranet')
-    # cursor = cnx.cursor()
-    # query = ("SELECT tag_id FROM posttag"
-    #         "WHERE post_id = %s")
-    # postid = Post.id
-    # tags = cursor.execute(query, (postid))
-    # print 'tags:', tags
-    # cursor.close()
-    # cnx.close()
-    return render_template('index.html', posts=posts, pagination=pagination, tagList=tagList)
+    # for post in posts:
+    #     postTag = PostTag.query.filter_by(post_id=post.id).all()
+    #     for tag in postTag:
+    #         print tag.tag_id
+    #         print Tag.query.filter_by(id=tag.tag_id).first().name
+    return render_template('index.html', posts=posts, pagination=pagination, PostTag=PostTag, Tag=Tag)
 
 @main.route('/error', methods=['GET', 'POST'])
 def error():
@@ -63,23 +61,20 @@ def newpost(data=None):
                 db.session.add(newtag)
                 db.session.commit()
                 posttag = PostTag(post_id=post.id, tag_id=newtag.id)
+                print "posttag.post_id:", posttag.post_id
+                print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
-            # else:
-            #     print "2"
-            # Creating instance where tag already exists
-            #     cnx = mysql.connector.connect(host='localhost', port=3306, user='root', database='intranet')
-            #     cursor = cnx.cursor()
-            #     query = ("SELECT id FROM tags"
-            #             "WHERE name = %s")
-            #     tagname = eachtag
-            #     oldtag = cursor.execute(query, (tagname))
-            #     print 'oldtagid:', oldtag
-            #     cursor.close()
-            #     cnx.close()
-            #     posttag = PostTag(post_id=post.id, tag_id=oldtag)
-            #     db.session.add(posttag)
-            #     db.session.commit()
+            else:
+                print "2"
+                oldtag = Tag.query.filter_by(name=eachtag).first().id
+                print oldtag
+                # Creating instance where tag already exists
+                posttag = PostTag(post_id=post.id, tag_id=oldtag)
+                print "posttag.post_id:", posttag.post_id
+                print "posttag.tag_id:", posttag.tag_id
+                db.session.add(posttag)
+                db.session.commit()
         return redirect(url_for('.index'))
     return render_template('new_post.html', tagList=tagList)
 
@@ -140,6 +135,7 @@ def delete(id):
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
 def tag(tag):
+    posts = PostTag.query.filter_by(tag_id=id).first()
     #Select posts for post with tag_id = Tag.id
     return render_template('tagged_posts.html', posts=posts)
 

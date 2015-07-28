@@ -100,7 +100,7 @@ class Post(db.Model):
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
 
     def __repr__(self):
-        return '<Post %r><Post %r>' % (self.tags, self.title)
+        return '<Post %r>' % (self.title)
 
     @staticmethod
     def on_changed_text(target, value, oldvalue, initiator):
@@ -122,15 +122,15 @@ class Tag(db.Model):
     name = db.Column(db.String(64))
 
     def __repr__(self):
-        return '<Post %r>' % (self.name)
+        return '<Tag %r>' % (self.name)
 
 class PostTag(db.Model):
     __tablename__ =  "posttag"
     post_id = db.Column(db.Integer, db.ForeignKey(Post.id), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey(Tag.id), primary_key=True)
 
-def find_tag(tag_id):
-    return Tag.query.get(int(tag_id))
+    def __repr__(self):
+        return '<Post %r><Tag %r>' % (self.post_id, self.tag_id)
 
 class Comment(db.Model):
     __tablename__ = 'comments'
