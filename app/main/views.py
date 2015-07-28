@@ -10,22 +10,27 @@ from ..decorators import admin_required, permission_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    tagList = Tag.query.with_entities(Tag.name).all()
-    tagList = [r[0].encode('utf-8') for r in tagList]
-    print "tagList:", tagList
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
     print "pagination:", pagination
     posts = pagination.items
     print "posts:", posts
-    # Select tag for all tags with post_id = Post.id
-    # Creating instance for looking for tags with a certain post id
-    # for post in posts:
-    #     postTag = PostTag.query.filter_by(post_id=post.id).all()
-    #     for tag in postTag:
-    #         print tag.tag_id
-    #         print Tag.query.filter_by(id=tag.tag_id).first().name
-    return render_template('index.html', posts=posts, pagination=pagination, PostTag=PostTag, Tag=Tag)
+    page_posts = []
+    for post in posts:
+        id = post.id
+        title = post.title
+        time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
+        text = post.text
+        comments = post.comments.count()
+        postTag = PostTag.query.filter_by(post_id=post.id).all()
+        tags = []
+        for tag in postTag:
+            print post, ':', tag
+            print tag.tag_id
+            name = Tag.query.filter_by(id=tag.tag_id).first().name
+            tags.append([tag.tag_id, name])
+        page_posts.append([id, title, time, text, comments, tags])
+    return render_template('index.html', pagination=pagination, page_posts=page_posts)
 
 @main.route('/error', methods=['GET', 'POST'])
 def error():
@@ -101,6 +106,43 @@ def post(id):
     return render_template('post.html', posts=[post], form=form,
                            comments=comments, pagination=pagination)
 
+@main.route('/tag/<string:tag>', methods=['GET', 'POST'])
+def tag(tag):
+    #Select posts for post with tag_id = Tag.id
+    # page = request.args.get('page', 1, type=int)
+    # pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    # print "pagination:", pagination
+    # posts = pagination.items
+    # print "posts:", posts
+    page_posts = []
+    tagid = Tag.query.filter_by(name=tag).first().id
+    print "TagID:", tagid
+    posttags = PostTag.query.filter_by(tag_id=tagid).all()
+    posts = []
+    for posttag in posttags:
+        print "posttag:", posttag
+        print "posttag.post_id:", posttag.post_id
+        print "Post Query:", Post.query.filter_by(id=posttag.post_id).all()
+        post = Post.query.filter_by(id=posttag.post_id).first()
+        posts.append(post)
+        print "posts:", posts
+    for post in posts:
+        print "post in for loop:", post
+        id = post.id
+        title = post.title
+        time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
+        text = post.text
+        comments = post.comments.count()
+        postTag = PostTag.query.filter_by(post_id=post.id).all()
+        tags = []
+        for tag in postTag:
+            print post, ':', tag
+            print tag.tag_id
+            name = Tag.query.filter_by(id=tag.tag_id).first().name
+            tags.append([tag.tag_id, name])
+        page_posts.append([id, title, time, text, comments, tags])
+    return render_template('tagged_posts.html', page_posts=page_posts)
+
 @main.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
@@ -132,12 +174,6 @@ def delete(id):
         flash('The post has been deleted.')
         return redirect(url_for('.index'))
     return render_template('delete_post.html', form=form)
-
-@main.route('/tag/<string:tag>', methods=['GET', 'POST'])
-def tag(tag):
-    posts = PostTag.query.filter_by(tag_id=id).first()
-    #Select posts for post with tag_id = Tag.id
-    return render_template('tagged_posts.html', posts=posts)
 
 @main.route('/mis')
 def mis():

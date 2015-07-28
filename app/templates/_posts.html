@@ -1,36 +1,34 @@
 <ul class="posts">
-{% for post in posts %}
-    <h5>
-    <h1>{{ post.title }}</h1>
-    <h10>{{ post.time.strftime("%B %d, %Y %l:%M%p %Z") }}</h10>
-    <div class="well">{{ post.text | safe }}</div>
+{% for post in page_posts %}
+    <h1>{{ post[1] }}</h1>
+    <h10>{{ post[2] }}</h10>
+    <div class="well">{{ post[3] | safe }}</div>
     <div class="post-footer">
-        <a href="{{ url_for('.post', id=post.id) }}">
+        <a href="{{ url_for('.post', id=post[0]) }}">
             <span class="label label-default">Permalink</span>
         </a>
-        <a href="{{ url_for('.post', id=post.id) }}#comments">
-            <span class="label label-primary">{{ post.comments.count() }} Comments</span>
+        <a href="{{ url_for('.post', id=post[0]) }}#comments">
+            <span class="label label-primary">{{ post[4] }} Comments</span>
         </a>
-        {% for tag in PostTag.query.filter_by(post_id=post.id).all() %}
-        <a href="{{ url_for('.tag', tag=post.id) }}">
-            <span class="label label-primary">{{ Tag.query.filter_by(id=tag.tag_id).first().name }}</span>
+        {% for tag in post[5] %}
+        <a href="{{ url_for('.tag', tag=tag[1]) }}">
+            <span class="label label-primary">{{ tag[1] }}</span>
         </a>
         {% endfor %}
         {% if current_user == post.author %}
-            <a href="{{ url_for('.edit', id=post.id) }}">
+            <a href="{{ url_for('.edit', id=post[0]) }}">
                 <span class="label label-primary">Edit</span>
             </a>
-            <a href="{{ url_for('.delete', id=post.id) }}">
+            <a href="{{ url_for('.delete', id=post[0]) }}">
                 <span class="label label-danger">Delete</span>
             </a>
         {% elif current_user.is_administrator() %}
-            <a href="{{ url_for('.edit', id=post.id) }}">
+            <a href="{{ url_for('.edit', id=post[0]) }}">
                 <span class="label label-primary">Edit [Admin]</span>
             </a>
-            <a href="{{ url_for('.delete', id=post.id) }}">
+            <a href="{{ url_for('.delete', id=post[0]) }}">
                 <span class="label label-danger">Delete</span>
             </a>
         {% endif %}
     </div>
 {% endfor %}
-</ul>
