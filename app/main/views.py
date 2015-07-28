@@ -194,10 +194,7 @@ def edit(id):
                 oldtag = Tag.query.filter_by(name=eachtag).first().id
                 print "oldtag", oldtag
                 print "post_id", post.id
-                posttag = PostTag(post_id=post.id, tag_id=oldtag)
-                print "posttag.post_id:", posttag.post_id
-                print "posttag.tag_id:", posttag.tag_id
-                db.session.delete(posttag)
+                PostTag.query.filter_by(post_id=post.id, tag_id=oldtag).delete()
                 db.session.commit()
         flash('The post has been updated.')
         return redirect(url_for('.post', id=post.id))
