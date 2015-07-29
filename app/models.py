@@ -24,7 +24,8 @@ class Role(db.Model):
     def insert_roles():
         roles = {
             'Employee': (Permission.COMMENT, True),
-            'Director': (Permission.WRITE_ARTICLES |
+            'Director': (Permission.COMMENT |
+                         Permission.WRITE_ARTICLES |
                          Permission.MODERATE_COMMENTS, False),
             'Administrator': (0xff, False)
         }
@@ -67,13 +68,26 @@ class User(UserMixin, db.Model):
             (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
+        print "is_administrator:", self.can(Permission.ADMINISTER)
         return self.can(Permission.ADMINISTER)
+
+    def is_director(self):
+        print "is_director:", self.can(Permission.COMMENT) and self.can(Permission.WRITE_ARTICLES) and self.can(Permission.MODERATE_COMMENTS)
+        return self.can(Permission.COMMENT) and self.can(Permission.WRITE_ARTICLES) and self.can(Permission.MODERATE_COMMENTS)
+
+    def is_employee(self):
+        print "is_employee:", self.can(Permission.COMMENT)
+        return self.can(Permission.COMMENT)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email == current_app.config['FLASKY_ADMIN']:
+            if self.email == current_app.config['ADMIN']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
+            if self.email == current_app.config['DIRECTOR']:
+                self.role = Role.query.filter_by(permissions=14).first()
+            if self.role == current_app.config['EMPLOYEE']:
+                self.role = Role.query.filter_by(permissions=2).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
 
@@ -85,6 +99,12 @@ class AnonymousUser(AnonymousUserMixin):
         return False
 
     def is_administrator(self):
+        return False
+
+    def is_director(self):
+        return False
+
+    def is_employee(self):
         return False
 
 login_manager.anonymous_user = AnonymousUser

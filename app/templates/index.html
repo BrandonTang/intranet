@@ -13,7 +13,9 @@
     {% include '_posts.html' %}
 </div>
 <div id="newpost">
+    {% if current_user.is_administrator() or current_user.is_director() %}
     <h3><a href="{{ url_for('main.newpost') }}">Add Post</a></h3>
+    {% endif %}
 </div>
 <div id="pagination">
     {{ macros.pagination_widget(pagination, '.index') }}

@@ -29,6 +29,13 @@
             <a href="{{ url_for('.delete', id=post[0]) }}">
                 <span class="label label-danger">Delete</span>
             </a>
+        {% elif current_user.is_director() %}
+            <a href="{{ url_for('.edit', id=post[0]) }}">
+                <span class="label label-primary">Edit [Director]</span>
+            </a>
+            <a href="{{ url_for('.delete', id=post[0]) }}">
+                <span class="label label-danger">Delete</span>
+            </a>
         {% endif %}
     </div>
 {% endfor %}
