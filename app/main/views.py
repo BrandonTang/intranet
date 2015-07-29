@@ -81,7 +81,20 @@ def newpost(data=None):
 @main.route('/post/<int:id>', methods=['GET', 'POST'])
 def post(id):
     post = Post.query.get_or_404(id)
+    page_posts = []
+    id = post.id
+    title = post.title
+    time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
+    text = post.text
+    comments = post.comments.count()
+    postTag = PostTag.query.filter_by(post_id=post.id).all()
+    tags = []
+    for tag in postTag:
+        name = Tag.query.filter_by(id=tag.tag_id).first().name
+        tags.append([tag.tag_id, name])
+    page_posts.append([id, title, time, text, comments, tags])
     form = CommentForm()
+    allComments = post.comments
     if form.validate_on_submit():
         comment = Comment(body=form.body.data,
                           post=post,
@@ -98,8 +111,8 @@ def post(id):
         page, per_page=current_app.config['COMMENTS_PER_PAGE'],
         error_out=False)
     comments = pagination.items
-    return render_template('post.html', posts=[post], form=form,
-                           comments=comments, pagination=pagination)
+    return render_template('post.html', posts=[post], form=form, allComments=allComments,
+                           comments=comments, pagination=pagination, page_posts=page_posts)
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
 def tag(tag):
@@ -208,6 +221,12 @@ def delete(id):
         abort(403)
     form = DeleteForm()
     if form.validate_on_submit():
+        posttags = PostTag.query.filter_by(post_id=id).all()
+        for posttag in posttags:
+            db.session.delete(posttag)
+        comments = Comment.query.filter_by(post_id=id).all()
+        for comment in comments:
+            db.session.delete(comments)
         db.session.delete(post)
         db.session.commit()
         flash('The post has been deleted.')
@@ -230,8 +249,8 @@ def moderate():
     pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(
         page, per_page=current_app.config['COMMENTS_PER_PAGE'],
         error_out=False)
-    comments = pagination.items
-    return render_template('moderate.html', comments=comments,
+    allComments = pagination.items
+    return render_template('moderate.html', allComments=allComments,
                            pagination=pagination, page=page)
 
 @main.route('/moderate/enable/<int:id>')
