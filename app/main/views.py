@@ -20,12 +20,13 @@ def index():
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
         text = post.text
         comments = post.comments.count()
+        author = post.author
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
             name = Tag.query.filter_by(id=tag.tag_id).first().name
             tags.append([tag.tag_id, name])
-        page_posts.append([id, title, time, text, comments, tags])
+        page_posts.append([id, title, time, text, comments, tags, author])
     return render_template('index.html', pagination=pagination, page_posts=page_posts)
 
 @main.route('/error', methods=['GET', 'POST'])
@@ -87,12 +88,13 @@ def post(id):
     time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
     text = post.text
     comments = post.comments.count()
+    author = post.author
     postTag = PostTag.query.filter_by(post_id=post.id).all()
     tags = []
     for tag in postTag:
         name = Tag.query.filter_by(id=tag.tag_id).first().name
         tags.append([tag.tag_id, name])
-    page_posts.append([id, title, time, text, comments, tags])
+    page_posts.append([id, title, time, text, comments, tags, author])
     form = CommentForm()
     allComments = post.comments
     if form.validate_on_submit():
@@ -141,12 +143,13 @@ def tag(tag):
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
         text = post.text
         comments = post.comments.count()
+        author = post.author
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
             name = Tag.query.filter_by(id=tag.tag_id).first().name
             tags.append([tag.tag_id, name])
-        page_posts.append([id, title, time, text, comments, tags])
+        page_posts.append([id, title, time, text, comments, tags, author])
     return render_template('tagged_posts.html', page_posts=page_posts)
 
 @main.route('/edit/<int:id>', methods=['GET', 'POST'])

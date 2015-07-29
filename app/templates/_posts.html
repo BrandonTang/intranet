@@ -15,7 +15,7 @@
             <span class="label label-primary">{{ tag[1] }}</span>
         </a>
         {% endfor %}
-        {% if current_user == post.author %}
+        {% if current_user == post[6] %}
             <a href="{{ url_for('.edit', id=post[0]) }}">
                 <span class="label label-primary">Edit</span>
             </a>
