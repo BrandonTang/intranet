@@ -229,7 +229,7 @@ def delete(id):
             db.session.delete(posttag)
         comments = Comment.query.filter_by(post_id=id).all()
         for comment in comments:
-            db.session.delete(comments)
+            db.session.delete(comment)
         db.session.delete(post)
         db.session.commit()
         flash('The post has been deleted.')
