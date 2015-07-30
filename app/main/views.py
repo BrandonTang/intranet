@@ -96,7 +96,10 @@ def post(id):
         tags.append([tag.tag_id, name])
     page_posts.append([id, title, time, text, comments, tags, author])
     form = CommentForm()
-    allComments = post.comments
+    allComments = []
+    for comment in post.comments:
+        allComments.append(comment)
+    allComments.reverse()
     if form.validate_on_submit():
         comment = Comment(body=form.body.data,
                           post=post,
