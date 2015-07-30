@@ -113,17 +113,11 @@ def post(id):
         page, per_page=current_app.config['COMMENTS_PER_PAGE'],
         error_out=False)
     comments = pagination.items
-    return render_template('post.html', posts=[post], form=form, allComments=allComments,
+    return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments,
                            comments=comments, pagination=pagination, page_posts=page_posts)
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
 def tag(tag):
-    #Select posts for post with tag_id = Tag.id
-    # page = request.args.get('page', 1, type=int)
-    # pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
-    # print "pagination:", pagination
-    # posts = pagination.items
-    # print "posts:", posts
     page_posts = []
     tagid = Tag.query.filter_by(name=tag).first().id
     print "TagID:", tagid
@@ -244,17 +238,17 @@ def mis():
 def lmt():
     return render_template('lmt.html')
 
-@main.route('/moderate')
+@main.route('/moderate/<int:id>', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.MODERATE_COMMENTS)
-def moderate():
-    page = request.args.get('page', 1, type=int)
-    pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(
-        page, per_page=current_app.config['COMMENTS_PER_PAGE'],
-        error_out=False)
-    allComments = pagination.items
-    return render_template('moderate.html', allComments=allComments,
-                           pagination=pagination, page=page)
+def moderate(id):
+    post = Post.query.get_or_404(id)
+    allComments = []
+    comments = post.comments
+    for comment in comments:
+        allComments.append(comment)
+    allComments.reverse()
+    return render_template('moderate.html', allComments=allComments)
 
 @main.route('/moderate/enable/<int:id>')
 @login_required
@@ -263,8 +257,8 @@ def moderate_enable(id):
     comment = Comment.query.get_or_404(id)
     comment.disabled = False
     db.session.add(comment)
-    return redirect(url_for('.moderate',
-                            page=request.args.get('page', 1, type=int)))
+    post = Comment.query.filter_by(id=id).first().post
+    return redirect(url_for('.moderate', id=post.id))
 
 @main.route('/moderate/disable/<int:id>')
 @login_required
@@ -273,5 +267,5 @@ def moderate_disable(id):
     comment = Comment.query.get_or_404(id)
     comment.disabled = True
     db.session.add(comment)
-    return redirect(url_for('.moderate',
-                            page=request.args.get('page', 1, type=int)))
+    post = Comment.query.filter_by(id=id).first().post
+    return redirect(url_for('.moderate', id=post.id))
