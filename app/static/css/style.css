@@ -222,6 +222,19 @@ ul > h10 {
 	margin-left: 40px;
 }
 
+#comment > h2 {
+	margin-left: 0px;
+}
+
 #comment > h3 {
-	margin-left: 35px;
+	margin-left: 5px;
+}
+
+#comment > form {
+	margin-left: 10px;
+	margin-bottom: 40px;
+}
+
+#comment-body a {
+	margin-bottom: 40px;
 }
