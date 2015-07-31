@@ -217,7 +217,7 @@ def edit(id):
 @login_required
 def delete(id):
     post = Post.query.get_or_404(id)
-    if current_user != post.author and not current_user.can(Permission.ADMINISTER):
+    if current_user != post.author and not current_user.can(Permission.ADMINISTER) and not current_user.is_director():
         abort(403)
     form = DeleteForm()
     if form.validate_on_submit():

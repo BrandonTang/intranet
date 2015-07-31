@@ -15,8 +15,8 @@
 {% include '_posts.html' %}
 <div id="comment">
     <h2>Comments<h2>
+    {% if current_user.can(Permission.COMMENT) %}
     <h3>Enter your comment</h3>
-	{% if current_user.can(Permission.COMMENT) %}
 		{{ wtf.quick_form(form) }}
 	{% endif %}
 </div>
