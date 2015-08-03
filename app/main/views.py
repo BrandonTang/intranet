@@ -35,6 +35,7 @@ def error():
 
 @main.route('/newpost', methods=['GET', 'POST'])
 @login_required
+@permission_required(Permission.WRITE_ARTICLES)
 def newpost(data=None):
     tagList = Tag.query.with_entities(Tag.name).all()
     tagList = [r[0].encode('utf-8') for r in tagList]

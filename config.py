@@ -13,6 +13,7 @@ class Config:
     FLASKY_MAIL_SUBJECT_PREFIX = '[Intranet]'
     FLASKY_MAIL_SENDER = 'Admin <tangbrandon1@gmail.com>'
     ADMIN = os.environ.get('ADMIN') or 'tangbrandon1@gmail.com'
+    ADMIN2 = os.environ.get('ADMIN2') or 'tangbrandon2@gmail.com'
     DIRECTOR = os.environ.get('DIRECTOR') or 'tangbrandon96@gmail.com'
     EMPLOYEE = os.environ.get('EMPLOYEE')
     POSTS_PER_PAGE = 5
