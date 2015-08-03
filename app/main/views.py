@@ -45,6 +45,9 @@ def newpost(data=None):
         if data['editor1'] == "":
             return render_template('error.html', message="Please fill out the text!")
         if post is None:
+            print "tags:", len(data['input_tag'])
+            if data['input_tag'] == '':
+                return render_template('error.html', message="Please include tags!")
             title = data['input_title']
             print "title:", title
             text = data['editor1']
