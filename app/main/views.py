@@ -48,6 +48,11 @@ def newpost(data=None):
             title = data['input_title']
             print "title:", title
             text = data['editor1']
+            textLength = len(text)
+            print textLength
+            if len(text) > 3000:
+                print len(text)
+                return render_template('error.html', message="Text is too long! Please lower number of characters or remove some text edits.")
             print "text:", text
             print "time:", datetime.now()
             print "author:", current_user._get_current_object()
