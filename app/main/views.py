@@ -158,7 +158,22 @@ def tag(tag):
         page_posts.append([id, title, time, text, comments, tags, author])
     return render_template('tagged_posts.html', page_posts=page_posts)
 
-@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_comment(id):
+    comment = Comment.query.get_or_404(id)
+    form = CommentForm()
+    if current_user != comment.author and not current_user.can(Permission.COMMENT):
+        abort(403)
+    if form.validate_on_submit():
+        comment.body = form.body.data
+        db.session.add(comment)
+        db.session.commit()
+        flash('The comment has been updated.')
+    form.body.data = comment.body
+    return render_template('edit_comment.html', form=form, comment=comment)
+
+@main.route('/edit/post/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
     tagList = Tag.query.with_entities(Tag.name).all()
@@ -222,7 +237,7 @@ def edit(id):
         return redirect(url_for('.post', id=post.id))
     return render_template('edit_post.html', post=post, tagList=tagList, previousTagString=previousTagString)
 
-@main.route('/delete/<int:id>', methods=['GET', 'POST'])
+@main.route('/delete/post/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete(id):
     post = Post.query.get_or_404(id)

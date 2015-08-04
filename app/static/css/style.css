@@ -237,5 +237,13 @@ ul > h10 {
 }
 
 #comment-body a {
-	margin-bottom: 40px;
+	margin-bottom: 30px;
+}
+
+#comment-body {
+	margin-bottom: 100px;
+}
+
+.well {
+	margin-top: 10px;
 }
