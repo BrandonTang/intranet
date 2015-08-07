@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:80 --log-file -
+web: gunicorn manage:app
