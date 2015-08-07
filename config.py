@@ -12,10 +12,10 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SUBJECT_PREFIX = '[Intranet]'
     FLASKY_MAIL_SENDER = 'Admin <tangbrandon1@gmail.com>'
-    ADMIN = os.environ.get('ADMIN') or 'tangbrandon1@gmail.com'
-    ADMIN2 = os.environ.get('ADMIN2') or 'tangbrandon2@gmail.com'
-    DIRECTOR = os.environ.get('DIRECTOR') or 'tangbrandon96@gmail.com'
-    DIRECTOR2 = os.environ.get('DIRECTOR2') or 'tangbrandon1996@gmail.com'
+    ADMIN = 'tangbrandon1@gmail.com'
+    ADMIN2 = 'tangbrandon2@gmail.com'
+    DIRECTOR = 'tangbrandon96@gmail.com'
+    DIRECTOR2 = 'tangbrandon1996@gmail.com'
     EMPLOYEE = os.environ.get('EMPLOYEE')
     POSTS_PER_PAGE = 5
     COMMENTS_PER_PAGE = 10
@@ -27,16 +27,16 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/intranet'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://root:@localhost/intranet'
 
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://root@localhost/intranet'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://root@localhost/intranet'
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'mysql://root@localhost/intranet'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://root@localhost/intranet'
 
 
 config = {
