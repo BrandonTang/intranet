@@ -11,18 +11,19 @@ from flask.ext.sqlalchemy import SQLAlchemy
 # migrate = Migrate(app, db)
 
 def create_app():
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-    db = SQLAlchemy(app)
-    db.create_all()
-    with app.app_context():
-        return app
+	app = Flask(__name__)
+	app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+	db = SQLAlchemy(app)
+	with app.app_context():
+		db.create_all()
+		return app
 
 
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role, Post=Post, Tag=Tag, PostTag=PostTag, Comment=Comment)
-manager.add_command("shell", Shell(make_context=make_shell_context))
-manager.add_command('db', MigrateCommand)
+
+# manager.add_command("shell", Shell(make_context=make_shell_context))
+# manager.add_command('db', MigrateCommand)
 
 
 @manager.command
