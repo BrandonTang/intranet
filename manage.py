@@ -2,6 +2,7 @@
 import os
 from app import create_app, db
 from app.models import User, Role, Post, Tag, PostTag, Comment
+import flask
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.sqlalchemy import SQLAlchemy
