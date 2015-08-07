@@ -4,10 +4,15 @@ from app import create_app, db
 from app.models import User, Role, Post, Tag, PostTag, Comment
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
+from flask.ext.sqlalchemy import SQLAlchemy
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-manager = Manager(app)
-migrate = Migrate(app, db)
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+db = SQLAlchemy(app)
+
+# app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+# manager = Manager(app)
+# migrate = Migrate(app, db)
 
 
 def make_shell_context():
