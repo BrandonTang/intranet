@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Edit Comment{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h2>Edit Comment</h2>
+</div>
+<div id="comment">
+    {% if current_user.can(Permission.COMMENT) %}
+    <h3>Edit your comment</h3>
+		{{ wtf.quick_form(form) }}
+	{% endif %}
+</div>
+{% endblock %}

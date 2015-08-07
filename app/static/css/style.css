@@ -248,6 +248,14 @@ ul > h10 {
 	margin-bottom: 100px;
 }
 
+#page-body #comment-body h4 {
+	margin-left: 30px;
+}
+
+#page-body #comment-body a {
+	margin-left: 30px;
+}
+
 .well {
 	margin-top: 10px;
 }

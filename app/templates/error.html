@@ -1,15 +1,13 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
-{% block title %}Tagged Posts{% endblock %}
+{% block title %}Error Page{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h2>Tagged Posts</h2>
+    <h2>Something went wrong...</h2>
 </div>
 <div id="page-body">
-{% include '_posts.html' %}
+	<h4>{{ message }}</h4>
 </div>
-
 {% endblock %}
