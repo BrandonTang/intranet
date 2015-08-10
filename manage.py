@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import os
+import psycopg2
+import urlparse
 from app import create_app, db
 from app.models import User, Role, Post, Tag, PostTag, Comment
 from flask import Flask
@@ -9,6 +11,15 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+urlparse.uses_netloc.append("postgres")
+url = urlparse.urlparse(os.environ["DATABASE_URL"])
+conn = psycopg2.connect(
+    database=url.path[1:],
+    user=url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
+)
 db = SQLAlchemy(app)
 manager = Manager(app)
 migrate = Migrate(app, db)
