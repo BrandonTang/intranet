@@ -29,10 +29,6 @@ def index():
         page_posts.append([id, title, time, text, comments, tags, author])
     return render_template('index.html', pagination=pagination, page_posts=page_posts)
 
-@main.route('/error', methods=['GET', 'POST'])
-def error():
-    return render_template('error.html')
-
 @main.route('/newpost', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.WRITE_ARTICLES)
@@ -264,6 +260,10 @@ def mis():
 @main.route('/lmt')
 def lmt():
     return render_template('lmt.html')
+
+@main.route('/error', methods=['GET', 'POST'])
+def error():
+    return render_template('error.html')
 
 @main.route('/moderate/<int:id>', methods=['GET', 'POST'])
 @login_required
