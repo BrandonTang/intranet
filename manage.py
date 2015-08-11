@@ -7,7 +7,8 @@ from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+# app = Flask(__name__)
+app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 manager = Manager(app)
