@@ -13,6 +13,7 @@ def index():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
+    allTags = Tag.query.all()
     page_posts = []
     for post in posts:
         id = post.id
@@ -27,7 +28,7 @@ def index():
             name = Tag.query.filter_by(id=tag.tag_id).first().name
             tags.append([tag.tag_id, name])
         page_posts.append([id, title, time, text, comments, tags, author])
-    return render_template('index.html', pagination=pagination, page_posts=page_posts)
+    return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags)
 
 @main.route('/newpost', methods=['GET', 'POST'])
 @login_required
