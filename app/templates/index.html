@@ -9,15 +9,21 @@
 <div class="page-header">
     <h2>Submissions</h2>
     <div id="nav-bottomright">
-<!--     <form id="index-form" role="form" method="get" action="results">
-        <input type="text" id="input_text" class="form-control" name="user_input" style="text-align: right">
-        <button type="submit" class="btn btn-nyc" id="btn" name="btn" value="Search">Search</button> -->
-            <select>
-                {% for tag in allTags %}
-                    <option value="{{ tag }}">{{ tag }}</option>
-                {% endfor %}
-            </select>
-        </div>
+
+        <!-- <select>
+            {% for tag in allTags %}
+                <option value="{{ tag }}">{{ tag.name }}</option>
+            {% endfor %}
+        </select> -->
+
+		<select class="ui fluid search dropdown" multiple="" >
+			<option value="">Filter</option>
+			{% for tag in allTags %}
+			<option value="{{ tag.name }}">{{ tag.name }}</option>
+			{% endfor %}
+		</select>
+
+	</div>
 </div>
 <div id="page-body">
     {% include '_posts.html' %}
@@ -33,3 +39,14 @@
 </div>
 {% endblock %}
 </div>
+
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/semantic.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/semantic.min.js') }}"></script>
+<script type="text/javascript">
+$('.ui.dropdown')
+  .dropdown()
+;
+</script>
+{% endblock %}
