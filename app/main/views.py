@@ -28,6 +28,37 @@ def index():
             name = Tag.query.filter_by(id=tag.tag_id).first().name
             tags.append([tag.tag_id, name])
         page_posts.append([id, title, time, text, comments, tags, author])
+    if request.method == 'POST':
+        selecttags = request.form.getlist('select_tags')
+        page_posts = []
+        for tag in selecttags:
+            print tag
+            tagid = Tag.query.filter_by(name=tag).first().id
+            print "TagID:", tagid
+            posttags = PostTag.query.filter_by(tag_id=tagid).all()
+            posts = []
+            for posttag in posttags:
+                print "posttag:", posttag
+                print "posttag.post_id:", posttag.post_id
+                print "Post Query:", Post.query.filter_by(id=posttag.post_id).all()
+                post = Post.query.filter_by(id=posttag.post_id).first()
+                posts.append(post)
+                print "posts:", posts
+            posts.reverse()
+            for post in posts:
+                id = post.id
+                title = post.title
+                time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
+                text = post.text
+                comments = post.comments.count()
+                author = post.author
+                postTag = PostTag.query.filter_by(post_id=post.id).all()
+                tags = []
+                for tag in postTag:
+                    name = Tag.query.filter_by(id=tag.tag_id).first().name
+                    tags.append([tag.tag_id, name])
+                page_posts.append([id, title, time, text, comments, tags, author])
+        return render_template('tagged_posts.html', page_posts=page_posts)
     return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags)
 
 @main.route('/newpost', methods=['GET', 'POST'])

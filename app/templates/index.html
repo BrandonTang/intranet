@@ -9,20 +9,19 @@
 <div class="page-header">
     <h2>Submissions</h2>
     <div id="nav-bottomright">
-
-        <!-- <select>
-            {% for tag in allTags %}
-                <option value="{{ tag }}">{{ tag.name }}</option>
-            {% endfor %}
-        </select> -->
-
-		<select class="ui fluid search dropdown" multiple="" >
+        <form name="input" class="form-horizontal" id="searchTags" method="post">
+		  <select name="select_tags" class="ui fluid search dropdown" multiple="" >
 			<option value="">Filter</option>
 			{% for tag in allTags %}
 			<option value="{{ tag.name }}">{{ tag.name }}</option>
 			{% endfor %}
-		</select>
-
+		  </select>
+            <div id="requestButton" class="control-group">
+                <div>
+                    <button type="submit" title="search_tags" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
 	</div>
 </div>
 <div id="page-body">
