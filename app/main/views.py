@@ -33,27 +33,30 @@ def index():
         searchterm = request.form.get('search_term')
         searchoption = request.form.get('select_search_option')
         if searchoption == 'title':
-            print "1"
             for post in Post.query.all():
-                print "2"
                 if searchterm in post.title:
-                    print "searchterm:", searchterm
-                    print "post.title:", post.title
-                    print "3"
                     id = post.id
-                    print "post.id:", post.id
                     title = post.title
-                    print "post.title:", post.title
                     time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
-                    print "post.time:", post.time
                     text = post.text
-                    print "post.text:", post.text
                     comments = post.comments.count()
-                    print "post.comments:", post.comments
                     author = post.author
-                    print "post.author:", post.author
                     postTag = PostTag.query.filter_by(post_id=post.id).all()
-                    print "postTag:", postTag
+                    tags = []
+                    for tag in postTag:
+                        name = Tag.query.filter_by(id=tag.tag_id).first().name
+                        tags.append([tag.tag_id, name])
+                    page_posts.append([id, title, time, text, comments, tags, author])
+        elif searchoption == 'text':
+            for post in Post.query.all():
+                if searchterm in post.text:
+                    id = post.id
+                    title = post.title
+                    time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
+                    text = post.text
+                    comments = post.comments.count()
+                    author = post.author
+                    postTag = PostTag.query.filter_by(post_id=post.id).all()
                     tags = []
                     for tag in postTag:
                         name = Tag.query.filter_by(id=tag.tag_id).first().name
