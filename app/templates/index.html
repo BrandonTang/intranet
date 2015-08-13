@@ -10,15 +10,27 @@
     <h2>Submissions</h2>
     <div id="nav-bottomright">
         <form name="input" class="form-horizontal" id="searchTags" method="post">
-		  <select name="select_tags" class="ui fluid search dropdown" multiple="" >
-			<option value="">Filter</option>
-			{% for tag in allTags %}
-			<option value="{{ tag.name }}">{{ tag.name }}</option>
-			{% endfor %}
-		  </select>
+            <div class="control-group">
+                <div class="ui action input">
+                    <input name="search_term" type="text" placeholder="Search...">
+                    <select name="select_search_option" class="ui compact selection dropdown">
+                        <option value="all">All</option>
+                        <option value="title">Title</option>
+                        <option value="text">Text</option>
+                    </select>
+            </div>
+            </div>
+            <div class="control-group">
+	        <select name="select_tags" class="ui fluid search dropdown" multiple="" >
+			    <option value="">Tag Filter</option>
+			    {% for tag in allTags %}
+			    <option value="{{ tag.name }}">{{ tag.name }}</option>
+			    {% endfor %}
+		      </select>
+            </div>
             <div id="requestButton" class="control-group">
                 <div>
-                    <button type="submit" title="search_tags" class="btn btn-primary">Search</button>
+                    <button type="submit" title="search_tags" class="ui button">Search</button>
                 </div>
             </div>
         </form>

@@ -29,6 +29,10 @@ def index():
             tags.append([tag.tag_id, name])
         page_posts.append([id, title, time, text, comments, tags, author])
     if request.method == 'POST':
+        searchterm = request.form.get('search_term')
+        selectsearchoption = request.form.get('select_search_option')
+        print "select search option:", selectsearchoption
+        print "searchterm:", searchterm
         selecttags = request.form.getlist('select_tags')
         page_posts = []
         for tag in selecttags:
