@@ -123,8 +123,11 @@ def index():
                     name = Tag.query.filter_by(id=tag.tag_id).first().name
                     tags.append([tag.tag_id, name])
                 page_posts.append([id, title, time, text, comments, tags, author])
-        
-        return render_template('tagged_posts.html', page_posts=page_posts)
+        page_posts_without_duplicates = []
+        for page_post in page_posts:
+            if page_post not in page_posts_without_duplicates:
+                page_posts_without_duplicates.append(page_post)
+        return render_template('tagged_posts.html', page_posts=page_posts_without_duplicates)
     return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags)
 
 @main.route('/newpost', methods=['GET', 'POST'])
