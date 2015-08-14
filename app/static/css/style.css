@@ -124,6 +124,10 @@ ul > h10 {
 	position: relative;
 }
 
+.section #moderate-comments {
+	margin-bottom: 20px;
+}
+
 #newpost {
 	margin-top: 40px;
 	margin-left: 40px;
