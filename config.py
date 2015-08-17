@@ -14,8 +14,8 @@ class Config:
     FLASKY_MAIL_SENDER = 'Admin <tangbrandon1@gmail.com>'
     ADMIN = os.environ.get('ADMIN') or 'tangbrandon1@gmail.com'
     ADMIN2 = os.environ.get('ADMIN2') or 'tangbrandon2@gmail.com'
-    DIRECTOR = os.environ.get('DIRECTOR') or 'tangbrandon96@gmail.com'
-    DIRECTOR2 = os.environ.get('DIRECTOR2') or 'tangbrandon1996@gmail.com'
+    DIRECTOR = os.environ.get('DIRECTOR') or 'brandontang1@gmail.com'
+    DIRECTOR2 = os.environ.get('DIRECTOR2') or 'brandontang2@gmail.com'
     EMPLOYEE = os.environ.get('EMPLOYEE')
     POSTS_PER_PAGE = 5
     COMMENTS_PER_PAGE = 10
