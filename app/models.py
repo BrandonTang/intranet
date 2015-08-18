@@ -82,11 +82,11 @@ class User(UserMixin, db.Model):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email == current_app.config['ADMIN']:
+            if self.email == current_app.config['ADMIN1']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.email == current_app.config['ADMIN2']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
-            if self.email == current_app.config['DIRECTOR']:
+            if self.email == current_app.config['DIRECTOR1']:
                 self.role = Role.query.filter_by(permissions=14).first()
             if self.email == current_app.config['DIRECTOR2']:
                 self.role = Role.query.filter_by(permissions=14).first()

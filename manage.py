@@ -10,10 +10,10 @@ from flask.ext.sqlalchemy import SQLAlchemy
 # app = Flask(__name__)
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config['ADMIN1'] = os.environ['ADMINISTRATOR_1']
-app.config['ADMIN2'] = os.environ['ADMINISTRATOR_2']
-app.config['DIR1'] = os.environ['DIRECTOR_1']
-app.config['DIR2'] = os.environ['DIRECTOR_2']
+app.config['ADMIN1'] = os.environ['ADMIN1']
+app.config['ADMIN2'] = os.environ['ADMIN2']
+app.config['DIRECTOR1'] = os.environ['DIRECTOR1']
+app.config['DIRECTOR2'] = os.environ['DIRECTOR2']
 db = SQLAlchemy(app)
 manager = Manager(app)
 migrate = Migrate(app, db)
