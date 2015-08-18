@@ -28,15 +28,27 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://root:@localhost/intranet'
+    ADMIN1 = 'tangbrandon1@gmail.com'
+    ADMIN2 = 'tangbrandon2@gmail.com'
+    DIR1 = 'brandontang1@gmail.com'
+    DIR2 = 'brandontang2@gmail.com'
 
 
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://root@localhost/intranet'
+    ADMIN1 = 'tangbrandon1@gmail.com'
+    ADMIN2 = 'tangbrandon2@gmail.com'
+    DIR1 = 'brandontang1@gmail.com'
+    DIR2 = 'brandontang2@gmail.com'
 
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'postgresql://root@localhost/intranet'
+    ADMIN1 = 'tangbrandon1@gmail.com'
+    ADMIN2 = 'tangbrandon2@gmail.com'
+    DIR1 = 'brandontang1@gmail.com'
+    DIR2 = 'brandontang2@gmail.com'
 
 
 config = {
