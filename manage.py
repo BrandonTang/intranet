@@ -13,6 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 manager = Manager(app)
 migrate = Migrate(app, db)
+s3 = S3Client(os.environ['ADMIN1'], os.environ['ADMIN2'], os.environ['DIRECTOR1'], os.environ['DIRECTOR2'])
 
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role, Post=Post, Tag=Tag, PostTag=PostTag, Comment=Comment)
