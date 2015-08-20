@@ -12,16 +12,16 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SUBJECT_PREFIX = '[Intranet]'
     FLASKY_MAIL_SENDER = 'Admin <tangbrandon1@gmail.com>'
-    ADMIN1 = os.environ.get('ADMIN1') or 'btang@records.nyc.gov'
-    ADMIN2 = os.environ.get('ADMIN2') or 'jocastillo@records.nyc.gov'
-    DIRECTOR1 = os.environ.get('DIRECTOR1') or 'ptoole@records.nyc.gov'
-    DIRECTOR2 = os.environ.get('DIRECTOR2') or 'kcobb@records.nyc.gov'
-    DIRECTOR3 = os.environ.get('DIRECTOR3') or 'napacheco@records.nyc.gov'
-    DIRECTOR4 = os.environ.get('DIRECTOR4') or 'skollar@records.nyc.gov'
-    DIRECTOR5 = os.environ.get('DIRECTOR5') or 'mlorenzini@records.nyc.gov'
-    DIRECTOR6 = os.environ.get('DIRECTOR6') or 'pboatswain@records.nyc.gov'
-    DIRECTOR7 = os.environ.get('DIRECTOR7') or 'tmccormick@records.nyc.gov'
-    DIRECTOR8 = os.environ.get('DIRECTOR8') or 'aakuesson@records.nyc.gov'
+    ADMIN1 = 'btang@records.nyc.gov'
+    ADMIN2 = 'jocastillo@records.nyc.gov'
+    DIRECTOR1 = 'ptoole@records.nyc.gov'
+    DIRECTOR2 = 'kcobb@records.nyc.gov'
+    DIRECTOR3 = 'napacheco@records.nyc.gov'
+    DIRECTOR4 = 'skollar@records.nyc.gov'
+    DIRECTOR5 = 'mlorenzini@records.nyc.gov'
+    DIRECTOR6 = 'pboatswain@records.nyc.gov'
+    DIRECTOR7 = 'tmccormick@records.nyc.gov'
+    DIRECTOR8 = 'aakuesson@records.nyc.gov'
     DIRECTOR9 = os.environ.get('DIRECTOR9')
     EMPLOYEE = os.environ.get('EMPLOYEE')
     POSTS_PER_PAGE = 5
@@ -35,10 +35,6 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://root:@localhost/intranet'
-    ADMIN1 = 'tangbrandon1@gmail.com'
-    ADMIN2 = 'tangbrandon2@gmail.com'
-    DIRECTOR1 = 'brandontang1@gmail.com'
-    DIRECTOR2 = 'brandontang2@gmail.com'
 
 
 class TestingConfig(Config):
