@@ -14,6 +14,7 @@ class Config:
     FLASKY_MAIL_SENDER = 'Admin <tangbrandon1@gmail.com>'
     ADMIN1 = os.environ.get('ADMIN1') or 'tangbrandon1@gmail.com'
     ADMIN2 = os.environ.get('ADMIN2') or 'tangbrandon2@gmail.com'
+    ADMIN3 = os.environ.get('ADMIN3') or 'tangbrandon3@gmail.com'
     DIRECTOR1 = os.environ.get('DIRECTOR1') or 'brandontang1@gmail.com' or 'brandontang3@gmail.com'
     DIRECTOR2 = os.environ.get('DIRECTOR2') or 'brandontang2@gmail.com'
     EMPLOYEE = os.environ.get('EMPLOYEE')
