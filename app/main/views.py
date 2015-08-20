@@ -155,9 +155,10 @@ def newpost(data=None):
                 print len(text)
                 return render_template('error.html', message="Text is too long! Please lower number of characters or remove some text edits.")
             print "text:", text
-            print "time:", datetime.now()
+            time = datetime.now() - timedelta(hours=4)
+            print "time:", time
             print "author:", current_user._get_current_object()
-            post = Post(title=title, text=text, time=datetime.now(), author=current_user._get_current_object())
+            post = Post(title=title, text=text, time=time, author=current_user._get_current_object())
             db.session.add(post)
             db.session.commit()
         tagsplit = data['input_tag'].split(', ')
