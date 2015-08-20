@@ -151,7 +151,7 @@ def newpost(data=None):
             text = data['editor1']
             textLength = len(text)
             print textLength
-            if len(text) > 3000:
+            if len(text) > 8000:
                 print len(text)
                 return render_template('error.html', message="Text is too long! Please lower number of characters or remove some text edits.")
             print "text:", text
