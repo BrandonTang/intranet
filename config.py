@@ -19,6 +19,7 @@ class Config:
     ADMIN4 = 'tangbrandon4@gmail.com'
     ADMIN5 = os.environ.get('ADMIN5')
     ADMIN6 = os.environ.get('ADMIN6') or 'tangbrandon6@gmail.com'
+    ADMINLIST = 'tangbrandon7@gmail.com' or 'tangbrandon8@gmail.com'
     DIRECTOR1 = os.environ.get('DIRECTOR1') or 'brandontang1@gmail.com' or 'brandontang3@gmail.com'
     DIRECTOR2 = os.environ.get('DIRECTOR2') or 'brandontang2@gmail.com'
     EMPLOYEE = os.environ.get('EMPLOYEE')
