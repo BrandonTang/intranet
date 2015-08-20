@@ -88,19 +88,23 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.email == current_app.config['ADMIN2']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
-            if self.email == current_app.config['ADMIN3']:
-                self.role = Role.query.filter_by(permissions=0xff).first()
-            if self.email == current_app.config['ADMIN4']:
-                self.role = Role.query.filter_by(permissions=0xff).first()
-            if self.email == current_app.config['ADMIN5']:
-                self.role = Role.query.filter_by(permissions=0xff).first()
-            if self.email == current_app.config['ADMIN6']:
-                self.role = Role.query.filter_by(permissions=0xff).first()
-            if self.email == current_app.config['ADMINLIST']:
-                self.role = Role.query.filter_by(permissions=0xff).first()
             if self.email == current_app.config['DIRECTOR1']:
                 self.role = Role.query.filter_by(permissions=14).first()
             if self.email == current_app.config['DIRECTOR2']:
+                self.role = Role.query.filter_by(permissions=14).first()
+            if self.email == current_app.config['DIRECTOR3']:
+                self.role = Role.query.filter_by(permissions=14).first()
+            if self.email == current_app.config['DIRECTOR4']:
+                self.role = Role.query.filter_by(permissions=14).first()
+            if self.email == current_app.config['DIRECTOR5']:
+                self.role = Role.query.filter_by(permissions=14).first()
+            if self.email == current_app.config['DIRECTOR6']:
+                self.role = Role.query.filter_by(permissions=14).first()
+            if self.email == current_app.config['DIRECTOR7']:
+                self.role = Role.query.filter_by(permissions=14).first()
+            if self.email == current_app.config['DIRECTOR8']:
+                self.role = Role.query.filter_by(permissions=14).first()
+            if self.email == current_app.config['DIRECTOR9']:
                 self.role = Role.query.filter_by(permissions=14).first()
             if self.role == current_app.config['EMPLOYEE']:
                 self.role = Role.query.filter_by(permissions=2).first()

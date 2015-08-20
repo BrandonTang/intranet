@@ -12,16 +12,17 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SUBJECT_PREFIX = '[Intranet]'
     FLASKY_MAIL_SENDER = 'Admin <tangbrandon1@gmail.com>'
-
-    ADMIN1 = os.environ.get('ADMIN1') or 'tangbrandon1@gmail.com'
-    ADMIN2 = os.environ.get('ADMIN2') or 'tangbrandon2@gmail.com'
-    ADMIN3 = os.environ.get('ADMIN3') or 'tangbrandon3@gmail.com'
-    ADMIN4 = 'tangbrandon4@gmail.com'
-    ADMIN5 = os.environ.get('ADMIN5')
-    ADMIN6 = os.environ.get('ADMIN6') or 'tangbrandon6@gmail.com'
-    ADMINLIST = 'tangbrandon7@gmail.com' or 'tangbrandon8@gmail.com'
-    DIRECTOR1 = os.environ.get('DIRECTOR1') or 'brandontang1@gmail.com' or 'brandontang3@gmail.com'
-    DIRECTOR2 = os.environ.get('DIRECTOR2') or 'brandontang2@gmail.com'
+    ADMIN1 = os.environ.get('ADMIN1') or 'btang@records.nyc.gov'
+    ADMIN2 = os.environ.get('ADMIN2') or 'jocastillo@records.nyc.gov'
+    DIRECTOR1 = os.environ.get('DIRECTOR1') or 'ptoole@records.nyc.gov'
+    DIRECTOR2 = os.environ.get('DIRECTOR2') or 'kcobb@records.nyc.gov'
+    DIRECTOR3 = os.environ.get('DIRECTOR3') or 'napacheco@records.nyc.gov'
+    DIRECTOR4 = os.environ.get('DIRECTOR4') or 'skollar@records.nyc.gov'
+    DIRECTOR5 = os.environ.get('DIRECTOR5') or 'mlorenzini@records.nyc.gov'
+    DIRECTOR6 = os.environ.get('DIRECTOR6') or 'pboatswain@records.nyc.gov'
+    DIRECTOR7 = os.environ.get('DIRECTOR7') or 'tmccormick@records.nyc.gov'
+    DIRECTOR8 = os.environ.get('DIRECTOR8') or 'aakuesson@records.nyc.gov'
+    DIRECTOR9 = os.environ.get('DIRECTOR9')
     EMPLOYEE = os.environ.get('EMPLOYEE')
     POSTS_PER_PAGE = 5
     COMMENTS_PER_PAGE = 10
