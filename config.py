@@ -12,11 +12,13 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SUBJECT_PREFIX = '[Intranet]'
     FLASKY_MAIL_SENDER = 'Admin <tangbrandon1@gmail.com>'
+
     ADMIN1 = os.environ.get('ADMIN1') or 'tangbrandon1@gmail.com'
     ADMIN2 = os.environ.get('ADMIN2') or 'tangbrandon2@gmail.com'
     ADMIN3 = os.environ.get('ADMIN3') or 'tangbrandon3@gmail.com'
     ADMIN4 = 'tangbrandon4@gmail.com'
     ADMIN5 = os.environ.get('ADMIN5')
+    ADMIN6 = os.environ.get('ADMIN6') or 'tangbrandon6@gmail.com'
     DIRECTOR1 = os.environ.get('DIRECTOR1') or 'brandontang1@gmail.com' or 'brandontang3@gmail.com'
     DIRECTOR2 = os.environ.get('DIRECTOR2') or 'brandontang2@gmail.com'
     EMPLOYEE = os.environ.get('EMPLOYEE')
