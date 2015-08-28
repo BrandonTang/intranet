@@ -399,23 +399,23 @@ def moderate_disable(id):
     post = Comment.query.filter_by(id=id).first().post
     return redirect(url_for('.moderate', id=post.id))
 
-@main.route('/profile', methods=['GET', 'POST'])
-@login_required
-def profile():
-    user = current_user.username
-    role = current_user.role.name
-    email = current_user.email
-    posts = current_user.posts.count()
-    comments = current_user.comments.count()
-    employees = []
-    directors = []
-    for eachuser in User.query.all():
-        if eachuser.role.name == 'Employee':
-            employees.append(eachuser.username)
-        elif eachuser.role.name == 'Director':
-            directors.append(eachuser.username)
-    if request.method == 'POST':
-        selectemployee = request.form.getlist('select_employee')
-        selectdirector = request.form.getlist('select_director')
-    return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
-        employees=employees, directors=directors)
+# @main.route('/profile', methods=['GET', 'POST'])
+# @login_required
+# def profile():
+#     user = current_user.username
+#     role = current_user.role.name
+#     email = current_user.email
+#     posts = current_user.posts.count()
+#     comments = current_user.comments.count()
+#     employees = []
+#     directors = []
+#     for eachuser in User.query.all():
+#         if eachuser.role.name == 'Employee':
+#             employees.append(eachuser.username)
+#         elif eachuser.role.name == 'Director':
+#             directors.append(eachuser.username)
+#     if request.method == 'POST':
+#         selectemployee = request.form.getlist('select_employee')
+#         selectdirector = request.form.getlist('select_director')
+#     return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
+#         employees=employees, directors=directors)
