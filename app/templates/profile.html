@@ -13,7 +13,9 @@
     	Name: {{ user }}<br>
     	Role: {{ role }}<br>
     	Email: {{ email }}<br>
+    	{% if role == 'Administrator' or role == 'Director' %}
     	Number of Posts: {{ posts }}<br>
+    	{% endif %}
     	Number of Comments: {{ comments }}
     </h4>
     {% if role == 'Administrator' or role == 'Director' %}
