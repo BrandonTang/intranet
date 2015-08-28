@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Profile{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h2>User Profile</h2>
+</div>
+<div id="page-body">
+    <h4>
+    	Name: {{ user }}<br>
+    	Role: {{ role }}<br>
+    	Email: {{ email }}<br>
+    	Number of Posts: {{ posts }}<br>
+    	Number of Comments: {{ comments }}
+    </h4>
+    {% if role == 'Administrator' or role == 'Director' %}
+    <h4>Employee Role Change to Director</h4>
+    <div class="control-group">
+    	<form name="input" class="form-horizontal" id="changeRole" method="post">
+	    	<select name="select_employee" class="ui dropdown">
+		    	<option value="">Employees</option>
+				{% for employee in employees %}
+		    	<option value="{{ employee }}">{{ employee }}</option>
+		    	{% endfor %}
+	    	</select>
+    	<div id="requestButton" class="control-group">
+        	<div>
+            	<button type="submit" title="submit_employee_role" class="ui button">Submit</button>
+        	</div>
+    	</div>
+    	</form>
+    </div>
+    {% endif %}
+	{% if role == 'Administrator' %}
+    <h4>Director Role Change to Administrator</h4>
+    <div class="control-group">
+    	<form name="input" class="form-horizontal" id="changeRole" method="post">
+	    	<select name="select_director" class="ui dropdown">
+		    	<option value="">Directors</option>
+				{% for director in directors %}
+		    	<option value="{{ director }}">{{ director }}</option>
+		    	{% endfor %}
+	    	</select>
+    	<div id="requestButton" class="control-group">
+        	<div>
+            	<button type="submit" title="submit_director_role" class="ui button">Submit</button>
+        	</div>
+    	</div>
+    	</form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/semantic.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/semantic.min.js') }}"></script>
+<script type="text/javascript">
+$('.ui.dropdown')
+  .dropdown()
+;
+</script>
+{% endblock %}
