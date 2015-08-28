@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-
 {% block title %}Intranet{% endblock %}
-
 {% import "_macros.html" as macros %}
 
 <div class="section">
@@ -18,7 +16,7 @@
                         <option value="title">Title</option>
                         <option value="text">Text</option>
                     </select>
-            </div>
+                </div>
             </div>
             <div class="control-group">
 	        <select name="select_tags" class="ui fluid search dropdown" multiple="" >
@@ -26,7 +24,7 @@
 			    {% for tag in allTags %}
 			    <option value="{{ tag.name }}">{{ tag.name }}</option>
 			    {% endfor %}
-		      </select>
+		    </select>
             </div>
             <div id="requestButton" class="control-group">
                 <div>
@@ -60,5 +58,4 @@ $('.ui.dropdown')
   .dropdown()
 ;
 </script>
-
 {% endblock %}
