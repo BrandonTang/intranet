@@ -68,17 +68,17 @@ class User(UserMixin, db.Model):
             (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
-        print "is_administrator:", self.can(Permission.ADMINISTER)
-        print "self.email:", self.email
+        # print "is_administrator:", self.can(Permission.ADMINISTER)
+        # print "self.email:", self.email
         return self.can(Permission.ADMINISTER)
 
     def is_director(self):
-        print "is_director:", self.can(Permission.COMMENT) and self.can(Permission.WRITE_ARTICLES) and self.can(Permission.MODERATE_COMMENTS)
-        print "self.email:", self.email
+        # print "is_director:", self.can(Permission.COMMENT) and self.can(Permission.WRITE_ARTICLES) and self.can(Permission.MODERATE_COMMENTS)
+        # print "self.email:", self.email
         return self.can(Permission.COMMENT) and self.can(Permission.WRITE_ARTICLES) and self.can(Permission.MODERATE_COMMENTS)
 
     def is_employee(self):
-        print "is_employee:", self.can(Permission.COMMENT)
+        # print "is_employee:", self.can(Permission.COMMENT)
         return self.can(Permission.COMMENT)
 
     def __init__(self, **kwargs):

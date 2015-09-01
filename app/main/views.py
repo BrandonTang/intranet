@@ -417,5 +417,24 @@ def profile():
     if request.method == 'POST':
         selectemployee = request.form.getlist('select_employee')
         selectdirector = request.form.getlist('select_director')
+        if selectemployee == '':
+            if selectdirector == '':
+                return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
+                    employees=employees, directors=directors)
+        else:
+            for employee in selectemployee:
+                for user in User.query.all():
+                    if employee == user.username:
+                        print "user:", user.role
+                        user.role = Role.query.filter_by(permissions=14).first()
+                        print "user:", user.role
+            for director in selectdirector:
+                for user in User.query.all():
+                    if director == user.username:
+                        print "user:", user.role
+                        user.role = Role.query.filter_by(permissions=0xff).first()
+                        print "user:", user.role
+            return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
+                    employees=employees, directors=directors)
     return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
         employees=employees, directors=directors)
