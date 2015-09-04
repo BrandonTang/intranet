@@ -28,6 +28,10 @@ def index():
             name = Tag.query.filter_by(id=tag.tag_id).first().name
             tags.append([tag.tag_id, name])
         page_posts.append([id, title, time, text, comments, tags, author])
+    for page_post in page_posts:
+        for tag in page_post[5]:
+            if tag[1] == "#sticky":
+                page_posts.insert(0, page_posts.pop(page_posts.index(page_post)))
     if request.method == 'POST':
         page_posts = []
         searchterm = request.form.get('search_term')
