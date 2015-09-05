@@ -256,6 +256,7 @@ ul > h10 {
 }
 
 #comment-body {
+	margin-top: 20px;
 	margin-bottom: 100px;
 }
 
@@ -271,6 +272,11 @@ ul > h10 {
 	margin-top: 10px;
 }
 
+#comment-body h4 .well{
+	margin-bottom: -5px;
+}
+
 #page-body > form > .lead > .control-group > .input_title {
 	width: 100%;
 }
+
