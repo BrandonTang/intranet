@@ -18,6 +18,12 @@
             </div>
         {% endif %}
         </h4>
+        <a href="{{ url_for('.edit_comment', id=comment.id) }}">
+            <span class="label label-primary">Edit</span>
+        </a>
+        <a href="{{ url_for('.delete_comment', id=comment.id) }}">
+            <span class="label label-danger">Delete</span>
+        </a>
     {% endif %}
 {% if moderate %}
     {% if comment.disabled %}
@@ -27,11 +33,6 @@
     <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable',
         id=comment.id, page=page) }}">Disable</a>
     {% endif %}
-<!--     {% if current_user.is_administrator() %}
-        <a href="{{ url_for('.edit_comment', id=comment.post_id) }}">
-            <span class="label label-primary">Edit [Admin]</span>
-        </a>
-    {% endif %} -->
 {% endif %}
 {% endfor %}
 </div>

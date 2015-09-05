@@ -260,21 +260,6 @@ def tag(tag):
         page_posts.append([id, title, time, text, comments, tags, author])
     return render_template('tagged_posts.html', page_posts=page_posts)
 
-@main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])
-@login_required
-def edit_comment(id):
-    comment = Comment.query.get_or_404(id)
-    form = CommentForm()
-    if current_user != comment.author and not current_user.can(Permission.COMMENT):
-        abort(403)
-    if form.validate_on_submit():
-        comment.body = form.body.data
-        db.session.add(comment)
-        db.session.commit()
-        flash('The comment has been updated.')
-    form.body.data = comment.body
-    return render_template('edit_comment.html', form=form, comment=comment)
-
 @main.route('/edit/post/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
@@ -442,3 +427,32 @@ def profile():
                     employees=employees, directors=directors)
     return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
         employees=employees, directors=directors)
+
+@main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_comment(id):
+    comment = Comment.query.get_or_404(id)
+    form = CommentForm()
+    if current_user != comment.author and not current_user.can(Permission.COMMENT):
+        abort(403)
+    if form.validate_on_submit():
+        comment.body = form.body.data
+        db.session.add(comment)
+        db.session.commit()
+        flash('The comment has been updated.')
+    form.body.data = comment.body
+    return render_template('edit_comment.html', form=form, comment=comment)
+
+@main.route('/delete/comment/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_comment(id):
+    comment = Comment.query.get_or_404(id)
+    if current_user != comment.author and not current_user.can(Permission.COMMENT):
+        abort(403)
+    form = DeleteForm()
+    if form.validate_on_submit():
+        db.session.delete(comment)
+        db.session.commit()
+        flash('The comment has been deleted.')
+        return redirect(url_for('.index'))
+    return render_template('delete_comment.html', form=form)
