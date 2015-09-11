@@ -439,7 +439,9 @@ def edit_comment(id):
         comment.body = form.body.data
         db.session.add(comment)
         db.session.commit()
+        print "comment.post_id:", comment.post_id
         flash('The comment has been updated.')
+        return redirect(url_for('.post', id=comment.post_id))
     form.body.data = comment.body
     return render_template('edit_comment.html', form=form, comment=comment)
 
