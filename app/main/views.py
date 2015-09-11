@@ -444,7 +444,10 @@ def edit_comment(id):
     if current_user != comment.author and not current_user.can(Permission.COMMENT):
         abort(403)
     if form.validate_on_submit():
-        comment.body = form.body.data
+        if "[Edited]" not in form.body.data:
+            comment.body = "[Edited] " + form.body.data
+        else:
+            comment.body = form.body.data
         db.session.add(comment)
         db.session.commit()
         flash('The comment has been updated.')
