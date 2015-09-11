@@ -53,6 +53,22 @@
     	</div>
     	</form>
     </div>
+    <h4>Delete Account</h4>
+    <div class="control-group">
+        <form name="input" class="form-horizontal" id="deleteAccount" method="post">
+            <select name="select_account" class="ui dropdown">
+                <option value="">Accounts</option>
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        <div id="requestButton" class="control-group">
+            <div>
+                <button type="submit" title="submit_director_role" class="ui button">Submit</button>
+            </div>
+        </div>
+        </form>
+    </div>
     {% endif %}
 </div>
 {% endblock %}

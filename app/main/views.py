@@ -391,6 +391,7 @@ def moderate_disable(id):
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    users = User.query.all()
     user = current_user.username
     role = current_user.role.name
     email = current_user.email
@@ -406,10 +407,12 @@ def profile():
     if request.method == 'POST':
         selectemployee = request.form.getlist('select_employee')
         selectdirector = request.form.getlist('select_director')
+        selectuser = request.form.getlist('select_account')
         if selectemployee == '':
             if selectdirector == '':
-                return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
-                    employees=employees, directors=directors)
+                if selectuser == '':
+                    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
+                        employees=employees, directors=directors)
         else:
             for employee in selectemployee:
                 for user in User.query.all():
@@ -423,9 +426,14 @@ def profile():
                         print "user:", user.role
                         user.role = Role.query.filter_by(permissions=0xff).first()
                         print "user:", user.role
-            return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
+            for id in selectuser:
+                print id
+                account = User.query.get_or_404(id)
+                db.session.delete(account)
+                db.session.commit()
+            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
                     employees=employees, directors=directors)
-    return render_template('profile.html', user=user, role=role, email=email, posts=posts, comments=comments, 
+    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
         employees=employees, directors=directors)
 
 @main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])
@@ -439,7 +447,6 @@ def edit_comment(id):
         comment.body = form.body.data
         db.session.add(comment)
         db.session.commit()
-        print "comment.post_id:", comment.post_id
         flash('The comment has been updated.')
         return redirect(url_for('.post', id=comment.post_id))
     form.body.data = comment.body
