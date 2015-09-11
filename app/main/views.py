@@ -459,12 +459,12 @@ def edit_comment(id):
 @login_required
 def delete_comment(id):
     comment = Comment.query.get_or_404(id)
+    form = DeleteForm()
     if current_user != comment.author and not current_user.can(Permission.COMMENT):
         abort(403)
-    form = DeleteForm()
     if form.validate_on_submit():
         db.session.delete(comment)
         db.session.commit()
         flash('The comment has been deleted.')
-        return redirect(url_for('.index'))
-    return render_template('delete_comment.html', form=form)
+        return redirect(url_for('.post', id=comment.post_id))
+    return render_template('delete_comment.html', form=form, comment=comment)
