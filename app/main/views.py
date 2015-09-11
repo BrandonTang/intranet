@@ -134,6 +134,7 @@ def index():
         return render_template('tagged_posts.html', page_posts=page_posts_without_duplicates)
     return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags)
 
+
 @main.route('/newpost', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.WRITE_ARTICLES)
@@ -190,6 +191,7 @@ def newpost(data=None):
         return redirect(url_for('.index'))
     return render_template('new_post.html', tagList=tagList)
 
+
 @main.route('/post/<int:id>', methods=['GET', 'POST'])
 def post(id):
     post = Post.query.get_or_404(id)
@@ -230,6 +232,7 @@ def post(id):
     return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments,
                            comments=comments, pagination=pagination, page_posts=page_posts)
 
+
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
 def tag(tag):
     page_posts = []
@@ -259,6 +262,7 @@ def tag(tag):
             tags.append([tag.tag_id, name])
         page_posts.append([id, title, time, text, comments, tags, author])
     return render_template('tagged_posts.html', page_posts=page_posts)
+
 
 @main.route('/edit/post/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -324,6 +328,7 @@ def edit(id):
         return redirect(url_for('.post', id=post.id))
     return render_template('edit_post.html', post=post, tagList=tagList, previousTagString=previousTagString)
 
+
 @main.route('/delete/post/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete(id):
@@ -344,17 +349,21 @@ def delete(id):
         return redirect(url_for('.index'))
     return render_template('delete_post.html', form=form)
 
+
 @main.route('/mis')
 def mis():
     return render_template('mis.html')
+
 
 @main.route('/lmt')
 def lmt():
     return render_template('lmt.html')
 
+
 @main.route('/error', methods=['GET', 'POST'])
 def error():
     return render_template('error.html')
+
 
 @main.route('/moderate/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -368,6 +377,7 @@ def moderate(id):
     allComments.reverse()
     return render_template('moderate.html', allComments=allComments)
 
+
 @main.route('/moderate/enable/<int:id>')
 @login_required
 @permission_required(Permission.MODERATE_COMMENTS)
@@ -378,6 +388,7 @@ def moderate_enable(id):
     post = Comment.query.filter_by(id=id).first().post
     return redirect(url_for('.moderate', id=post.id))
 
+
 @main.route('/moderate/disable/<int:id>')
 @login_required
 @permission_required(Permission.MODERATE_COMMENTS)
@@ -387,6 +398,7 @@ def moderate_disable(id):
     db.session.add(comment)
     post = Comment.query.filter_by(id=id).first().post
     return redirect(url_for('.moderate', id=post.id))
+
 
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -436,6 +448,7 @@ def profile():
     return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
         employees=employees, directors=directors)
 
+
 @main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_comment(id):
@@ -454,6 +467,7 @@ def edit_comment(id):
         return redirect(url_for('.post', id=comment.post_id))
     form.body.data = comment.body
     return render_template('edit_comment.html', form=form, comment=comment)
+
 
 @main.route('/delete/comment/<int:id>', methods=['GET', 'POST'])
 @login_required
