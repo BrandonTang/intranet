@@ -21,10 +21,14 @@ Markdown==2.6.2
 MarkupSafe==0.18
 mysql-connector-python==2.0.4
 MySQL-python==1.2.5
+oauthlib==1.0.3
 optional-django==0.1.0
 psycopg2==2.6.1
+requests==2.9.1
+requests-oauthlib==0.6.0
 six==1.9.0
 SQLAlchemy==0.8.4
+tweepy==3.5.0
 Werkzeug==0.9.6
 wheel==0.24.0
 WTForms==1.0.5
