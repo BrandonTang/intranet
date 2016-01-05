@@ -6,6 +6,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/selectize.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.min.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='nycgov.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='nycgov.ico') }}" type="image/x-icon">
@@ -46,17 +48,26 @@
         <li><a href="https://prod.citytime.nycnet/">CityTime</a></li>
         <li><a href="http://timeclock.records.nycnet/timeclock/">TimeClock</a></li>
         <li><a href="https://hrb.nycaps.nycnet/">NYCAPS</a></li>
-        <li><a href="http://www1.nyc.gov/site/olr/index.page/">OLR</a></li>
-        <li><a href="https://www.nycers.org/(S(5q1h533sz52syq45qiawxg55))/index.aspx/">NYCERS</a></li>
-        <li><a href="http://www.nyc.gov/html/dcas/html/employees/psbhome.shtml/">PSBs</a></li>
-        <li><a href="{{ url_for('main.mis') }}">MIS</a></li>
-        <li><a href="{{ url_for('main.lmt') }}">LMT</a></li>
-        <li><a href="{{ url_for('main.agencypolicies') }}">Agency Policies</a></li>
-        <li><a href="https://www.facebook.com/nycrecords?fref=ts/">Facebook</a></li>
-        <li><a href="https://twitter.com/nycrecords/">Twitter</a></li>
-        <li><a href="https://www.youtube.com/user/NYCDeptofRecords/">YouTube</a></li>
-        <li><a href="https://instagram.com/explore/locations/6126741/">Instagram</a></li>
-        <li><a href="http://nycrecords.tumblr.com/">Tumblr</a></li>
+        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Departments</a>
+        <ul class="dropdown-menu">
+            <li><a href="{{ url_for('main.mis') }}">MIS</a></li>
+            <li><a href="{{ url_for('main.lmt') }}">LMT</a></li>
+        </ul>
+        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Employee Info</a>
+        <ul class="dropdown-menu">
+            <li><a href="http://www1.nyc.gov/site/olr/index.page/">OLR</a></li>
+            <li><a href="https://www.nycers.org/(S(m4z1oy554pem3oudryveam55))/index.aspx">NYCERS</a></li>
+            <li><a href="http://www.nyc.gov/html/dcas/html/employees/psbhome.shtml/">PSBs</a></li>
+            <li><a href="{{ url_for('main.agencypolicies') }}">Agency Policies</a></li>
+        </ul>
+        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Social Media</a>
+        <ul class="dropdown-menu">
+            <li><a href="https://www.facebook.com/nycrecords?fref=ts/">Facebook</a></li>
+            <li><a href="https://twitter.com/nycrecords/">Twitter</a></li>
+            <li><a href="https://www.youtube.com/user/NYCDeptofRecords/">YouTube</a></li>
+            <li><a href="https://instagram.com/explore/locations/6126741/">Instagram</a></li>
+            <li><a href="http://nycrecords.tumblr.com/">Tumblr</a></li>
+        </ul>
     </ul>
 </div>
 {% endblock %}
@@ -75,6 +86,10 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src ="https://code.jquery.com/jquery.js"></script>
+<script src ="js/bootstrap.min.js"></script>
 {{ super() }}
 {{ moment.include_moment() }}
 {% endblock %}

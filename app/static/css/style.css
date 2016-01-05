@@ -20,12 +20,12 @@ li a:hover, .page-footer > h3 > a {
 
 .aside {
 	background-color: #62009b;
-	width: 15%;
+	width: 16%;
 	height: 100%;
     float: left;
     position: fixed;
-    margin-top: 77px;
-    padding-top: 10px;
+    margin-top: 75px;
+    padding-top: 1%;
 }
 
 .aside .menu {
@@ -33,15 +33,23 @@ li a:hover, .page-footer > h3 > a {
 }
 
 .aside .menu li {
-	margin: 5px 0px 5px 0px;
+	margin: 10px 0px 5px 0px;
 }
 
+.aside .menu .dropdown {
+	margin: 10px 0px 5px 0px;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+ }
+
 .section {
-	padding: 10px 0px 0px 0px;
-	margin-top: 6%;
+	margin-top: 8%;
 	margin-left: 50px;
 	position: relative;
-	width: 85%;
+	width: 84%;
 	float: right;
 }
 
@@ -119,8 +127,8 @@ ul > h10 {
 }
 
 .section {
-	margin-right: 50px;
-	width: 80%;
+	margin-right: 70px;
+	width: 76%;
 	position: relative;
 }
 
@@ -216,7 +224,8 @@ ul > h10 {
 }
 
 .section .page-header {
-	margin-left: 0px;
+	margin-left: 10px;
+	padding-bottom: 15px;
 }
 
 #page-header {
@@ -283,4 +292,8 @@ ul > h10 {
 #tweets {
 	margin-top: 40px;
 	margin-left: 40px;
+}
+
+.ui {
+	float: right;
 }
