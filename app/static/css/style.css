@@ -50,11 +50,10 @@ li a:hover, .page-footer > h3 > a {
  }
 
 .section {
-	margin-top: 7%;
+	margin-top: 100px;
 	margin-left: 50px;
-	padding-bottom: 7%;
+	padding-bottom: 100px;
 	position: relative;
-	width: 84%;
 	float: right;
 }
 
