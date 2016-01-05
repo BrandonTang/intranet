@@ -15,7 +15,7 @@ li a:hover, .page-footer > h3 > a {
 	position: fixed;
     background-color: #5f2da4;
     width: 100%;
-    z-index: 1;
+    z-index: 2;
 }
 
 .aside {
@@ -229,13 +229,8 @@ ul > h10 {
 }
 
 .section .page-header {
-	margin-left: 10px;
 	margin-top: 15px;
 	padding-bottom: 15px;
-}
-
-#page-header {
-	margin-left: -20px;
 }
 
 .pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus {
