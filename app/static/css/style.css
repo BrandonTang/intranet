@@ -46,8 +46,9 @@ li a:hover, .page-footer > h3 > a {
  }
 
 .section {
-	margin-top: 8%;
+	margin-top: 7%;
 	margin-left: 50px;
+	padding-bottom: 7%;
 	position: relative;
 	width: 84%;
 	float: right;
@@ -292,8 +293,4 @@ ul > h10 {
 #tweets {
 	margin-top: 40px;
 	margin-left: 40px;
-}
-
-.ui {
-	float: right;
 }

@@ -34,7 +34,7 @@
                 {% endif %}
             </ul>
             {% if current_user.is_authenticated() %}
-            <a href="{{ url_for('.profile') }}">
+            <a href="{{ url_for('main.profile') }}">
                 <div id="showuser"><h12>{{ current_user.username }}</h12></div>
             </a>
             {% endif %}
