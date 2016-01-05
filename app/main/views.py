@@ -16,6 +16,14 @@ def index():
     posts = pagination.items
     allTags = Tag.query.all()
     page_posts = []
+    consumer_key = 'kRRG89udi3NjDmJ9rGSfp957W'
+    consumer_secret = 'WhqecA6jBvSXLOJG2vlKGCIdFyW0ECkm4ld8619qQoXvXUedlG'
+    auth_token = '2279694055-fXD7BC316kjMjeVsI0BtaAxEpbRbCFbq3ZdnxAt'
+    auth_secret = 'cnwWy7WbZ5cCcOqSHonfQVgQkmhNCvFth80utqfhsb2Qn'
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(auth_token, auth_secret)
+    api = tweepy.API(auth)
+    recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
     for post in posts:
         id = post.id
         title = post.title
@@ -133,14 +141,6 @@ def index():
             if page_post not in page_posts_without_duplicates:
                 page_posts_without_duplicates.append(page_post)
         return render_template('tagged_posts.html', page_posts=page_posts_without_duplicates)
-    consumer_key = 'kRRG89udi3NjDmJ9rGSfp957W'
-    consumer_secret = 'WhqecA6jBvSXLOJG2vlKGCIdFyW0ECkm4ld8619qQoXvXUedlG'
-    auth_token = '2279694055-fXD7BC316kjMjeVsI0BtaAxEpbRbCFbq3ZdnxAt'
-    auth_secret = 'cnwWy7WbZ5cCcOqSHonfQVgQkmhNCvFth80utqfhsb2Qn'
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(auth_token, auth_secret)
-    api = tweepy.API(auth)
-    recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
     return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags, recent_tweet=recent_tweet)
 
 
