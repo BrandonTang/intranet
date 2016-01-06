@@ -25,7 +25,7 @@ def index():
     api = tweepy.API(auth)
     recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
     for tweet in recent_tweet:
-        tweet_datetime = (tweet.created_at - timedelta(hours=5)).strftime('%m/%d/%Y %I:%M%p')
+        tweet_datetime = (tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p')
     for post in posts:
         id = post.id
         title = post.title
