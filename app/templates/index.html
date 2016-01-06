@@ -19,12 +19,12 @@
                 </div>
             </div>
             <div class="control-group">
-	        <select name="select_tags" class="ui fluid search dropdown" multiple="" >
-			    <option value="">Tag Filter</option>
-			    {% for tag in allTags %}
-			    <option value="{{ tag.name }}">{{ tag.name }}</option>
-			    {% endfor %}
-		    </select>
+            <select name="select_tags" class="ui fluid search dropdown" multiple="" >
+                <option value="">Tag Filter</option>
+                {% for tag in allTags %}
+                <option value="{{ tag.name }}">{{ tag.name }}</option>
+                {% endfor %}
+            </select>
             </div>
             <div id="requestButton" class="control-group">
                 <div>
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </form>
-	</div>
+    </div>
 </div>
 
 {% if pagination.page == 1 %}
@@ -70,8 +70,8 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/semantic.min.js') }}"></script>
 <script type="text/javascript">
 $('.ui.dropdown')
-  .dropdown()
-;
-$('.dropdown-toggle').dropdown()
+    .dropdown();
+$('.dropdown-toggle')
+    .dropdown();
 </script>
 {% endblock %}
