@@ -20,7 +20,7 @@ li a:hover, .page-footer > h3 > a {
 
 .aside {
 	background-color: #5f2da4;
-	width: 16%;
+	width: 200px;
 	height: 100%;
     float: left;
     position: fixed;
@@ -51,10 +51,9 @@ li a:hover, .page-footer > h3 > a {
 
 .section {
 	margin-top: 100px;
-	margin-left: 50px;
+	margin-left: 225px;
 	padding-bottom: 100px;
-	position: relative;
-	float: right;
+	float: left;
 }
 
 .section h6 {
