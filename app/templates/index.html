@@ -34,6 +34,8 @@
         </form>
 	</div>
 </div>
+
+{% if pagination.page == 1 %}
 <div id="tweets">
     <h1>Twitter Ticker</h1>
     {% for tweet in recent_tweet %}
@@ -43,20 +45,23 @@
     {% endfor %}
     <br>
 </div>
+{% endif %}
+
 <div id="page-body">
     {% include '_posts.html' %}
 </div>
+
 <div id="newpost">
     {% if current_user.is_administrator() or current_user.is_director() %}
     <h3><a href="{{ url_for('main.newpost') }}">Add Post</a></h3>
     {% endif %}
 </div>
+
 <div id="pagination">
     {{ macros.pagination_widget(pagination, '.index') }}
 </div>
 </div>
 {% endblock %}
-</div>
 
 {% block scripts %}
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.10.2.min.js') }}"></script>
