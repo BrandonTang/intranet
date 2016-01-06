@@ -24,6 +24,8 @@ def index():
     auth.set_access_token(auth_token, auth_secret)
     api = tweepy.API(auth)
     recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
+    for tweet in recent_tweet:
+        tweet_datetime = (tweet.created_at - timedelta(hours=5)).strftime('%m/%d/%Y %I:%M%p')
     for post in posts:
         id = post.id
         title = post.title
@@ -141,7 +143,7 @@ def index():
             if page_post not in page_posts_without_duplicates:
                 page_posts_without_duplicates.append(page_post)
         return render_template('tagged_posts.html', page_posts=page_posts_without_duplicates)
-    return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags, recent_tweet=recent_tweet)
+    return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags, recent_tweet=recent_tweet, tweet_datetime=tweet_datetime)
 
 
 @main.route('/newpost', methods=['GET', 'POST'])

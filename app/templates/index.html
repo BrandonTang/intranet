@@ -41,7 +41,7 @@
     <div class="well">
     {% for tweet in recent_tweet %}
         @{{ tweet.user.screen_name }}<br>
-        {{ tweet.created_at }}<br>
+        {{ tweet_datetime }}<br>
         {{ tweet.text }}<br>
     {% endfor %}
 </div>
