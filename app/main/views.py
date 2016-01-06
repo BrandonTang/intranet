@@ -60,7 +60,7 @@ def index():
                         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                         text = post.text
                         comments = post.comments.count()
-                        author = post.author
+                        author = ' '.join((post.author.username).split('_'))
                         postTag = PostTag.query.filter_by(post_id=post.id).all()
                         tags = []
                         for tag in postTag:
@@ -73,7 +73,7 @@ def index():
                         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                         text = post.text
                         comments = post.comments.count()
-                        author = post.author
+                        author = ' '.join((post.author.username).split('_'))
                         postTag = PostTag.query.filter_by(post_id=post.id).all()
                         tags = []
                         for tag in postTag:
@@ -88,7 +88,7 @@ def index():
                         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                         text = post.text
                         comments = post.comments.count()
-                        author = post.author
+                        author = ' '.join((post.author.username).split('_'))
                         postTag = PostTag.query.filter_by(post_id=post.id).all()
                         tags = []
                         for tag in postTag:
@@ -103,7 +103,7 @@ def index():
                         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                         text = post.text
                         comments = post.comments.count()
-                        author = post.author
+                        author = ' '.join((post.author.username).split('_'))
                         postTag = PostTag.query.filter_by(post_id=post.id).all()
                         tags = []
                         for tag in postTag:
@@ -131,7 +131,7 @@ def index():
                 time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                 text = post.text
                 comments = post.comments.count()
-                author = post.author
+                author = ' '.join((post.author.username).split('_'))
                 postTag = PostTag.query.filter_by(post_id=post.id).all()
                 tags = []
                 for tag in postTag:
@@ -212,7 +212,7 @@ def post(id):
     time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
     text = post.text
     comments = post.comments.count()
-    author = post.author
+    author = ' '.join((post.author.username).split('_'))
     postTag = PostTag.query.filter_by(post_id=post.id).all()
     tags = []
     for tag in postTag:
@@ -265,7 +265,7 @@ def tag(tag):
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
         text = post.text
         comments = post.comments.count()
-        author = post.author
+        author = ' '.join((post.author.username).split('_'))
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
