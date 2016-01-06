@@ -32,7 +32,9 @@ def index():
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
         text = post.text
         comments = post.comments.count()
-        author = post.author
+        author = post.author.username
+        author = ' '.join(str(author).split('_'))
+        print author
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
