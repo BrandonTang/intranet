@@ -38,12 +38,13 @@
 {% if pagination.page == 1 %}
 <div id="tweets">
     <h1>Twitter Ticker</h1>
+    <div class="well">
     {% for tweet in recent_tweet %}
         @{{ tweet.user.screen_name }}<br>
         {{ tweet.created_at }}<br>
         {{ tweet.text }}<br>
     {% endfor %}
-    <br>
+</div>
 </div>
 {% endif %}
 

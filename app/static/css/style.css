@@ -292,4 +292,9 @@ ul > h10 {
 #tweets {
 	margin-top: 40px;
 	margin-left: 40px;
+	color: #5f2da4;
+}
+
+#tweets .well {
+	margin-right: 40px;
 }
