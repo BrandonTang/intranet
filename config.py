@@ -24,6 +24,7 @@ class Config:
     DIRECTOR8 = 'aakuesson@records.nyc.gov'
     DIRECTOR9 = 'lcjones@records.nyc.gov'
     DIRECTOR10 = 'temccormick@records.nyc.gov'
+    DIRECTOR11 = 'jewilson@records.nyc.gov'
     EMPLOYEE = os.environ.get('EMPLOYEE')
     POSTS_PER_PAGE = 5
     COMMENTS_PER_PAGE = 10

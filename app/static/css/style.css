@@ -154,6 +154,10 @@ li a:hover, .page-footer > h3 > a {
 	margin-left: 30px;
 }
 
+#page-body form .checkbox {
+	margin-left: -20px;
+}
+
 #page-body > form > .lead > .control-group > .input_title {
 	width: 100%;
 }
