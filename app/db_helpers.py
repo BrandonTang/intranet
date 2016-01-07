@@ -12,10 +12,10 @@ def authenticate_login(email, password):
     :return: The user object, if the user is authenticated, otherwise None
     :rtype: User object
     """
-    print "USE_LDAP:"+ str(current_app.config['USE_LDAP'])
+    # print "USE_LDAP:"+ str(current_app.config['USE_LDAP'])
     if current_app.config['USE_LDAP']:
-        print "USE_LDAP"
-        print("Use LDAP: %s" % current_app.config['USE_LDAP'])
+        # print "USE_LDAP"
+        # print("Use LDAP: %s" % current_app.config['USE_LDAP'])
         # # Setup the LDAP Options
         if current_app.config['LDAP_USE_TLS']:
             # Sets up TLS for LDAP connection
@@ -47,15 +47,15 @@ def authenticate_login(email, password):
             try:
                 user_dn, attributes = user_dn[0]
                 authenticated = ctx.bind_s(user_dn, password)
-                print "USER IS IN LDAP: " + str(email)
-                print "AUTHENTICATED:"+ str(authenticated)
+                # print "USER IS IN LDAP: " + str(email)
+                # print "AUTHENTICATED:"+ str(authenticated)
                 return authenticated
             except ldap.INVALID_CREDENTIALS as e:
-                print("User: %s failed to authenticate", email)
+                # print("User: %s failed to authenticate", email)
                 return None
         else:
             user = User.query.filter_by(email=email).first()
-            print("User: %s not found", user)
+            # print("User: %s not found", user)
             return None
         return None
     else:

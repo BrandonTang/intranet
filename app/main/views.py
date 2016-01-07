@@ -14,7 +14,7 @@ from os import environ, pardir
 @main.route('/', methods=['GET', 'POST'])
 def index():
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=int(os.environ.get('POSTS_PER_PAGE')), error_out=False)
     posts = pagination.items
     allTags = Tag.query.all()
     page_posts = []
@@ -110,18 +110,18 @@ def index():
                         page_posts.append([id, title, time, text, comments, tags, author])
         selecttags = request.form.getlist('select_tags')
         for tag in selecttags:
-            print tag
+            # print tag
             tagid = Tag.query.filter_by(name=tag).first().id
-            print "TagID:", tagid
+            # print "TagID:", tagid
             posttags = PostTag.query.filter_by(tag_id=tagid).all()
             posts = []
             for posttag in posttags:
-                print "posttag:", posttag
-                print "posttag.post_id:", posttag.post_id
-                print "Post Query:", Post.query.filter_by(id=posttag.post_id).all()
+                # print "posttag:", posttag
+                # print "posttag.post_id:", posttag.post_id
+                # print "Post Query:", Post.query.filter_by(id=posttag.post_id).all()
                 post = Post.query.filter_by(id=posttag.post_id).first()
                 posts.append(post)
-                print "posts:", posts
+                # print "posts:", posts
             posts.reverse()
             for post in posts:
                 id = post.id
@@ -150,51 +150,51 @@ def index():
 def newpost(data=None):
     tagList = Tag.query.with_entities(Tag.name).all()
     tagList = [r[0].encode('utf-8') for r in tagList]
-    print tagList
+    # print tagList
     if data or request.method == 'POST':
         data = request.form.copy()
         post = Post.query.filter_by(text=data['editor1']).first()
         if data['editor1'] == "":
             return render_template('error.html', message="Please fill out the text!")
         if post is None:
-            print "tags:", len(data['input_tag'])
+            # print "tags:", len(data['input_tag'])
             if data['input_tag'] == '':
                 return render_template('error.html', message="Please include tags!")
             title = data['input_title']
-            print "title:", title
+            # print "title:", title
             text = data['editor1']
             textLength = len(text)
-            print textLength
+            # print textLength
             if len(text) > 8000:
-                print len(text)
+                # print len(text)
                 return render_template('error.html', message="Text is too long! Please lower number of characters or remove some text edits.")
-            print "text:", text
+            # print "text:", text
             time = datetime.now() - timedelta(hours=4)
-            print "time:", time
-            print "author:", current_user._get_current_object()
+            # print "time:", time
+            # print "author:", current_user._get_current_object()
             post = Post(title=title, text=text, time=time, author=current_user._get_current_object())
             db.session.add(post)
             db.session.commit()
         tagsplit = data['input_tag'].split(', ')
         for eachtag in tagsplit:
-            print "eachtag:", eachtag
+            # print "eachtag:", eachtag
             if eachtag not in tagList:
-                print "1"
+                # print "1"
                 newtag = Tag(name=eachtag)
                 db.session.add(newtag)
                 db.session.commit()
                 posttag = PostTag(post_id=post.id, tag_id=newtag.id)
-                print "posttag.post_id:", posttag.post_id
-                print "posttag.tag_id:", posttag.tag_id
+                # print "posttag.post_id:", posttag.post_id
+                # print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
             else:
-                print "2"
+                # print "2"
                 oldtag = Tag.query.filter_by(name=eachtag).first().id
-                print oldtag
+                # print oldtag
                 posttag = PostTag(post_id=post.id, tag_id=oldtag)
-                print "posttag.post_id:", posttag.post_id
-                print "posttag.tag_id:", posttag.tag_id
+                # print "posttag.post_id:", posttag.post_id
+                # print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
         return redirect(url_for('.index'))
@@ -233,9 +233,9 @@ def post(id):
     page = request.args.get('page', 1, type=int)
     if page == -1:
         page = (post.comments.count() - 1) / \
-               current_app.config['COMMENTS_PER_PAGE'] + 1
+               os.environ.get('COMMENTS_PER_PAGE') + 1
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
-        page, per_page=current_app.config['COMMENTS_PER_PAGE'],
+        page, per_page=os.environ.get('COMMENTS_PER_PAGE'),
         error_out=False)
     comments = pagination.items
     return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments,
@@ -246,16 +246,16 @@ def post(id):
 def tag(tag):
     page_posts = []
     tagid = Tag.query.filter_by(name=tag).first().id
-    print "TagID:", tagid
+    # print "TagID:", tagid
     posttags = PostTag.query.filter_by(tag_id=tagid).all()
     posts = []
     for posttag in posttags:
-        print "posttag:", posttag
-        print "posttag.post_id:", posttag.post_id
-        print "Post Query:", Post.query.filter_by(id=posttag.post_id).all()
+        # print "posttag:", posttag
+        # print "posttag.post_id:", posttag.post_id
+        # print "Post Query:", Post.query.filter_by(id=posttag.post_id).all()
         post = Post.query.filter_by(id=posttag.post_id).first()
         posts.append(post)
-        print "posts:", posts
+        # print "posts:", posts
     posts.reverse()
     for post in posts:
         id = post.id
@@ -282,16 +282,16 @@ def edit(id):
     previousTagList = []
     postids = PostTag.query.filter_by(post_id=id).all()
     for postid in postids:
-        print "tag_id:", postid.tag_id
+        # print "tag_id:", postid.tag_id
         tagid = postid.tag_id
-        print "tag_name:", Tag.query.filter_by(id=tagid).first().name
+        # print "tag_name:", Tag.query.filter_by(id=tagid).first().name
         tagname = Tag.query.filter_by(id=tagid).first().name
         previousTagList.append(tagname)
         previousTagString += tagname
         previousTagString += ", "
     previousTagString = previousTagString[:-2]
-    print "previousTagString:", previousTagString
-    print "previousTagList:", previousTagList
+    # print "previousTagString:", previousTagString
+    # print "previousTagList:", previousTagList
     post = Post.query.get_or_404(id)
     if current_user != post.author and not current_user.can(Permission.ADMINISTER):
         abort(403)
@@ -301,36 +301,36 @@ def edit(id):
         post.text = data['editor1']
         db.session.add(post)
         db.session.commit()
-        print "newtags:", data['input_tag']
+        # print "newtags:", data['input_tag']
         tagsplit = data['input_tag'].split(', ')
-        print "tagsplit:", tagsplit
+        # print "tagsplit:", tagsplit
         for eachtag in tagsplit:
-            print "eachtag:", eachtag
+            # print "eachtag:", eachtag
             if eachtag not in tagList:
-                print "1"
+                # print "1"
                 newtag = Tag(name=eachtag)
                 db.session.add(newtag)
                 db.session.commit()
                 posttag = PostTag(post_id=post.id, tag_id=newtag.id)
-                print "posttag.post_id:", posttag.post_id
-                print "posttag.tag_id:", posttag.tag_id
+                # print "posttag.post_id:", posttag.post_id
+                # print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
             elif eachtag not in previousTagList:
-                print "2"
+                # print "2"
                 oldtag = Tag.query.filter_by(name=eachtag).first().id
-                print "oldtag", oldtag
+                # print "oldtag", oldtag
                 posttag = PostTag(post_id=post.id, tag_id=oldtag)
-                print "posttag.post_id:", posttag.post_id
-                print "posttag.tag_id:", posttag.tag_id
+                # print "posttag.post_id:", posttag.post_id
+                # print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
         for eachtag in previousTagList:
             if eachtag not in tagsplit:
-                print "3"
+                # print "3"
                 oldtag = Tag.query.filter_by(name=eachtag).first().id
-                print "oldtag", oldtag
-                print "post_id", post.id
+                # print "oldtag", oldtag
+                # print "post_id", post.id
                 PostTag.query.filter_by(post_id=post.id, tag_id=oldtag).delete()
                 db.session.commit()
         flash('The post has been updated.')
@@ -443,17 +443,17 @@ def profile():
             for employee in selectemployee:
                 for user in User.query.all():
                     if employee == user.username:
-                        print "user:", user.role
+                        # print "user:", user.role
                         user.role = Role.query.filter_by(permissions=14).first()
-                        print "user:", user.role
+                        # print "user:", user.role
             for director in selectdirector:
                 for user in User.query.all():
                     if director == user.username:
-                        print "user:", user.role
+                        # print "user:", user.role
                         user.role = Role.query.filter_by(permissions=0xff).first()
-                        print "user:", user.role
+                        # print "user:", user.role
             for id in selectuser:
-                print id
+                # print id
                 account = User.query.get_or_404(id)
                 db.session.delete(account)
                 db.session.commit()

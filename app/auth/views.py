@@ -14,7 +14,7 @@ def login():
     registration_form = RegistrationForm()
     if form.validate_on_submit():
         user_to_login = authenticate_login(form.email.data, form.password.data)
-        print user_to_login
+        # print user_to_login
         email = None
         if user_to_login:
             if "@" in form.email.data:

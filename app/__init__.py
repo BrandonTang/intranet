@@ -13,8 +13,6 @@ import os
 
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
 
-#app = Flask(__name__)
-
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
@@ -25,11 +23,9 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
-
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
-    #app.config.from_envvar('MYCOOLAPP_CONFIG',silent=True)
     config[config_name].init_app(app)
 
     bootstrap.init_app(app)

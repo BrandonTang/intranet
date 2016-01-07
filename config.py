@@ -25,8 +25,6 @@ class Config:
     DIRECTOR10 = os.environ.get('DIRECTOR10')
     DIRECTOR11 = os.environ.get('DIRECTOR11')
     EMPLOYEE = os.environ.get('EMPLOYEE')
-    POSTS_PER_PAGE = int(os.environ.get('POSTS_PER_PAGE'))
-    COMMENTS_PER_PAGE = os.environ.get('COMMENTS_PER_PAGE')
     USE_LDAP = os.environ.get('USE_LDAP')
     LDAP_SERVER = os.environ.get('LDAP_SERVER')
     LDAP_PORT = os.environ.get('LDAP_PORT')
