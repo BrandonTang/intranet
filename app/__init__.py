@@ -6,6 +6,14 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.pagedown import PageDown
 from config import config
+from os import environ, pardir
+from os.path import abspath, dirname, join
+from dotenv import load_dotenv
+import os
+
+load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
+
+#app = Flask(__name__)
 
 bootstrap = Bootstrap()
 mail = Mail()
@@ -21,6 +29,7 @@ login_manager.login_view = 'auth.login'
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    #app.config.from_envvar('MYCOOLAPP_CONFIG',silent=True)
     config[config_name].init_app(app)
 
     bootstrap.init_app(app)

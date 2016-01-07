@@ -48,20 +48,12 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
-
-    @password.setter
-    def password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def verify_password(self, password):
-        return check_password_hash(self.password_hash, password)
 
     def can(self, permissions):
         return self.role is not None and \
@@ -88,6 +80,8 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.email == current_app.config['ADMIN2']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
+            if self.email == current_app.config['ADMIN3']:
+                self.role = Role.query.filter_by(permissions=0xff).first()                
             if self.email == current_app.config['DIRECTOR1']:
                 self.role = Role.query.filter_by(permissions=14).first()
             if self.email == current_app.config['DIRECTOR2']:

@@ -8,6 +8,8 @@ from ..models import Role, User, Post, Tag, Permission, PostTag, Comment
 from datetime import datetime, timedelta
 from ..decorators import admin_required, permission_required
 import tweepy
+import os
+from os import environ, pardir
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -16,12 +18,8 @@ def index():
     posts = pagination.items
     allTags = Tag.query.all()
     page_posts = []
-    consumer_key = 'kRRG89udi3NjDmJ9rGSfp957W'
-    consumer_secret = 'WhqecA6jBvSXLOJG2vlKGCIdFyW0ECkm4ld8619qQoXvXUedlG'
-    auth_token = '2279694055-fXD7BC316kjMjeVsI0BtaAxEpbRbCFbq3ZdnxAt'
-    auth_secret = 'cnwWy7WbZ5cCcOqSHonfQVgQkmhNCvFth80utqfhsb2Qn'
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(auth_token, auth_secret)
+    auth = tweepy.OAuthHandler(os.environ.get('consumer_key'), os.environ.get('consumer_secret'))
+    auth.set_access_token(os.environ.get('auth_token'), os.environ.get('auth_secret'))
     api = tweepy.API(auth)
     recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
     for tweet in recent_tweet:
