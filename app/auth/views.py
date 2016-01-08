@@ -12,17 +12,16 @@ from ..db_helpers import authenticate_login
 def login():
     form = LoginForm()
     registration_form = RegistrationForm()
+    email = None
     if form.validate_on_submit():
-        user_to_login = authenticate_login(form.email.data, form.password.data)
-        # print user_to_login
-        email = None
+        if "@" in form.email.data:
+            email = form.email.data
+            user = User.query.filter_by(email=form.email.data).first()
+        else:
+            email = User.query.filter_by(username=form.email.data).first().email
+            user = User.query.filter_by(email=email).first()
+        user_to_login = authenticate_login(email, form.password.data)
         if user_to_login:
-            if "@" in form.email.data:
-                user = User.query.filter_by(email=form.email.data).first()
-            else:
-                email = User.query.filter_by(username=form.email.data).first().email
-                user = User.query.filter_by(email).first()
-
             if user:
                 login_user(user, form.remember_me.data)
                 return redirect(request.args.get('next') or url_for('main.index'))
