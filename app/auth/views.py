@@ -17,6 +17,7 @@ def login():
         if "@" in form.email.data:
             email = form.email.data
             user = User.query.filter_by(email=form.email.data).first()
+            print 'user:', user
         else:
             email = User.query.filter_by(username=form.email.data).first().email
             user = User.query.filter_by(email=email).first()
@@ -43,9 +44,13 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data,
-                    username=form.username.data)
-        db.session.add(user)
-        flash('You can now login.')
-        return redirect(request.args.get('next') or url_for('main.index'))
+        user_to_login = authenticate_login(form.email.data, form.password.data)
+        if user_to_login:
+            user = User(email=form.email.data, username=form.username.data)
+            db.session.add(user)
+            flash('You can now login.')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('You are not an authorized user. Please recheck your email and password and try again.')
+            return redirect(url_for('auth.register'))
     return render_template('auth/register.html', form=form)
