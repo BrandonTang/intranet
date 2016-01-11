@@ -6,6 +6,7 @@
     {% if moderate or not comment.disabled %}
         <h4>
             {% if comment.body_html %}
+            <img src="{{ avatar }}">
             {{ comment.author.username }} -
             {{ moment(comment.timestamp).fromNow() }}
             <br>

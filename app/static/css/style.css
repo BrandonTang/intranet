@@ -302,3 +302,7 @@ ul > h10 {
 #tweets .well {
 	margin-right: 40px;
 }
+
+.control-group img {
+	margin-left: 30px;
+}

@@ -189,6 +189,7 @@ def post(id):
     text = post.text
     comments = post.comments.count()
     author = ' '.join((post.author.username).split('_'))
+    avatar = post.author.avatar(32)
     postTag = PostTag.query.filter_by(post_id=post.id).all()
     tags = []
     for tag in postTag:
@@ -201,23 +202,20 @@ def post(id):
         allComments.append(comment)
     allComments.reverse()
     if form.validate_on_submit():
-        comment = Comment(body=form.body.data,
-                          post=post,
-                          author=current_user._get_current_object())
+        comment = Comment(body=form.body.data, post=post, author=current_user._get_current_object())
         db.session.add(comment)
-        flash('Your comment has been published.')
+        flash('Your comment has been posted.')
         db.session.commit()
         return redirect(url_for('.post', id=post.id, page=-1))
     page = request.args.get('page', 1, type=int)
     if page == -1:
         page = (post.comments.count() - 1) / \
-               os.environ.get('COMMENTS_PER_PAGE') + 1
+               int(os.environ.get('COMMENTS_PER_PAGE')) + 1
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
-        page, per_page=os.environ.get('COMMENTS_PER_PAGE'),
-        error_out=False)
+        page, per_page=int(os.environ.get('COMMENTS_PER_PAGE')), error_out=False)
     comments = pagination.items
     return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments,
-                           comments=comments, pagination=pagination, page_posts=page_posts)
+                           comments=comments, pagination=pagination, page_posts=page_posts, avatar=avatar)
 
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
@@ -379,6 +377,7 @@ def profile():
     email = current_user.email
     posts = current_user.posts.count()
     comments = current_user.comments.count()
+    avatar = current_user.avatar(128)
     employees = []
     directors = []
     for eachuser in User.query.all():
@@ -397,7 +396,7 @@ def profile():
             if selectdirector == '':
                 if selectuser == '':
                     if editusername == user:
-                        return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
+                        return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, avatar=avatar,
                             employees=employees, directors=directors)
         else:
             if editusername != user and len(editusername) > 0:
@@ -414,9 +413,9 @@ def profile():
                 account = User.query.get_or_404(id)
                 db.session.delete(account)
                 db.session.commit()
-            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
+            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, avatar=avatar, 
                     employees=employees, directors=directors)
-    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
+    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, avatar=avatar, 
         employees=employees, directors=directors)
 
 
