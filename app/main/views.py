@@ -110,18 +110,12 @@ def index():
                         page_posts.append([id, title, time, text, comments, tags, author])
         selecttags = request.form.getlist('select_tags')
         for tag in selecttags:
-            # print tag
             tagid = Tag.query.filter_by(name=tag).first().id
-            # print "TagID:", tagid
             posttags = PostTag.query.filter_by(tag_id=tagid).all()
             posts = []
             for posttag in posttags:
-                # print "posttag:", posttag
-                # print "posttag.post_id:", posttag.post_id
-                # print "Post Query:", Post.query.filter_by(id=posttag.post_id).all()
                 post = Post.query.filter_by(id=posttag.post_id).first()
                 posts.append(post)
-                # print "posts:", posts
             posts.reverse()
             for post in posts:
                 id = post.id
@@ -150,51 +144,35 @@ def index():
 def newpost(data=None):
     tagList = Tag.query.with_entities(Tag.name).all()
     tagList = [r[0].encode('utf-8') for r in tagList]
-    # print tagList
     if data or request.method == 'POST':
         data = request.form.copy()
         post = Post.query.filter_by(text=data['editor1']).first()
         if data['editor1'] == "":
             return render_template('error.html', message="Please fill out the text!")
         if post is None:
-            # print "tags:", len(data['input_tag'])
             if data['input_tag'] == '':
                 return render_template('error.html', message="Please include tags!")
             title = data['input_title']
-            # print "title:", title
             text = data['editor1']
             textLength = len(text)
-            # print textLength
             if len(text) > 8000:
-                # print len(text)
                 return render_template('error.html', message="Text is too long! Please lower number of characters or remove some text edits.")
-            # print "text:", text
             time = datetime.now() - timedelta(hours=4)
-            # print "time:", time
-            # print "author:", current_user._get_current_object()
             post = Post(title=title, text=text, time=time, author=current_user._get_current_object())
             db.session.add(post)
             db.session.commit()
         tagsplit = data['input_tag'].split(', ')
         for eachtag in tagsplit:
-            # print "eachtag:", eachtag
             if eachtag not in tagList:
-                # print "1"
                 newtag = Tag(name=eachtag)
                 db.session.add(newtag)
                 db.session.commit()
                 posttag = PostTag(post_id=post.id, tag_id=newtag.id)
-                # print "posttag.post_id:", posttag.post_id
-                # print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
             else:
-                # print "2"
                 oldtag = Tag.query.filter_by(name=eachtag).first().id
-                # print oldtag
                 posttag = PostTag(post_id=post.id, tag_id=oldtag)
-                # print "posttag.post_id:", posttag.post_id
-                # print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
         return redirect(url_for('.index'))
@@ -246,16 +224,11 @@ def post(id):
 def tag(tag):
     page_posts = []
     tagid = Tag.query.filter_by(name=tag).first().id
-    # print "TagID:", tagid
     posttags = PostTag.query.filter_by(tag_id=tagid).all()
     posts = []
     for posttag in posttags:
-        # print "posttag:", posttag
-        # print "posttag.post_id:", posttag.post_id
-        # print "Post Query:", Post.query.filter_by(id=posttag.post_id).all()
         post = Post.query.filter_by(id=posttag.post_id).first()
         posts.append(post)
-        # print "posts:", posts
     posts.reverse()
     for post in posts:
         id = post.id
@@ -282,16 +255,12 @@ def edit(id):
     previousTagList = []
     postids = PostTag.query.filter_by(post_id=id).all()
     for postid in postids:
-        # print "tag_id:", postid.tag_id
         tagid = postid.tag_id
-        # print "tag_name:", Tag.query.filter_by(id=tagid).first().name
         tagname = Tag.query.filter_by(id=tagid).first().name
         previousTagList.append(tagname)
         previousTagString += tagname
         previousTagString += ", "
     previousTagString = previousTagString[:-2]
-    # print "previousTagString:", previousTagString
-    # print "previousTagList:", previousTagList
     post = Post.query.get_or_404(id)
     if current_user != post.author and not current_user.can(Permission.ADMINISTER):
         abort(403)
@@ -301,36 +270,23 @@ def edit(id):
         post.text = data['editor1']
         db.session.add(post)
         db.session.commit()
-        # print "newtags:", data['input_tag']
         tagsplit = data['input_tag'].split(', ')
-        # print "tagsplit:", tagsplit
         for eachtag in tagsplit:
-            # print "eachtag:", eachtag
             if eachtag not in tagList:
-                # print "1"
                 newtag = Tag(name=eachtag)
                 db.session.add(newtag)
                 db.session.commit()
                 posttag = PostTag(post_id=post.id, tag_id=newtag.id)
-                # print "posttag.post_id:", posttag.post_id
-                # print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
             elif eachtag not in previousTagList:
-                # print "2"
                 oldtag = Tag.query.filter_by(name=eachtag).first().id
-                # print "oldtag", oldtag
                 posttag = PostTag(post_id=post.id, tag_id=oldtag)
-                # print "posttag.post_id:", posttag.post_id
-                # print "posttag.tag_id:", posttag.tag_id
                 db.session.add(posttag)
                 db.session.commit()
         for eachtag in previousTagList:
             if eachtag not in tagsplit:
-                # print "3"
                 oldtag = Tag.query.filter_by(name=eachtag).first().id
-                # print "oldtag", oldtag
-                # print "post_id", post.id
                 PostTag.query.filter_by(post_id=post.id, tag_id=oldtag).delete()
                 db.session.commit()
         flash('The post has been updated.')
@@ -431,29 +387,35 @@ def profile():
         elif eachuser.role.name == 'Director':
             directors.append(eachuser.username)
     if request.method == 'POST':
+        editusername = request.form.getlist('edit_username')
+        if len(editusername) > 0:
+            editusername = [r.encode('utf-8') for r in editusername][0]
+        print "Username:", editusername
+        print "user:", user
         selectemployee = request.form.getlist('select_employee')
+        print "Employees:", selectemployee
         selectdirector = request.form.getlist('select_director')
+        print "Director:", selectdirector
         selectuser = request.form.getlist('select_account')
+        print "Account:", selectuser
         if selectemployee == '':
             if selectdirector == '':
                 if selectuser == '':
-                    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
-                        employees=employees, directors=directors)
+                    if editusername == user:
+                        return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
+                            employees=employees, directors=directors)
         else:
+            if editusername != user:
+                current_user.username = editusername
             for employee in selectemployee:
                 for user in User.query.all():
                     if employee == user.username:
-                        # print "user:", user.role
                         user.role = Role.query.filter_by(permissions=14).first()
-                        # print "user:", user.role
             for director in selectdirector:
                 for user in User.query.all():
                     if director == user.username:
-                        # print "user:", user.role
                         user.role = Role.query.filter_by(permissions=0xff).first()
-                        # print "user:", user.role
             for id in selectuser:
-                # print id
                 account = User.query.get_or_404(id)
                 db.session.delete(account)
                 db.session.commit()

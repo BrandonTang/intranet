@@ -9,9 +9,19 @@
     <h2>User Profile</h2>
 </div>
 <div id="page-body">
-    <h4>
-    	Name: {{ user }}<br>
-    	Role: {{ role }}<br>
+    <h4>Username: </h4>
+        <div class="control-group">
+            <form name="input" class="form-horizontal" id="changeUsername" method="post">
+                <input value="{{ user }}" class="edit_username" name="edit_username" title="edit_username" required>
+                <div id="requestButton" class="control-group">
+                    <div>
+                        <button type="submit" title="submit_edit_username" class="ui button">Edit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <br>
+        <h4>Role: {{ role }}<br>
     	Email: {{ email }}<br>
     	{% if role == 'Administrator' or role == 'Director' %}
     	Number of Posts: {{ posts }}<br>
@@ -64,7 +74,7 @@
             </select>
         <div id="requestButton" class="control-group">
             <div>
-                <button type="submit" title="submit_director_role" class="ui button">Submit</button>
+                <button type="submit" title="delete_account" class="ui button">Delete</button>
             </div>
         </div>
         </form>
