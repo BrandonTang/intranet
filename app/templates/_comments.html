@@ -1,11 +1,14 @@
+{% if allCommentsCount > 0 %}
+
 {% for comment in allComments %}
 <div id="comment-body">
     {% if comment.disabled %}
     <p><i>This comment has been disabled by a moderator.</i></p>
     {% endif %}
+
     {% if moderate or not comment.disabled %}
         <h4>
-            {% if comment.body_html %}
+        {% if comment.body_html %}
             <img src="{{ avatar }}">
             {{ comment.author.username }} -
             {{ moment(comment.timestamp).fromNow() }}
@@ -19,6 +22,7 @@
             </div>
         {% endif %}
         </h4>
+
         {% if current_user == comment.author or current_user.is_administrator() %}
         <a href="{{ url_for('.edit_comment', id=comment.id) }}">
             <span class="label label-primary">Edit</span>
@@ -28,6 +32,7 @@
         </a>
         {% endif %}
     {% endif %}
+
 {% if moderate %}
     {% if comment.disabled %}
     <a class="btn btn-default btn-xs" href="{{ url_for('.moderate_enable',
@@ -36,6 +41,10 @@
     <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable',
         id=comment.id, page=page) }}">Disable</a>
     {% endif %}
+</div>
 {% endif %}
 {% endfor %}
-</div>
+
+{% else %}
+<h4>There are currently no comments for this post.</h4>
+{% endif %}

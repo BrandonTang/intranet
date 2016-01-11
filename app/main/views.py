@@ -201,6 +201,7 @@ def post(id):
     for comment in post.comments:
         allComments.append(comment)
     allComments.reverse()
+    allCommentsCount = len(allComments)
     if form.validate_on_submit():
         comment = Comment(body=form.body.data, post=post, author=current_user._get_current_object())
         db.session.add(comment)
@@ -214,7 +215,7 @@ def post(id):
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
         page, per_page=int(os.environ.get('COMMENTS_PER_PAGE')), error_out=False)
     comments = pagination.items
-    return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments,
+    return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments, allCommentsCount=allCommentsCount,
                            comments=comments, pagination=pagination, page_posts=page_posts, avatar=avatar)
 
 
