@@ -24,13 +24,14 @@
             </form>
         </div>
         <br>
-        <h4>Role: {{ role }}<br>
+        <h4>
+        Role: {{ role }}<br>
     	Email: {{ email }}<br>
     	{% if role == 'Administrator' or role == 'Director' %}
     	Number of Posts: {{ posts }}<br>
     	{% endif %}
     	Number of Comments: {{ comments }}
-    </h4>
+        </h4>
     {% if role == 'Administrator' or role == 'Director' %}
     <h4>Employee Role Change to Director</h4>
     <div class="control-group">

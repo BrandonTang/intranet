@@ -344,7 +344,8 @@ def moderate(id):
     for comment in comments:
         allComments.append(comment)
     allComments.reverse()
-    return render_template('moderate.html', allComments=allComments)
+    allCommentsCount = len(allComments)
+    return render_template('moderate.html', allComments=allComments, allCommentsCount=allCommentsCount)
 
 
 @main.route('/moderate/enable/<int:id>')
