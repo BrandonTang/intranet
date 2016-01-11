@@ -390,14 +390,9 @@ def profile():
         editusername = request.form.getlist('edit_username')
         if len(editusername) > 0:
             editusername = [r.encode('utf-8') for r in editusername][0]
-        print "Username:", editusername
-        print "user:", user
         selectemployee = request.form.getlist('select_employee')
-        print "Employees:", selectemployee
         selectdirector = request.form.getlist('select_director')
-        print "Director:", selectdirector
         selectuser = request.form.getlist('select_account')
-        print "Account:", selectuser
         if selectemployee == '':
             if selectdirector == '':
                 if selectuser == '':
@@ -405,7 +400,7 @@ def profile():
                         return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
                             employees=employees, directors=directors)
         else:
-            if editusername != user:
+            if editusername != user and len(editusername) > 0:
                 current_user.username = editusername
             for employee in selectemployee:
                 for user in User.query.all():

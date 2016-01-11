@@ -12,7 +12,7 @@
     <h4>Username: </h4>
         <div class="control-group">
             <form name="input" class="form-horizontal" id="changeUsername" method="post">
-                <input value="{{ user }}" class="edit_username" name="edit_username" title="edit_username" required>
+                <input value="{{ current_user.username }}" class="edit_username" name="edit_username" title="edit_username" required>
                 <div id="requestButton" class="control-group">
                     <div>
                         <button type="submit" title="submit_edit_username" class="ui button">Edit</button>
