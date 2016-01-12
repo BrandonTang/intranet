@@ -17,7 +17,6 @@ def login():
         if "@" in form.email.data:
             email = form.email.data
             user = User.query.filter_by(email=form.email.data).first()
-            print 'user:', user
         else:
             email = User.query.filter_by(username=form.email.data).first().email
             user = User.query.filter_by(email=email).first()

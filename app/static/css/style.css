@@ -306,3 +306,7 @@ ul > h10 {
 .control-group img {
 	margin-left: 30px;
 }
+
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
