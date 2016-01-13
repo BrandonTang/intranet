@@ -427,18 +427,25 @@ def profile():
                 else:
                     flash('Username is already taken. Please choose another username.')
             for employee in selectemployee:
-                    for user in User.query.all():
-                        if employee == user.username:
-                            user.role = Role.query.filter_by(permissions=14).first()
+                for user in User.query.all():
+                    if employee == user.username:
+                        user.role = Role.query.filter_by(permissions=14).first()
             for director in selectdirector:
-                    for user in User.query.all():
-                        if director == user.username:
-                            user.role = Role.query.filter_by(permissions=0xff).first()
+                for user in User.query.all():
+                    if director == user.username:
+                        user.role = Role.query.filter_by(permissions=0xff).first()
             if len(selectuser) > 0:
                 for id in request.form.getlist('select_account'):
                     account = User.query.get_or_404(id)
                     db.session.delete(account)
                     db.session.commit()
+            employees = []
+            directors = []
+            for eachuser in User.query.all():
+                if eachuser.role.name == 'Employee':
+                    employees.append(eachuser.username)
+                elif eachuser.role.name == 'Director':
+                    directors.append(eachuser.username)
             return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
                     avatar=avatar, employees=employees, directors=directors)
     return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
