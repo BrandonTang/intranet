@@ -10,6 +10,9 @@ from ..decorators import admin_required, permission_required
 import tweepy
 import os
 from os import environ, pardir
+from PIL import Image
+from werkzeug import secure_filename
+
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -30,7 +33,7 @@ def index():
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
         text = post.text
         comments = post.comments.count()
-        author = ' '.join((post.author.username).split('_'))
+        author = post.author.username
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
@@ -189,7 +192,7 @@ def post(id):
     text = post.text
     comments = post.comments.count()
     author = ' '.join((post.author.username).split('_'))
-    avatar = post.author.avatar(32)
+    # avatar = post.author.avatar(32)
     postTag = PostTag.query.filter_by(post_id=post.id).all()
     tags = []
     for tag in postTag:
@@ -216,7 +219,7 @@ def post(id):
         page, per_page=int(os.environ.get('COMMENTS_PER_PAGE')), error_out=False)
     comments = pagination.items
     return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments, allCommentsCount=allCommentsCount,
-                           comments=comments, pagination=pagination, page_posts=page_posts, avatar=avatar)
+                           comments=comments, pagination=pagination, page_posts=page_posts)
 
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
@@ -370,6 +373,11 @@ def moderate_disable(id):
     return redirect(url_for('.moderate', id=post.id))
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in os.environ.get('ALLOWED_EXTENSIONS')
+
+
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -379,7 +387,7 @@ def profile():
     email = current_user.email
     posts = current_user.posts.count()
     comments = current_user.comments.count()
-    avatar = current_user.avatar(128)
+    avatar = current_user.avatar
     employees = []
     directors = []
     for eachuser in User.query.all():
@@ -388,37 +396,50 @@ def profile():
         elif eachuser.role.name == 'Director':
             directors.append(eachuser.username)
     if request.method == 'POST':
+        file = request.files['profile_picture']
+        print "file:", bool(file)
         editusername = request.form.getlist('edit_username')
         if len(editusername) > 0:
             editusername = [r.encode('utf-8') for r in editusername][0]
         selectemployee = request.form.getlist('select_employee')
         selectdirector = request.form.getlist('select_director')
         selectuser = request.form.getlist('select_account')
-        if selectemployee == '':
-            if selectdirector == '':
-                if selectuser == '':
-                    if editusername == user:
-                        return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, avatar=avatar,
-                            employees=employees, directors=directors)
+        if len(selectuser) > 0:
+            selectuser = [r.encode('utf-8') for r in selectuser][0]
+        if (len(selectemployee) < 1) and (len(selectdirector) < 1) and (len(selectuser) == 0) and ((len(editusername) == 0) or (editusername == user)) and (bool(file) == False):
+            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments,
+                                avatar=avatar, employees=employees, directors=directors)
         else:
-            if editusername != user and len(editusername) > 0:
-                current_user.username = editusername
+            if bool(file) == True:
+                avatarfile = secure_filename(file.filename)
+                saveaddress = os.path.join(os.environ.get('UPLOAD_FOLDER'), avatarfile)
+                if file and allowed_file(file.filename):
+                    file.save(saveaddress)
+                    current_user.avatar = 'avatars/' + str(file.filename)
+                    print 'saveaddress:', saveaddress
+                    print 'current_user.avatar:', current_user.avatar
+            if editusername != user and (len(editusername) > 1):
+                if User.query.filter_by(username=editusername).first() == None:
+                    current_user.username = editusername
+                else:
+                    flash('Username is already taken. Please choose another username.')
             for employee in selectemployee:
-                for user in User.query.all():
-                    if employee == user.username:
-                        user.role = Role.query.filter_by(permissions=14).first()
+                    for user in User.query.all():
+                        if employee == user.username:
+                            user.role = Role.query.filter_by(permissions=14).first()
             for director in selectdirector:
-                for user in User.query.all():
-                    if director == user.username:
-                        user.role = Role.query.filter_by(permissions=0xff).first()
-            for id in selectuser:
-                account = User.query.get_or_404(id)
-                db.session.delete(account)
-                db.session.commit()
-            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, avatar=avatar, 
-                    employees=employees, directors=directors)
-    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, avatar=avatar, 
-        employees=employees, directors=directors)
+                    for user in User.query.all():
+                        if director == user.username:
+                            user.role = Role.query.filter_by(permissions=0xff).first()
+            if len(selectuser) > 0:
+                for id in request.form.getlist('select_account'):
+                    account = User.query.get_or_404(id)
+                    db.session.delete(account)
+                    db.session.commit()
+            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
+                    avatar=avatar, employees=employees, directors=directors)
+    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
+        avatar=avatar, employees=employees, directors=directors)
 
 
 @main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])

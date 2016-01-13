@@ -51,13 +51,14 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    avatar = db.Column(db.String(64), default=None)
 
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
 
-    def avatar(self, size):
-        return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
+    # def avatar(self, size):
+        # return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
 
     def can(self, permissions):
         return self.role is not None and \
