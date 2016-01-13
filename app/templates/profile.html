@@ -11,7 +11,7 @@
 <div id="page-body">
     <h4>Avatar:</h4>
     <div class="control-group">
-        <img src="{{ url_for('static', filename=current_user.avatar)}}" height="200" width="200">
+        <img src="{{ url_for('static', filename=current_user.avatar)}}" height="250" width="250">
         <form name="input" class="form-horizontal" enctype="multipart/form-data" method="post">
         <input type="file" name="profile_picture" accept="image/*">
         <div id="requestButton" class="control-group">

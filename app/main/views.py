@@ -342,6 +342,7 @@ def error():
 @login_required
 @permission_required(Permission.MODERATE_COMMENTS)
 def moderate(id):
+    avatar = current_user.avatar
     post = Post.query.get_or_404(id)
     allComments = []
     comments = post.comments
@@ -349,7 +350,7 @@ def moderate(id):
         allComments.append(comment)
     allComments.reverse()
     allCommentsCount = len(allComments)
-    return render_template('moderate.html', allComments=allComments, allCommentsCount=allCommentsCount)
+    return render_template('moderate.html', avatar=avatar, allComments=allComments, allCommentsCount=allCommentsCount)
 
 
 @main.route('/moderate/enable/<int:id>')
