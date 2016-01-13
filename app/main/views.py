@@ -192,7 +192,8 @@ def post(id):
     text = post.text
     comments = post.comments.count()
     author = ' '.join((post.author.username).split('_'))
-    # avatar = post.author.avatar(32)
+    avatar = post.author.avatar
+    print avatar
     postTag = PostTag.query.filter_by(post_id=post.id).all()
     tags = []
     for tag in postTag:
@@ -219,7 +220,7 @@ def post(id):
         page, per_page=int(os.environ.get('COMMENTS_PER_PAGE')), error_out=False)
     comments = pagination.items
     return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments, allCommentsCount=allCommentsCount,
-                           comments=comments, pagination=pagination, page_posts=page_posts)
+                           avatar=avatar, comments=comments, pagination=pagination, page_posts=page_posts)
 
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
