@@ -398,7 +398,6 @@ def profile():
             directors.append(eachuser.username)
     if request.method == 'POST':
         file = request.files['profile_picture']
-        print "file:", bool(file)
         editusername = request.form.getlist('edit_username')
         if len(editusername) > 0:
             editusername = [r.encode('utf-8') for r in editusername][0]
@@ -414,11 +413,14 @@ def profile():
             if bool(file) == True:
                 avatarfile = secure_filename(file.filename)
                 saveaddress = os.path.join(os.environ.get('UPLOAD_FOLDER'), avatarfile)
-                if file and allowed_file(file.filename):
+                if current_user.avatar != None:
+                    oldAvatar = current_user.avatar[8:]
+                    os.remove(os.path.join(os.environ.get('UPLOAD_FOLDER'), oldAvatar))
+                if allowed_file(file.filename):
                     file.save(saveaddress)
                     current_user.avatar = 'avatars/' + str(file.filename)
-                    print 'saveaddress:', saveaddress
-                    print 'current_user.avatar:', current_user.avatar
+                else:
+                    flash('The uploaded file cannot be used.')
             if editusername != user and (len(editusername) > 1):
                 if User.query.filter_by(username=editusername).first() == None:
                     current_user.username = editusername
