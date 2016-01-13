@@ -413,10 +413,10 @@ def profile():
             if bool(file) == True:
                 avatarfile = secure_filename(file.filename)
                 saveaddress = os.path.join(os.environ.get('UPLOAD_FOLDER'), avatarfile)
-                if current_user.avatar != None:
-                    oldAvatar = current_user.avatar[8:]
-                    os.remove(os.path.join(os.environ.get('UPLOAD_FOLDER'), oldAvatar))
                 if allowed_file(file.filename):
+                    if current_user.avatar != None:
+                        oldAvatar = current_user.avatar[8:]
+                        os.remove(os.path.join(os.environ.get('UPLOAD_FOLDER'), oldAvatar))
                     file.save(saveaddress)
                     current_user.avatar = 'avatars/' + str(file.filename)
                 else:
