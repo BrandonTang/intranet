@@ -420,26 +420,31 @@ def profile():
                             pass
                     file.save(saveaddress)
                     current_user.avatar = 'avatars/' + str(file.filename)
+                    flash('Avatar has been updated.')
                 else:
                     flash('The uploaded file cannot be used.')
             if editusername != user and (len(editusername) > 1):
                 if User.query.filter_by(username=editusername).first() == None:
                     current_user.username = editusername
+                    flash('Username has been updated.')
                 else:
                     flash('Username is already taken. Please choose another username.')
             for employee in selectemployee:
                 for user in User.query.all():
                     if employee == user.username:
                         user.role = Role.query.filter_by(permissions=14).first()
+                        flash('Employee role has been updated.')
             for director in selectdirector:
                 for user in User.query.all():
                     if director == user.username:
                         user.role = Role.query.filter_by(permissions=0xff).first()
+                        flash('Director role has been updated.')
             if len(selectuser) > 0:
                 for id in request.form.getlist('select_account'):
                     account = User.query.get_or_404(id)
                     db.session.delete(account)
                     db.session.commit()
+                    flash('Account has been deleted.')
             employees = []
             directors = []
             for eachuser in User.query.all():
