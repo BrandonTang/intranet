@@ -496,7 +496,7 @@ def profile():
                                     comments=comments, avatar=avatar, employees=employees, directors=directors)
         else:
             if bool(file) == True:
-                avatarfile = secure_filename(file.filename)
+                avatarfile = "userid" + str(current_user.id) + secure_filename(file.filename)
                 saveaddress = os.path.join(os.environ.get('UPLOAD_FOLDER'), avatarfile)
                 if allowed_file(file.filename):
                     if current_user.avatar != None and current_user.avatar != "avatars/Background.jpg":
@@ -506,10 +506,9 @@ def profile():
                         else:
                             pass
                     file.save(saveaddress)
-                    current_user.avatar = 'avatars/' + str(file.filename)
+                    current_user.avatar = 'avatars/' + "userid" + str(current_user.id) + str(file.filename)
                     flash('Avatar has been updated.')
                 else:
-
                     flash('The uploaded file cannot be used.')
             if editusername != user and (len(editusername) > 1):
                 if User.query.filter_by(username=editusername).first() == None:
