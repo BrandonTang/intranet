@@ -67,7 +67,7 @@ class User(UserMixin, db.Model):
     role_id -- Column: Integer, ForeignKey = roles.id
     posts -- Relationship: 'Post', 'author'
     comments -- Relationship: 'Comment', 'author'
-    avatar -- Column: String(64), default = 'avatars/Background.jpg'
+    avatar -- Column: String(64), default = 'avatars/default.png'
     """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -76,7 +76,7 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
-    avatar = db.Column(db.String(64), default="avatars/Background.jpg")
+    avatar = db.Column(db.String(64), default="avatars/default.png")
 
     @property
     def password(self):

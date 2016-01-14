@@ -499,7 +499,7 @@ def profile():
                 avatarfile = "userid" + str(current_user.id) + secure_filename(file.filename)
                 saveaddress = os.path.join(os.environ.get('UPLOAD_FOLDER'), avatarfile)
                 if allowed_file(file.filename):
-                    if current_user.avatar != None and current_user.avatar != "avatars/Background.jpg":
+                    if current_user.avatar != None and current_user.avatar != "avatars/default.png":
                         oldAvatar = os.path.join(os.environ.get('UPLOAD_FOLDER'), current_user.avatar[8:])
                         if os.path.exists(oldAvatar):
                             os.remove(oldAvatar)
