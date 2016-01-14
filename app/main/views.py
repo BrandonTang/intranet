@@ -15,8 +15,15 @@ from werkzeug import secure_filename
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
+    """
+    Return the main homepage containing all submitted posts with their corresponding tags,
+    search bar, and a new post button.
+
+    Only directors or administrators will be able to see or use the new post feature.
+    """
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=int(os.environ.get('POSTS_PER_PAGE')), error_out=False)
+    pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=int(os.environ.get('POSTS_PER_PAGE')), 
+                                                                        error_out=False)
     posts = pagination.items
     allTags = Tag.query.all()
     page_posts = []
@@ -50,7 +57,8 @@ def index():
         selecttags = request.form.getlist('select_tags')
         if searchterm == '':
             if selecttags == '':
-                return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags)
+                return render_template('index.html', pagination=pagination, page_posts=page_posts, 
+                                        allTags=allTags)
         else:
             if searchoption == 'all':
                 for post in Post.query.all():
@@ -137,13 +145,20 @@ def index():
             if page_post not in page_posts_without_duplicates:
                 page_posts_without_duplicates.append(page_post)
         return render_template('tagged_posts.html', page_posts=page_posts_without_duplicates)
-    return render_template('index.html', pagination=pagination, page_posts=page_posts, allTags=allTags, recent_tweet=recent_tweet, tweet_datetime=tweet_datetime)
+    return render_template('index.html', pagination=pagination, page_posts=page_posts, 
+                            allTags=allTags, recent_tweet=recent_tweet, tweet_datetime=tweet_datetime)
 
 
 @main.route('/newpost', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permission.WRITE_ARTICLES)
 def newpost(data=None):
+    """
+    Return the page for creating a new post containing tags, title, and text.
+
+    Keyword arguments:
+    data -- initialization of data (default None)
+    """
     tagList = Tag.query.with_entities(Tag.name).all()
     tagList = [r[0].encode('utf-8') for r in tagList]
     if data or request.method == 'POST':
@@ -158,7 +173,8 @@ def newpost(data=None):
             text = data['editor1']
             textLength = len(text)
             if len(text) > 8000:
-                return render_template('error.html', message="Text is too long! Please lower number of characters or remove some text formatting.")
+                return render_template('error.html', message='Text is too long! Please lower number of \
+                                                                characters or remove some text formatting.')
             time = datetime.now() - timedelta(hours=4)
             post = Post(title=title, text=text, time=time, author=current_user._get_current_object())
             db.session.add(post)
@@ -183,6 +199,12 @@ def newpost(data=None):
 
 @main.route('/post/<int:id>', methods=['GET', 'POST'])
 def post(id):
+    """
+    Return the page of a specific post containing the post itself, comments, and comment box if logged in.
+
+    Keyword arguments:
+    id -- the post id
+    """
     post = Post.query.get_or_404(id)
     page_posts = []
     id = post.id
@@ -216,12 +238,19 @@ def post(id):
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
         page, per_page=int(os.environ.get('COMMENTS_PER_PAGE')), error_out=False)
     comments = pagination.items
-    return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments, allCommentsCount=allCommentsCount,
-                           comments=comments, pagination=pagination, page_posts=page_posts)
+    return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments, 
+                            allCommentsCount=allCommentsCount, comments=comments, pagination=pagination, 
+                            page_posts=page_posts)
 
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
 def tag(tag):
+    """
+    Return the page containing all posts with the chosen tag.
+
+    Keyword arguments:
+    tag -- the selected tag
+    """
     page_posts = []
     tagid = Tag.query.filter_by(name=tag).first().id
     posttags = PostTag.query.filter_by(tag_id=tagid).all()
@@ -249,6 +278,12 @@ def tag(tag):
 @main.route('/edit/post/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
+    """
+    Return the page for editing a specific post containing possible edits for tags, title, and text.
+
+    Keyword arguments:
+    id -- the post id
+    """
     tagList = Tag.query.with_entities(Tag.name).all()
     tagList = [r[0].encode('utf-8') for r in tagList]
     previousTagString = ""
@@ -297,6 +332,12 @@ def edit(id):
 @main.route('/delete/post/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete(id):
+    """
+    Return the confirmation page for deleting a post.
+
+    Keyword arguments:
+    id -- the post id
+    """
     post = Post.query.get_or_404(id)
     if current_user != post.author and not current_user.can(Permission.ADMINISTER) and not current_user.is_director():
         abort(403)
@@ -317,21 +358,33 @@ def delete(id):
 
 @main.route('/mis')
 def mis():
+    """
+    Return the MIS information page.
+    """
     return render_template('mis.html')
 
 
 @main.route('/lmt')
 def lmt():
+    """
+    Return the LMT information page.
+    """
     return render_template('lmt.html')
 
 
 @main.route('/agencypolicies')
 def agencypolicies():
+    """
+    Return the agency policies page.
+    """
     return render_template('agencypolicies.html')
 
 
 @main.route('/error', methods=['GET', 'POST'])
 def error():
+    """
+    Return the error page.
+    """
     return render_template('error.html')
 
 
@@ -339,6 +392,12 @@ def error():
 @login_required
 @permission_required(Permission.MODERATE_COMMENTS)
 def moderate(id):
+    """
+    Return the moderation page for comments from a specific post.
+
+    Keyword arguments:
+    id -- the post id
+    """
     avatar = current_user.avatar
     post = Post.query.get_or_404(id)
     allComments = []
@@ -354,6 +413,12 @@ def moderate(id):
 @login_required
 @permission_required(Permission.MODERATE_COMMENTS)
 def moderate_enable(id):
+    """
+    Enable a comment and redirect to the moderation page.
+
+    Keyword arguments:
+    id -- the comment id
+    """
     comment = Comment.query.get_or_404(id)
     comment.disabled = False
     db.session.add(comment)
@@ -365,6 +430,12 @@ def moderate_enable(id):
 @login_required
 @permission_required(Permission.MODERATE_COMMENTS)
 def moderate_disable(id):
+    """
+    Disable a comment and redirect to the moderation page.
+
+    Keyword arguments:
+    id -- the comment id
+    """
     comment = Comment.query.get_or_404(id)
     comment.disabled = True
     db.session.add(comment)
@@ -373,6 +444,12 @@ def moderate_disable(id):
 
 
 def allowed_file(filename):
+    """
+    Define the extension types of a file allowed for uploading.
+
+    Keyword arguments:
+    filename -- the uploaded filename
+    """
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in os.environ.get('ALLOWED_EXTENSIONS')
 
@@ -380,6 +457,14 @@ def allowed_file(filename):
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
+    """
+    Return the profile page of a user including the user's avatar, username, role,
+    email, number of comments, number of posts, and ability to upgrade user roles.
+
+    Users can edit their email, and avatar by uploading a image file.
+
+    Only administrators can upgrade user roles.
+    """
     users = User.query.all()
     user = current_user.username
     role = current_user.role.name
@@ -404,9 +489,11 @@ def profile():
         selectuser = request.form.getlist('select_account')
         if len(selectuser) > 0:
             selectuser = [r.encode('utf-8') for r in selectuser][0]
-        if (len(selectemployee) < 1) and (len(selectdirector) < 1) and (len(selectuser) == 0) and ((len(editusername) == 0) or (editusername == user)) and (bool(file) == False):
-            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments,
-                                avatar=avatar, employees=employees, directors=directors)
+        if ((len(selectemployee) < 1) and (len(selectdirector) < 1) and 
+                (len(selectuser) == 0) and ((len(editusername) == 0) or (editusername == user)) and 
+                (bool(file) == False)):
+            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, 
+                                    comments=comments, avatar=avatar, employees=employees, directors=directors)
         else:
             if bool(file) == True:
                 avatarfile = secure_filename(file.filename)
@@ -422,6 +509,7 @@ def profile():
                     current_user.avatar = 'avatars/' + str(file.filename)
                     flash('Avatar has been updated.')
                 else:
+
                     flash('The uploaded file cannot be used.')
             if editusername != user and (len(editusername) > 1):
                 if User.query.filter_by(username=editusername).first() == None:
@@ -452,15 +540,21 @@ def profile():
                     employees.append(eachuser.username)
                 elif eachuser.role.name == 'Director':
                     directors.append(eachuser.username)
-            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
-                    avatar=avatar, employees=employees, directors=directors)
-    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, comments=comments, 
-        avatar=avatar, employees=employees, directors=directors)
+            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, 
+                                    comments=comments, avatar=avatar, employees=employees, directors=directors)
+    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, 
+                            comments=comments, avatar=avatar, employees=employees, directors=directors)
 
 
 @main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_comment(id):
+    """
+    Return the page for editing a specific comment.
+
+    Keyword arguments:
+    id -- the comment id
+    """
     comment = Comment.query.get_or_404(id)
     form = CommentForm()
     if current_user != comment.author and not current_user.can(Permission.COMMENT):
@@ -481,6 +575,12 @@ def edit_comment(id):
 @main.route('/delete/comment/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_comment(id):
+    """
+    Return the confirmation page for deleting a comment.
+
+    Keyword arguments:
+    id -- the comment id
+    """
     comment = Comment.query.get_or_404(id)
     form = DeleteForm()
     if current_user != comment.author and not current_user.can(Permission.COMMENT):

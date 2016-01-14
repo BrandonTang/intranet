@@ -6,13 +6,27 @@ from markdown import markdown
 from flask import current_app, request, url_for
 import bleach
 
+
 class Permission:
+    """
+    Define the permission codes for certain actions.
+    """
     WRITE_ARTICLES = 0x04
     ADMINISTER = 0x80
     COMMENT = 0x02
     MODERATE_COMMENTS = 0x08
 
+
 class Role(db.Model):
+    """
+    Define the Role class with the following columns and relationships:
+
+    id -- Column: Integer, PrimaryKey
+    name -- Column: String(64), Unique
+    default -- Column: Boolean, Default = False
+    permissions -- Column: Integer
+    users -- Relationship: 'User', 'role'
+    """
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -22,6 +36,7 @@ class Role(db.Model):
 
     @staticmethod
     def insert_roles():
+        """Insert permissions for each role: employee, director, and administrator."""
         roles = {
             'Employee': (Permission.COMMENT, True),
             'Director': (Permission.COMMENT |
@@ -38,11 +53,22 @@ class Role(db.Model):
             db.session.add(role)
         db.session.commit()
 
-
     def __repr__(self):
         return '<Role %r>' % self.name
 
+
 class User(UserMixin, db.Model):
+    """
+    Define the User class with the following columns and relationships:
+
+    id -- Column: Integer, PrimaryKey
+    email -- Column: String(64), Unique
+    username -- Column: String(64), Unique
+    role_id -- Column: Integer, ForeignKey = roles.id
+    posts -- Relationship: 'Post', 'author'
+    comments -- Relationship: 'Comment', 'author'
+    avatar -- Column: String(64), default = 'avatars/Background.jpg'
+    """
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
@@ -111,6 +137,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False
@@ -124,9 +151,22 @@ class AnonymousUser(AnonymousUserMixin):
     def is_employee(self):
         return False
 
+
 login_manager.anonymous_user = AnonymousUser
 
+
 class Post(db.Model):
+    """
+    Define the Post class with the following columns and relationships:
+
+    id -- Column: Integer, PrimaryKey
+    title -- Column: String(64), Unique
+    text -- Column: UnicodeText
+    time -- Column: DateTime
+    author_id -- Column: Intger, ForeignKey = 'user.id'
+    text_html -- Column: Text
+    comments -- Relationship: 'Comment', 'post'
+    """
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), unique=True)
@@ -147,13 +187,22 @@ class Post(db.Model):
         target.text_html = bleach.linkify(bleach.clean(
             markdown(value, output_format='html'), 
             tags=allowed_tags, strip=True))
+
+
 db.event.listen(Post.text, 'set', Post.on_changed_text)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 class Tag(db.Model):
+    """
+    Define the Tag class with the following columns:
+
+    id -- Column: Integer, PrimaryKey
+    name -- Column: String(64)
+    """
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
@@ -161,7 +210,14 @@ class Tag(db.Model):
     def __repr__(self):
         return '<Tag %r>' % (self.name)
 
+
 class PostTag(db.Model):
+    """
+    Define the PostTag class with the following columns:
+
+    post_id -- Column: Integer, ForeignKey = 'Post.id'
+    tag_id -- Column: Integer, ForeignKey = 'Tag.id'
+    """
     __tablename__ =  "posttag"
     post_id = db.Column(db.Integer, db.ForeignKey(Post.id), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey(Tag.id), primary_key=True)
@@ -169,7 +225,19 @@ class PostTag(db.Model):
     def __repr__(self):
         return '<Post %r><Tag %r>' % (self.post_id, self.tag_id)
 
+
 class Comment(db.Model):
+    """
+    Define the Comment class with the following columns:
+
+    id -- Column: Integer, PrimaryKey
+    body -- Column: Text
+    body_html -- Column: Text
+    timestamp -- Column: DateTime, Default = dateimte.utcnow
+    disabled -- Column: Boolean
+    author_id -- Column: Integer, ForeignKey = 'users.id'
+    post_id -- Column: Integer, ForeignKey = 'posts.id'
+    """
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
@@ -188,3 +256,4 @@ class Comment(db.Model):
             tags=allowed_tags, strip=True))
 
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)
+
