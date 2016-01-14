@@ -1,6 +1,7 @@
 {% if allCommentsCount > 0 %}
 
 {% for comment in allComments %}
+
 <div id="comment-body">
     {% if comment.disabled %}
     <p><i>This comment has been disabled by a moderator.</i></p>
@@ -9,7 +10,7 @@
     {% if moderate or not comment.disabled %}
         <h4>
         {% if comment.body_html %}
-            <img src="{{ url_for('static', filename=avatar)}}" height="35" width="35">
+            <img src="{{ url_for('static', filename=comment.author.avatar)}}" height="35" width="35">
             {{ comment.author.username }} -
             {{ moment(comment.timestamp).fromNow() }}
             <br>

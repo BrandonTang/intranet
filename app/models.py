@@ -5,7 +5,6 @@ from datetime import datetime
 from markdown import markdown
 from flask import current_app, request, url_for
 import bleach
-from hashlib import md5
 
 class Permission:
     WRITE_ARTICLES = 0x04
@@ -51,14 +50,11 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
-    avatar = db.Column(db.String(64), default=None)
+    avatar = db.Column(db.String(64), default="avatars/Background.jpg")
 
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
-
-    # def avatar(self, size):
-        # return 'http://www.gravatar.com/avatar/%s?d=mm&s=%d' % (md5(self.email.encode('utf-8')).hexdigest(), size)
 
     def can(self, permissions):
         return self.role is not None and \

@@ -10,7 +10,6 @@ from ..decorators import admin_required, permission_required
 import tweepy
 import os
 from os import environ, pardir
-from PIL import Image
 from werkzeug import secure_filename
 
 
@@ -192,8 +191,6 @@ def post(id):
     text = post.text
     comments = post.comments.count()
     author = ' '.join((post.author.username).split('_'))
-    avatar = post.author.avatar
-    print avatar
     postTag = PostTag.query.filter_by(post_id=post.id).all()
     tags = []
     for tag in postTag:
@@ -220,7 +217,7 @@ def post(id):
         page, per_page=int(os.environ.get('COMMENTS_PER_PAGE')), error_out=False)
     comments = pagination.items
     return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments, allCommentsCount=allCommentsCount,
-                           avatar=avatar, comments=comments, pagination=pagination, page_posts=page_posts)
+                           comments=comments, pagination=pagination, page_posts=page_posts)
 
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
@@ -415,9 +412,12 @@ def profile():
                 avatarfile = secure_filename(file.filename)
                 saveaddress = os.path.join(os.environ.get('UPLOAD_FOLDER'), avatarfile)
                 if allowed_file(file.filename):
-                    if current_user.avatar != None:
-                        oldAvatar = current_user.avatar[8:]
-                        os.remove(os.path.join(os.environ.get('UPLOAD_FOLDER'), oldAvatar))
+                    if current_user.avatar != None and current_user.avatar != "avatars/Background.jpg":
+                        oldAvatar = os.path.join(os.environ.get('UPLOAD_FOLDER'), current_user.avatar[8:])
+                        if os.path.exists(oldAvatar):
+                            os.remove(oldAvatar)
+                        else:
+                            pass
                     file.save(saveaddress)
                     current_user.avatar = 'avatars/' + str(file.filename)
                 else:
