@@ -1,4 +1,5 @@
 <ul class="posts">
+{% if page_posts[0] %}
 {% for post in page_posts %}
     <h1>{{ post[1] }}</h1>
     <h10>{{ post[2] }}</h10>
@@ -34,3 +35,6 @@
         {% endif %}
     </div>
 {% endfor %}
+{% else %}
+    <h4>There are no matching results.</h4>
+{% endif %}
