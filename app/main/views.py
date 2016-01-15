@@ -454,8 +454,10 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in os.environ.get('ALLOWED_EXTENSIONS')
 
 
+# @main.route('/profile/<string:username>', methods=['GET', 'POST'])
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
+# def profile(username):
 def profile():
     """
     Return the profile page of a user including the user's avatar, username, role,
@@ -465,6 +467,8 @@ def profile():
 
     Only administrators can upgrade user roles.
     """
+    # user_id = User.query.filter_by(username=username).first()
+    # print user_id
     users = User.query.all()
     user = current_user.username
     role = current_user.role.name
