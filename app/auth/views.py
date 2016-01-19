@@ -18,7 +18,9 @@ def login():
             email = form.email.data
             user = User.query.filter_by(email=form.email.data).first()
         else:
-            email = User.query.filter_by(username=form.email.data).first().email
+            print form.email.data
+            email = User.query.filter_by(username=str(form.email.data)).first().email
+            print 'email', User.query.filter_by(username=form.email.data).first().email
             user = User.query.filter_by(email=email).first()
         user_to_login = authenticate_login(email, form.password.data)
         if user_to_login:

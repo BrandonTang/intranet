@@ -60,7 +60,6 @@ li a:hover, .page-footer > h3 > a {
 
 .dropdown:hover .dropdown-menu {
 	display: block;
-	margin-top: 0;
 }
 
 .dropdown:hover .dropdown-menu li a:hover {
@@ -309,8 +308,4 @@ ul > h10 {
 
 .control-group img {
 	margin-left: 30px;
-}
-
-.dropdown:hover .dropdown-menu {
-	display: block;
 }
