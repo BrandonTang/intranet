@@ -34,7 +34,7 @@
         {% endif %}
     {% endif %}
 
-{% if moderate %}
+    {% if moderate %}
     {% if comment.disabled %}
     <a class="label label-primary" href="{{ url_for('.moderate_enable',
         id=comment.id, page=page) }}">Enable</a>
