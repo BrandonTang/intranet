@@ -3,6 +3,13 @@
 
 {% block title %}Intranet - Agency Policies{% endblock %}
 
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript" ></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+{{ super() }}
+{% endblock %}
+
 <div class="section">
 {% block page_content %}
 <div class="page-header">
