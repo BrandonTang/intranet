@@ -1,13 +1,16 @@
 {% extends "bootstrap/base.html" %}
+
 {% block title %}Intranet{% endblock %}
 
 {% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript" ></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/selectize.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.min.css') }}" type="text/css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename='nycgov.ico') }}" type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename='nycgov.ico') }}" type="image/x-icon">
@@ -93,14 +96,4 @@
 
     {% block page_content %}{% endblock %}
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-
-{{ super() }}
-{{ moment.include_moment() }}
 {% endblock %}
