@@ -58,6 +58,11 @@ li a:hover, .page-footer > h3 > a {
 	margin: 10px 0px 5px 0px;
 }
 
+.dropdown ul {
+	position: relative;
+	margin-bottom: 15px;
+}
+
 .section {
 	margin-top: 100px;
 	margin-left: 225px;
