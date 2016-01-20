@@ -380,6 +380,14 @@ def agencypolicies():
     return render_template('agencypolicies.html')
 
 
+@main.route('/eeo')
+def eeo():
+    """
+    Return the EEO information page.
+    """
+    return render_template('eeo.html')
+
+
 @main.route('/error', methods=['GET', 'POST'])
 def error():
     """
