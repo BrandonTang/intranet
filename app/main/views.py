@@ -1,11 +1,12 @@
-from flask import render_template, redirect, url_for, abort, flash, request, current_app, make_response
+from flask import render_template, redirect, url_for, abort, flash, request, current_app, make_response, session
 from flask.ext.login import login_required, current_user
 from flask.ext.sqlalchemy import get_debug_queries
 from . import main
-from .forms import DeleteForm, CommentForm
+from .forms import DeleteForm, CommentForm, NameForm
 from .. import db
 from ..models import Role, User, Post, Tag, Permission, PostTag, Comment
 from datetime import datetime, timedelta
+import datetime
 from ..decorators import admin_required, permission_required
 import tweepy
 import os
@@ -602,3 +603,52 @@ def delete_comment(id):
         flash('The comment has been deleted.')
         return redirect(url_for('.post', id=comment.post_id))
     return render_template('delete_comment.html', form=form, comment=comment)
+
+
+@main.route('/enfg/', methods=['GET', 'POST'])
+def enfg():
+    form = NameForm()
+    if form.validate_on_submit():
+        session['type'] = form.type.data
+        session['name'] = form.name.data
+        session['bride_name'] = form.bride_name.data
+        session['year'] = form.year.data
+        session['borough'] = ', '.join(form.borough.data)
+        session['signature'] = form.signature.data
+        if not session['signature']:
+            return redirect(url_for('.result'))
+        else:
+            return redirect(url_for('.result_nosig'))
+    return render_template('enfg.html', form=form,
+                           type=session.get('type'),
+                           name=session.get('name'),
+                           bride_name=session.get('bride_name'),
+                           year=session.get('year'),
+                           borough=session.get('borough'),
+                           now=datetime.date.today())
+
+
+@main.route('/enfg/result', methods=['GET', 'POST'])
+def result():
+    session['date']=datetime.date.today().strftime('%m/%d/%y')
+    return render_template('result.html',
+                           date=session.get('date'),
+                           type=session.get('type'),
+                           name=session.get('name'),
+                           bride_name=session.get('bride_name'),
+                           year=session.get('year'),
+                           borough=session.get('borough'),
+                           now=datetime.date.today())
+
+
+@main.route('/enfg/result_nosig', methods=['GET', 'POST'])
+def result_nosig():
+    session['date']=datetime.date.today().strftime('%m/%d/%y')
+    return render_template('result_nosig.html',
+                           date=session.get('date'),
+                           type=session.get('type'),
+                           name=session.get('name'),
+                           bride_name=session.get('bride_name'),
+                           year=session.get('year'),
+                           borough=session.get('borough'),
+                           now=datetime.date.today())

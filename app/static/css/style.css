@@ -11,6 +11,12 @@ li a:hover, .page-footer > h3 > a {
     color: #36F064;
 }
 
+form li {
+    display: inline;
+    list-style-type: none;
+    padding-right: 20px;
+}
+
 .nav {
 	position: fixed;
     background-color: #5f2da4;
