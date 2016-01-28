@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Intranet - EEO{% endblock %}
+
+{% block head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript" ></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+{{ super() }}
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h2>Equal Employment Opportunity</h2>
+</div>
+
+<div id="page-body">
+	<h4><b>EEO Information Files</b>
+	<br><br>
+	- <a href="{{ url_for('static', filename='files/NYC_EEO_Policy.pdf') }}">NYC EEO Policy</a><br>
+	- <a href="{{ url_for('static', filename='files/eeo_reasonable_accommodation.pdf') }}">EEO Reasonable Accommodation</a><br>
+	- <a href="{{ url_for('static', filename='files/eeo_discrimination_complaint_procedures.pdf') }}">EEO Discrimination Complaint Procedures</a><br>
+	- <a href="{{ url_for('static', filename='files/about_eeo_booklet.pdf') }}">About EEO Booklet</a><br>
+	- <a href="{{ url_for('static', filename='files/55A_Booklet_final.pdf') }}">55A Booklet Final</a><br>
+	</h4>
+</div>
+{% endblock %}
