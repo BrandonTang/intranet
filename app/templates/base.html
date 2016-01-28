@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.min.css') }}" type="text/css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
-<link rel="shortcut icon" href="{{ url_for('static', filename='nycgov.ico') }}" type="image/x-icon">
-<link rel="icon" href="{{ url_for('static', filename='nycgov.ico') }}" type="image/x-icon">
+<link rel="shortcut icon" href="{{ url_for('static', filename='images/nycgov.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='images/nycgov.ico') }}" type="image/x-icon">
 {% endblock %}
 
 {% block navbar %}
@@ -67,18 +67,18 @@
                 <li><a href="{{ url_for('main.eeo') }}">EEO</a></li>
                 <li><a href="http://www1.nyc.gov/site/olr/index.page">OLR</a></li>
                 <li><a href="https://www.nycers.org/(S(m4z1oy554pem3oudryveam55))/index.aspx">NYCERS</a></li>
-                <li><a href="http://www.nyc.gov/html/dcas/html/employees/psbhome.shtml/">PSBs</a></li>
+                <li><a href="http://www.nyc.gov/html/dcas/html/employees/psbhome.shtml">PSBs</a></li>
                 <li><a href="{{ url_for('main.agencypolicies') }}">Policies</a></li>
             </ul>
         </li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Social Media<span class="caret"></span></a>
             <ul class="dropdown-menu">
-                <li><a href="https://www.facebook.com/nycrecords?fref=ts/"><img src="{{ url_for('static', filename='image002.gif') }}">  Facebook</a></li>
-                <li><a href="https://twitter.com/nycrecords/"><img src="{{ url_for('static', filename='image003.png') }}">  Twitter</a></li>
-                <li><a href="https://www.youtube.com/user/NYCDeptofRecords/"><img src="{{ url_for('static', filename='image005.png') }}">  YouTube</a></li>
-                <li><a href="https://instagram.com/explore/locations/6126741/"><img src="{{ url_for('static', filename='image006.jpg') }}" style="margin-left: -7px;">  Instagram</a></li>
-                <li><a href="http://nycrecords.tumblr.com/"><img src="{{ url_for('static', filename='image004.gif') }}">  Tumblr</a></li>
+                <li><a href="https://www.facebook.com/nycrecords?fref=ts/"><img src="{{ url_for('static', filename='images/image002.gif') }}">  Facebook</a></li>
+                <li><a href="https://twitter.com/nycrecords/"><img src="{{ url_for('static', filename='images/image003.png') }}">  Twitter</a></li>
+                <li><a href="https://www.youtube.com/user/NYCDeptofRecords/"><img src="{{ url_for('static', filename='images/image005.png') }}">  YouTube</a></li>
+                <li><a href="https://instagram.com/explore/locations/6126741/"><img src="{{ url_for('static', filename='images/image006.jpg') }}" style="margin-left: -7px;">  Instagram</a></li>
+                <li><a href="http://nycrecords.tumblr.com/"><img src="{{ url_for('static', filename='images/image004.gif') }}">  Tumblr</a></li>
             </ul>
         </li>
     </ul>
