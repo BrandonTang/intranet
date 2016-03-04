@@ -3,10 +3,10 @@ from flask.ext.login import login_required, current_user
 from flask.ext.sqlalchemy import get_debug_queries
 from . import main
 from .forms import DeleteForm, CommentForm, NameForm
-from .. import db
+from .. import db, moment
 from ..models import Role, User, Post, Tag, Permission, PostTag, Comment
-from datetime import datetime, timedelta
 import datetime
+from datetime import timedelta, datetime
 from ..decorators import admin_required, permission_required
 import tweepy
 import os
@@ -176,7 +176,7 @@ def newpost(data=None):
             if len(text) > 8000:
                 return render_template('error.html', message='Text is too long! Please lower number of \
                                                                 characters or remove some text formatting.')
-            time = datetime.now() - timedelta(hours=4)
+            time = datetime.now()
             post = Post(title=title, text=text, time=time, author=current_user._get_current_object())
             db.session.add(post)
             db.session.commit()
@@ -360,7 +360,7 @@ def delete(id):
 @main.route('/mis')
 def mis():
     """
-    Return the MIS information page.
+    Return the Management and Information Services information page.
     """
     return render_template('mis.html')
 
@@ -368,9 +368,17 @@ def mis():
 @main.route('/lmt')
 def lmt():
     """
-    Return the LMT information page.
+    Return the Labor Management Team information page.
     """
     return render_template('lmt.html')
+
+
+@main.route('/archives')
+def archives():
+    """
+    Return the Municipal Archives information page.
+    """
+    return render_template('archives.html')
 
 
 @main.route('/agencypolicies')
@@ -463,10 +471,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in os.environ.get('ALLOWED_EXTENSIONS')
 
 
-# @main.route('/profile/<string:username>', methods=['GET', 'POST'])
 @main.route('/profile', methods=['GET', 'POST'])
 @login_required
-# def profile(username):
 def profile():
     """
     Return the profile page of a user including the user's avatar, username, role,
@@ -625,12 +631,12 @@ def enfg():
                            bride_name=session.get('bride_name'),
                            year=session.get('year'),
                            borough=session.get('borough'),
-                           now=datetime.date.today())
+                           now=datetime.today())
 
 
 @main.route('/enfg/result', methods=['GET', 'POST'])
 def result():
-    session['date']=datetime.date.today().strftime('%m/%d/%y')
+    session['date']=datetime.today().strftime('%m/%d/%y')
     return render_template('result.html',
                            date=session.get('date'),
                            type=session.get('type'),
@@ -638,12 +644,12 @@ def result():
                            bride_name=session.get('bride_name'),
                            year=session.get('year'),
                            borough=session.get('borough'),
-                           now=datetime.date.today())
+                           now=datetime.today())
 
 
 @main.route('/enfg/result_nosig', methods=['GET', 'POST'])
 def result_nosig():
-    session['date']=datetime.date.today().strftime('%m/%d/%y')
+    session['date']=datetime.today().strftime('%m/%d/%y')
     return render_template('result_nosig.html',
                            date=session.get('date'),
                            type=session.get('type'),
@@ -651,4 +657,4 @@ def result_nosig():
                            bride_name=session.get('bride_name'),
                            year=session.get('year'),
                            borough=session.get('borough'),
-                           now=datetime.date.today())
+                           now=datetime.today())

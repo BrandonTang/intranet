@@ -5,7 +5,7 @@
 {% block head %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript" ></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/selectize.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.min.css') }}" type="text/css">
@@ -65,10 +65,11 @@
             <ul class="dropdown-menu">
                 <li><a href="{{ url_for('main.enfg') }}">ENFG</a></li>
                 <li><a href="{{ url_for('main.eeo') }}">EEO</a></li>
+                <li><a href="{{ url_for('main.agencypolicies') }}">Policies</a></li>
                 <li><a href="http://www1.nyc.gov/site/olr/index.page">OLR</a></li>
                 <li><a href="https://www.nycers.org/(S(m4z1oy554pem3oudryveam55))/index.aspx">NYCERS</a></li>
                 <li><a href="http://www.nyc.gov/html/dcas/html/employees/psbhome.shtml">PSBs</a></li>
-                <li><a href="{{ url_for('main.agencypolicies') }}">Policies</a></li>
+                <li><a href="http://www.gcflearnfree.org/office">MS Office</a></li>
             </ul>
         </li>
         <li class="dropdown">

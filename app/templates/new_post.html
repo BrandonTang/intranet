@@ -1,10 +1,20 @@
-{% extends "base.html" %}
+{% extends 'layouts/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Intranet - New Post{% endblock %}
 
-{% block page_content %}
-<div class="page-header">
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/selectize.css') }}" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript" ></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.css') }}" type="text/css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/semantic.min.css') }}" type="text/css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="well">
     <h2>New Post</h2>
 </div>
 <div id="page-body">

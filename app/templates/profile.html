@@ -1,16 +1,18 @@
-{% extends "base.html" %}
+{% extends 'layouts/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "_macros.html" as macros %}
 
 {% block title %}Intranet - Profile{% endblock %}
 
-{% block page_content %}
-<div class="page-header">
+{% block body %}
+<div class="well">
     <h2>User Profile</h2>
 </div>
+
 <div id="page-body">
-    <h4>Avatar:</h4>
-    <div class="control-group">
+<div class="control-group">
+    <div class="well">
+        <h4>Avatar:</h4>
         <img src="{{ url_for('static', filename=current_user.avatar) }}" height="250" width="250">
         <form name="input" class="form-horizontal" enctype="multipart/form-data" method="post">
         <input type="file" name="profile_picture" accept="image/*">
@@ -35,6 +37,8 @@
     	{% endif %}
     	Number of Comments: {{ comments }}
     </h4>
+    </div>
+    <div class="well">
     {% if role == 'Administrator' or role == 'Director' %}
     <h4>Employee Role Change to Director</h4>
 	    <select name="select_employee" class="ui dropdown">
@@ -76,6 +80,7 @@
     </div>
     </form>
     {% endif %}
+</div>
 </div>
 {% endblock %}
 

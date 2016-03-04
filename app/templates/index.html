@@ -1,16 +1,14 @@
-{% extends "base.html" %}
-{% block title %}Intranet{% endblock %}
+{% extends 'layouts/base.html' %}
 {% import "_macros.html" as macros %}
 
-<div class="section">
-{% block page_content %}
-<div class="page-header" style="margin-left: 10px;">
-    <h2>Home</h2>
-    <div id="nav-bottomright">
+{% block title %}Intranet - Home{% endblock %}
+
+{% block body %}
+<div id="nav-bottomright" style="float: right;">
         <form name="input" class="form-horizontal" id="searchTags" method="post">
             <div class="control-group">
                 <div class="ui action input">
-                    <input name="search_term" type="text" placeholder="Search" style="font-family: Georgia, serif;">
+                    <input name="search_term" type="text" placeholder="Search Posts" style="font-family: Georgia, serif;">
                     <select name="select_search_option" class="ui compact selection dropdown">
                         <option value="all">All</option>
                         <option value="title">Title</option>
@@ -28,30 +26,30 @@
             </div>
             <div id="requestButton" class="control-group">
                 <div>
-                    <button type="submit" title="search_tags" class="ui button">Search</button>
+                    <button type="submit" title="search_tags" class="ui button" style="float: right;">Search</button>
                 </div>
             </div>
         </form>
     </div>
+
+<div class="well">
+    <h1>Home</h1>
 </div>
 
 {% if pagination.page == 1 %}
 <div id="tweets">
-    <h1>Twitter Ticker</h1>
     <div class="well">
+    <h2>Twitter Ticker</h2>
     {% for tweet in recent_tweet %}
         @{{ tweet.user.screen_name }}<br>
         {{ tweet_datetime }}<br>
         {{ tweet.text }}<br>
     {% endfor %}
+    </div>
 </div>
-</div>
-<br>
 {% endif %}
 
-<div id="page-body">
-    {% include '_posts.html' %}
-</div>
+{% include '_posts.html' %}
 
 <div id="newpost">
     {% if current_user.is_administrator() or current_user.is_director() %}
@@ -59,10 +57,8 @@
     {% endif %}
 </div>
 
-<div id="pagination">
-    {{ macros.pagination_widget(pagination, '.index') }}
-</div>
-</div>
+{{ macros.pagination_widget(pagination, '.index') }}
+
 {% endblock %}
 
 {% block scripts %}

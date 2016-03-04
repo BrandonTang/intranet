@@ -1,21 +1,14 @@
-{% extends "base.html" %}
+{% extends 'layouts/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}Intranet - EEO{% endblock %}
 
-{% block head %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript" ></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
-{{ super() }}
-{% endblock %}
-
-{% block page_content %}
-<div class="page-header">
+{% block body %}
+<div class="well">
     <h2>Equal Employment Opportunity</h2>
 </div>
 
-<div id="page-body">
+<div class="well">
 	<h4><b>EEO Information Files</b>
 	<br><br>
 	- <a href="{{ url_for('static', filename='files/NYC_EEO_Policy.pdf') }}">NYC EEO Policy</a><br>
