@@ -96,9 +96,17 @@
 </div>
 <div class="well">
 	<section id="contact"></section>
-	<b>Stumped?</b><br>
+	<b>Stumped?</b> - Contact Us!<br>
 	Records Help Desk is ready to assist you with computer problems.<br>
 	Please contact Adotey at 212-788-8650 or aakuesson@records.nyc.gov.<br>
 	</h4>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+var shiftWindow = function() { scrollBy(0, -80) };
+if (location.hash) shiftWindow();
+window.addEventListener("hashchange", shiftWindow);
+</script>
 {% endblock %}
