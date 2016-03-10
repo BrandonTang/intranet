@@ -22,8 +22,6 @@ def index():
 
     Only directors or administrators will be able to see or use the new post feature.
     """
-    # db.session.delete(Post.query.all()[8])
-    # db.session.commit()
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=int(os.environ.get('POSTS_PER_PAGE')), 
                                                                         error_out=False)
@@ -37,9 +35,12 @@ def index():
     for tweet in recent_tweet:
         tweet_datetime = (tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p')
         if Post.query.filter_by(text=tweet.text).first() == None:
-            tweet_title = 'Twitter Ticker'
+            tweet_title = 'Twitter Ticker - @nycrecords'
             post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=5)), author=User.query.filter_by(username='testuser1').first())
             db.session.add(post)
+            db.session.commit()
+            twittertag = PostTag(post_id=post.id, tag_id=Tag.query.filter_by(name='#twitter').first().id)
+            db.session.add(twittertag)
             db.session.commit()
     for post in posts:
         id = post.id
