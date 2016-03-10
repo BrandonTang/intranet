@@ -42,6 +42,7 @@
     <h2>Twitter Ticker</h2>
     {% for tweet in recent_tweet %}
         @{{ tweet.user.screen_name }}<br>
+        {{ tweet_id }}
         {{ tweet_datetime }}<br>
         {{ tweet.text }}<br>
     {% endfor %}
