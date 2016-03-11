@@ -33,9 +33,10 @@ def index():
     api = tweepy.API(auth)
     recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
     for tweet in recent_tweet:
+        print str((tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p'))
         tweet_datetime = (tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p')
         if Post.query.filter_by(text=tweet.text).first() == None:
-            tweet_title = 'Twitter Ticker - @nycrecords'
+            tweet_title = 'Twitter - @nycrecords: ' + str((tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p'))
             post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=5)), author=User.query.filter_by(username='testuser1').first())
             db.session.add(post)
             db.session.commit()

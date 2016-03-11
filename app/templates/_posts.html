@@ -4,7 +4,11 @@
     <h1>{{ post[1] }}</h1>
     <h10>{{ post[2] }}</h10>
     <br>
-    <h13>Posted by {{ post[6] }}</h13>
+    {% if 'Twitter - @nycrecords: ' in post[1] %}
+        <h13>Posted on Twitter</h13>
+    {% else %}
+        <h13>Posted by {{ post[6] }}</h13>
+    {% endif %}
     <div class="well">{{ post[3] | safe }}</div>
     <div class="post-footer">
         <a href="{{ url_for('.post', id=post[0]) }}">
