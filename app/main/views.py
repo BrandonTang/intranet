@@ -33,7 +33,6 @@ def index():
     api = tweepy.API(auth)
     recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
     for tweet in recent_tweet:
-        print str((tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p'))
         tweet_datetime = (tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p')
         if Post.query.filter_by(text=tweet.text).first() == None:
             tweet_title = 'Twitter - @nycrecords: ' + str((tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p'))
@@ -191,6 +190,8 @@ def newpost(data=None):
             db.session.commit()
         tagsplit = data['input_tag'].split(', ')
         for eachtag in tagsplit:
+            if eachtag[0] != '#':
+                eachtag = '#' + eachtag
             if eachtag not in tagList:
                 newtag = Tag(name=eachtag)
                 db.session.add(newtag)
@@ -317,6 +318,8 @@ def edit(id):
         db.session.commit()
         tagsplit = data['input_tag'].split(', ')
         for eachtag in tagsplit:
+            if eachtag[0] != '#':
+                eachtag = '#' + eachtag
             if eachtag not in tagList:
                 newtag = Tag(name=eachtag)
                 db.session.add(newtag)
