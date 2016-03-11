@@ -16,11 +16,13 @@
 {% include '_posts.html' %}
 <br>
 <div id="comment">
+	<div class="well">
     <h2>Comments<h2>
     {% if current_user.can(Permission.COMMENT) %}
     <h3>Enter your comment</h3>
 		{{ wtf.quick_form(form) }}
 	{% endif %}
+	</div>
 </div>
 {% include '_comments.html' %}
 {% endblock %}

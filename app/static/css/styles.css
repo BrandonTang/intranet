@@ -68,3 +68,7 @@ form li {
 .post-footer > a:hover {
     text-decoration: none;
 }
+
+#moderate-comments {
+	padding-bottom: 15px;
+}
