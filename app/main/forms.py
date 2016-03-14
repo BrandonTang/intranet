@@ -4,7 +4,7 @@ from wtforms.validators import Required, DataRequired
 from flask.ext.pagedown.fields import PageDownField
 
 class DeleteForm(Form):
-	confirm = SubmitField('Yes')
+	submit = SubmitField('Yes')
 
 
 class CommentForm(Form):
@@ -17,6 +17,7 @@ type = [('Birth','Birth'), ('Death','Death'), ('Marriage','Marriage'),
 
 borough = [('Manhattan','Manhattan'), ('Bronx','Bronx'), ('Brooklyn', 'Brooklyn'),
            ('Queens', 'Queens'), ('Richmond', 'Richmond')]
+
 
 class NameForm(Form):
     type = SelectField(

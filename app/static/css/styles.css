@@ -69,10 +69,16 @@ form li {
     text-decoration: none;
 }
 
+#comment-body > a:hover {
+	text-decoration: none;
+}
+
 #moderate-comments {
 	padding-bottom: 15px;
 }
 
-/*#flash_message_container {
-	background-color: ;
-}*/
+#flash_message_container {
+	color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}

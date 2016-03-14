@@ -4,10 +4,10 @@
 {% block title %}Intranet - Edit Comment{% endblock %}
 
 {% block body %}
-<div class="page-header">
+<div class="well">
     <h2>Edit Comment</h2>
 </div>
-<div id="comment">
+<div class="well">
     {% if current_user.can(Permission.COMMENT) %}
     <h3>Edit your comment</h3>
 		{{ wtf.quick_form(form) }}
