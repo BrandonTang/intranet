@@ -318,7 +318,7 @@ def edit(id):
         db.session.commit()
         tagsplit = data['input_tag'].split(', ')
         for eachtag in tagsplit:
-            if eachtag[0] != '#':
+            if len(tagsplit[0]) != 0 and eachtag[0] != '#':
                 eachtag = '#' + eachtag
             if eachtag not in tagList:
                 newtag = Tag(name=eachtag)
