@@ -190,6 +190,8 @@ def newpost(data=None):
             db.session.commit()
         tagsplit = data['input_tag'].split(', ')
         for eachtag in tagsplit:
+            if Tag.query.filter_by(name='').first() != None:
+                db.session.delete(Tag.query.filter_by(name='').first())
             if eachtag[0] != '#':
                 eachtag = '#' + eachtag
             if eachtag not in tagList:
@@ -318,6 +320,8 @@ def edit(id):
         db.session.commit()
         tagsplit = data['input_tag'].split(', ')
         for eachtag in tagsplit:
+            if Tag.query.filter_by(name='').first() != None:
+                db.session.delete(Tag.query.filter_by(name='').first())
             if len(tagsplit[0]) != 0 and eachtag[0] != '#':
                 eachtag = '#' + eachtag
             if eachtag not in tagList:
