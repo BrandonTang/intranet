@@ -13,7 +13,9 @@
     {% if moderate or not comment.disabled %}
         <h4>
         {% if comment.body_html %}
-            <img src="{{ url_for('static', filename=comment.author.avatar)}}" height="35" width="35">
+            <a href="{{ url_for('.profile', username=comment.author.username) }}">
+            <img src="{{ url_for('static', filename=comment.author.avatar) }}" height="35" width="35">
+            </a>
             {{ comment.author.username }} -
             {{ moment(comment.timestamp).fromNow() }}
             <br>
