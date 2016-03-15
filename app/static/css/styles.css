@@ -61,9 +61,9 @@ form li {
 	background: white;
 }
 
-.navbar-default {
-	background-color: #5f2da4;
-}
+/*.navbar-default .navbar-collapse {
+	background-color: #9b59b6;
+}*/
 
 .post-footer > a:hover {
     text-decoration: none;

@@ -1,0 +1,56 @@
+{% extends 'layouts/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
+
+{% block title %}Intranet - Edit User Role{% endblock %}
+
+{% block body %}
+<div class="well">
+    <h2>Edit User Roles</h2>
+</div>
+
+<div class="well">
+	<form name="input" class="form-horizontal" method="post">
+	{% if current_user.is_administrator or current_user.is_director %}
+    <h4>Employee Role Change to Director</h4>
+	    <select name="select_employee" class="ui compact selection dropdown">
+		    <option value="">Employees</option>
+			{% for employee in employees %}
+		    <option value="{{ employee }}">{{ employee }}</option>
+		    {% endfor %}
+	    </select>
+    <div id="requestButton" class="control-group">
+        <div>
+            <button type="submit" title="submit_employee_role" class="ui button">Submit</button>
+        </div>
+    </div>
+    {% endif %}
+	{% if current_user.is_administrator %}
+    <h4>Director Role Change to Administrator</h4>
+	    <select name="select_director" class="ui compact selection dropdown">
+		    <option value="">Directors</option>
+			{% for director in directors %}
+		    <option value="{{ director }}">{{ director }}</option>
+		    {% endfor %}
+	    </select>
+    <div id="requestButton" class="control-group">
+        <div>
+            <button type="submit" title="submit_director_role" class="ui button">Submit</button>
+        </div>
+    </div>
+    <h4>Delete Account</h4>
+        <select name="select_account" class="ui compact selection dropdown">
+            <option value="">Accounts</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+    <div id="requestButton" class="control-group">
+        <div>
+            <button type="submit" title="delete_account" class="ui button">Delete</button>
+        </div>
+    </div>
+    </form>
+	{% endif %}
+</div>
+{% endblock %}

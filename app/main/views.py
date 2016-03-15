@@ -487,26 +487,15 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in os.environ.get('ALLOWED_EXTENSIONS')
 
 
-@main.route('/profile', methods=['GET', 'POST'])
+@main.route('/edituserroles', methods=['GET', 'POST'])
 @login_required
-def profile():
+def edituserroles():
     """
-    Return the profile page of a user including the user's avatar, username, role,
-    email, number of comments, number of posts, and ability to upgrade user roles.
-
-    Users can edit their email, and avatar by uploading a image file.
+    Return a page with ability to uprade user roles.
 
     Only administrators can upgrade user roles.
     """
-    # user_id = User.query.filter_by(username=username).first()
-    # print user_id
     users = User.query.all()
-    user = current_user.username
-    role = current_user.role.name
-    email = current_user.email
-    posts = current_user.posts.count()
-    comments = current_user.comments.count()
-    avatar = current_user.avatar
     employees = []
     directors = []
     for eachuser in User.query.all():
@@ -514,19 +503,69 @@ def profile():
             employees.append(eachuser.username)
         elif eachuser.role.name == 'Director':
             directors.append(eachuser.username)
+        print employees
+        print directors
+    if request.method == 'POST':
+        selectemployee = request.form.getlist('select_employee')
+        print selectemployee
+        selectdirector = request.form.getlist('select_director')
+        print selectdirector
+        selectuser = request.form.getlist('select_account')
+        print selectuser
+        if len(selectuser) > 0:
+            selectuser = [r.encode('utf-8') for r in selectuser][0]
+        if ((len(selectemployee) < 1) and (len(selectdirector) < 1) and (len(selectuser) == 0)):
+            return render_template('edituserroles.html', users=users, employees=employees, directors=directors)
+        else:
+            for employee in selectemployee:
+                for user in User.query.all():
+                    if employee == user.username:
+                        user.role = Role.query.filter_by(permissions=14).first()
+                        flash('Employee role has been updated.')
+            for director in selectdirector:
+                for user in User.query.all():
+                    if director == user.username:
+                        user.role = Role.query.filter_by(permissions=0xff).first()
+                        flash('Director role has been updated.')
+            if len(selectuser) > 0:
+                for id in request.form.getlist('select_account'):
+                    account = User.query.get_or_404(id)
+                    db.session.delete(account)
+                    db.session.commit()
+                    flash('Account has been deleted.')
+            employees = []
+            directors = []
+            for eachuser in User.query.all():
+                if eachuser.role.name == 'Employee':
+                    employees.append(eachuser.username)
+                elif eachuser.role.name == 'Director':
+                    directors.append(eachuser.username)
+            return render_template('edituserroles.html', users=users, employees=employees, directors=directors)
+    return render_template('edituserroles.html', users=users, employees=employees, directors=directors)
+
+
+@main.route('/profile/<string:username>', methods=['GET', 'POST'])
+@login_required
+def profile(username):
+    """
+    Return the profile page of a user including the user's avatar, username, role,
+    email, number of comments, and number of posts.
+
+    Users can edit their email, and avatar by uploading a image file.
+    """
+    users = User.query.all()
+    user = User.query.filter_by(username=username).first().username
+    role = User.query.filter_by(username=username).first().role.name
+    email = User.query.filter_by(username=username).first().email
+    posts = User.query.filter_by(username=username).first().posts.count()
+    comments = User.query.filter_by(username=username).first().comments.count()
+    avatar = User.query.filter_by(username=username).first().avatar
     if request.method == 'POST':
         file = request.files['profile_picture']
         editusername = request.form.getlist('edit_username')
         if len(editusername) > 0:
             editusername = [r.encode('utf-8') for r in editusername][0]
-        selectemployee = request.form.getlist('select_employee')
-        selectdirector = request.form.getlist('select_director')
-        selectuser = request.form.getlist('select_account')
-        if len(selectuser) > 0:
-            selectuser = [r.encode('utf-8') for r in selectuser][0]
-        if ((len(selectemployee) < 1) and (len(selectdirector) < 1) and 
-                (len(selectuser) == 0) and ((len(editusername) == 0) or (editusername == user)) and 
-                (bool(file) == False)):
+        if (((len(editusername) == 0) or (editusername == user)) and (bool(file) == False)):
             return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, 
                                     comments=comments, avatar=avatar, employees=employees, directors=directors)
         else:
@@ -551,33 +590,10 @@ def profile():
                     flash('Username has been updated.')
                 else:
                     flash('Username is already taken. Please choose another username.')
-            for employee in selectemployee:
-                for user in User.query.all():
-                    if employee == user.username:
-                        user.role = Role.query.filter_by(permissions=14).first()
-                        flash('Employee role has been updated.')
-            for director in selectdirector:
-                for user in User.query.all():
-                    if director == user.username:
-                        user.role = Role.query.filter_by(permissions=0xff).first()
-                        flash('Director role has been updated.')
-            if len(selectuser) > 0:
-                for id in request.form.getlist('select_account'):
-                    account = User.query.get_or_404(id)
-                    db.session.delete(account)
-                    db.session.commit()
-                    flash('Account has been deleted.')
-            employees = []
-            directors = []
-            for eachuser in User.query.all():
-                if eachuser.role.name == 'Employee':
-                    employees.append(eachuser.username)
-                elif eachuser.role.name == 'Director':
-                    directors.append(eachuser.username)
-            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, 
-                                    comments=comments, avatar=avatar, employees=employees, directors=directors)
+            return redirect(url_for('.profile', user=user, users=users, role=role, email=email, posts=posts, 
+                                    comments=comments, avatar=avatar, username=editusername))
     return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, 
-                            comments=comments, avatar=avatar, employees=employees, directors=directors)
+                            comments=comments, avatar=avatar, username=username)
 
 
 @main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])

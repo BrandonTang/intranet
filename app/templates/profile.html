@@ -9,78 +9,40 @@
     <h2>User Profile</h2>
 </div>
 
-<div id="page-body">
-<div class="control-group">
-    <div class="well">
-        <h4>Avatar:</h4>
-        <img src="{{ url_for('static', filename=current_user.avatar) }}" height="250" width="250">
-        <form name="input" class="form-horizontal" enctype="multipart/form-data" method="post">
-        <input type="file" name="profile_picture" accept="image/*">
-        <div id="requestButton" class="control-group">
-            <div>
-                <button type="submit" title="submit_profile_picture" class="ui button">Edit</button>
-            </div>
+{% if current_user.username == user %}
+<div class="well">
+    <h4>Avatar:</h4>
+    <img src="{{ url_for('static', filename=avatar) }}" height="250" width="250">
+    <form name="input" class="form-horizontal" enctype="multipart/form-data" method="post">
+    <input type="file" name="profile_picture" accept="image/*">
+    <div id="requestButton" class="control-group">
+        <div>
+            <button type="submit" title="submit_profile_picture" class="ui button">Edit</button>
         </div>
+    </div>
     <h4>Username:</h4>
-        <input value="{{ current_user.username }}" name="edit_username" title="edit_username" required>
-        <div id="requestButton" class="control-group">
-            <div>
-                <button type="submit" title="submit_edit_username" class="ui button">Edit</button>
-            </div>
+    <input value="{{ username }}" name="edit_username" title="edit_username" required>
+    <div id="requestButton" class="control-group">
+        <div>
+            <button type="submit" title="submit_edit_username" class="ui button">Edit</button>
         </div>
+    </div>
     <br>
-    <h4>
-        Role: {{ role }}<br>
-    	Email: {{ email }}<br>
-    	{% if role == 'Administrator' or role == 'Director' %}
-    	Number of Posts: {{ posts }}<br>
-    	{% endif %}
-    	Number of Comments: {{ comments }}
-    </h4>
-    </div>
-    <div class="well">
-    {% if role == 'Administrator' or role == 'Director' %}
-    <h4>Employee Role Change to Director</h4>
-	    <select name="select_employee" class="ui dropdown">
-		    <option value="">Employees</option>
-			{% for employee in employees %}
-		    <option value="{{ employee }}">{{ employee }}</option>
-		    {% endfor %}
-	    </select>
-    <div id="requestButton" class="control-group">
-        <div>
-            <button type="submit" title="submit_employee_role" class="ui button">Submit</button>
-        </div>
-    </div>
-    {% endif %}
-	{% if role == 'Administrator' %}
-    <h4>Director Role Change to Administrator</h4>
-	    <select name="select_director" class="ui dropdown">
-		    <option value="">Directors</option>
-			{% for director in directors %}
-		    <option value="{{ director }}">{{ director }}</option>
-		    {% endfor %}
-	    </select>
-    <div id="requestButton" class="control-group">
-        <div>
-            <button type="submit" title="submit_director_role" class="ui button">Submit</button>
-        </div>
-    </div>
-    <h4>Delete Account</h4>
-        <select name="select_account" class="ui dropdown">
-            <option value="">Accounts</option>
-            {% for user in users %}
-            <option value="{{ user.id }}">{{ user.username }}</option>
-            {% endfor %}
-        </select>
-    <div id="requestButton" class="control-group">
-        <div>
-            <button type="submit" title="delete_account" class="ui button">Delete</button>
-        </div>
-    </div>
-    </form>
-    {% endif %}
 </div>
+{% endif %}
+
+<div class="well">
+    <h4>
+    Avatar:  <br>
+    <img src="{{ url_for('static', filename=avatar) }}" height="250" width="250"><br>
+    Username: {{ user }}<br>
+    Role: {{ role }}<br>
+	Email: {{ email }}<br>
+	{% if role == 'Administrator' or role == 'Director' %}
+	Number of Posts: {{ posts }}<br>
+	{% endif %}
+	Number of Comments: {{ comments }}
+    </h4>
 </div>
 {% endblock %}
 
