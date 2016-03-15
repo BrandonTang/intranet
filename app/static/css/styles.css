@@ -61,9 +61,21 @@ form li {
 	background: white;
 }
 
-/*.navbar-default .navbar-collapse {
-	background-color: #9b59b6;
-}*/
+.navbar-default .navbar-collapse li {
+	font-size: 20px;
+}
+
+.navbar-header .navbar-brand {
+	font-size: 20px;
+}
+
+.navbar-default .navbar-collapse li:hover {
+	background-color: #9e64b6;
+}
+
+.navbar-default .navbar-collapse .dropdown-menu li a:hover {
+	color: #9b59b6;
+}
 
 .post-footer > a:hover {
     text-decoration: none;
