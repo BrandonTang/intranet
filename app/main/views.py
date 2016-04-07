@@ -490,9 +490,9 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in os.environ.get('ALLOWED_EXTENSIONS')
 
 
-@main.route('/edituserroles', methods=['GET', 'POST'])
+@main.route('/edituserinfo', methods=['GET', 'POST'])
 @login_required
-def edituserroles():
+def edituserinfo():
     """
     Return a page with ability to uprade user roles.
 
@@ -527,7 +527,7 @@ def edituserroles():
         # if len(selectaccount) > 0:
         #     selectaccount = [r.encode('utf-8') for r in selectaccount][0]
         if ((len(selectemployee) == 0) and (len(selectdirector) == 0) and (len(selectaccount) == 0) and (len(selectuser) == 0) and (len(selectdivision) == 0)):
-            return render_template('edituserroles.html', users=users, employees=employees, directors=directors, allusers=allusers)
+            return render_template('edituserinfo.html', users=users, employees=employees, directors=directors, allusers=allusers)
         else:
             if len(selectemployee) > 0:
                 for user in User.query.all():
@@ -557,8 +557,8 @@ def edituserroles():
                     employees.append(eachuser.username)
                 elif eachuser.role.name == 'Director':
                     directors.append(eachuser.username)
-            return render_template('edituserroles.html', users=users, employees=employees, directors=directors, divisions=divisions, allusers=allusers)
-    return render_template('edituserroles.html', users=users, employees=employees, directors=directors, divisions=divisions, allusers=allusers)
+            return render_template('edituserinfo.html', users=users, employees=employees, directors=directors, divisions=divisions, allusers=allusers)
+    return render_template('edituserinfo.html', users=users, employees=employees, directors=directors, divisions=divisions, allusers=allusers)
 
 
 @main.route('/profile/<string:username>', methods=['GET', 'POST'])

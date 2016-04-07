@@ -129,7 +129,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{ url_for('main.profile', username=current_user.username) }}">User Profile</a></li>
                                 {% if current_user.is_administrator %}
-                                <li><a href="{{ url_for('main.edituserroles') }}">User Roles</a></li>
+                                <li><a href="{{ url_for('main.edituserinfo') }}">User Info</a></li>
                                 {% endif %}
                                 <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
                             </ul>
