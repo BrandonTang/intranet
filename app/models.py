@@ -77,6 +77,7 @@ class User(UserMixin, db.Model):
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
     avatar = db.Column(db.String(64), default="avatars/default.png")
+    division = db.Column(db.String(64))
 
     @property
     def password(self):
@@ -169,7 +170,7 @@ class Post(db.Model):
     """
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), unique=True)
+    title = db.Column(db.String(64))
     text = db.Column(db.UnicodeText)
     time = db.Column(db.DateTime)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))

@@ -50,6 +50,24 @@
             <button type="submit" title="delete_account" class="ui button">Delete</button>
         </div>
     </div>
+    <h4>Division Change</h4>
+        <select name="select_user" class="ui compact selection dropdown">
+            <option value="">Employees</option>
+            {% for user in allusers %}
+            <option value="{{ user }}">{{ user }}</option>
+            {% endfor %}
+        </select>
+        <select name="select_division" class="ui compact selection dropdown">
+            <option value="">Division</option>
+            {% for division in divisions %}
+            <option value="{{ division }}">{{ division }}</option>
+            {% endfor %}
+        </select>
+    <div id="requestButton" class="control-group">
+        <div>
+            <button type="submit" title="submit_division" class="ui button">Submit</button>
+        </div>
+    </div>
     </form>
 	{% endif %}
 </div>

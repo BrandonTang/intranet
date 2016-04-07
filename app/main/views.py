@@ -39,6 +39,9 @@ def index():
             post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=5)), author=User.query.filter_by(username='testuser1').first())
             db.session.add(post)
             db.session.commit()
+            # addtwittertag = Tag(name='#twitter')
+            # db.session.add(addtwittertag)
+            # db.session.commit()
             twittertag = PostTag(post_id=post.id, tag_id=Tag.query.filter_by(name='#twitter').first().id)
             db.session.add(twittertag)
             db.session.commit()
@@ -48,7 +51,7 @@ def index():
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
         text = post.text
         comments = post.comments.count()
-        author = post.author.username
+        author = post.author
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
@@ -496,43 +499,57 @@ def edituserroles():
     Only administrators can upgrade user roles.
     """
     users = User.query.all()
+    # useremployees = User.query.filter_by(role_id='1').all()
+    # userdirectors = User.query.filter_by(role_id='2').all()
     employees = []
     directors = []
+    allusers = []
+    divisions = ['A', 'B', 'C']
     for eachuser in User.query.all():
         if eachuser.role.name == 'Employee':
             employees.append(eachuser.username)
         elif eachuser.role.name == 'Director':
             directors.append(eachuser.username)
-        print employees
-        print directors
+        allusers.append(eachuser.username)
+    print 'employees: ', employees
+    print 'directors: ', directors
     if request.method == 'POST':
-        selectemployee = request.form.getlist('select_employee')
-        print selectemployee
-        selectdirector = request.form.getlist('select_director')
-        print selectdirector
-        selectuser = request.form.getlist('select_account')
-        print selectuser
-        if len(selectuser) > 0:
-            selectuser = [r.encode('utf-8') for r in selectuser][0]
-        if ((len(selectemployee) < 1) and (len(selectdirector) < 1) and (len(selectuser) == 0)):
-            return render_template('edituserroles.html', users=users, employees=employees, directors=directors)
+        selectemployee = request.form.getlist('select_employee')[0]
+        print 'selectemployee: ', selectemployee
+        selectdirector = request.form.getlist('select_director')[0]
+        print 'selectdirector: ', selectdirector
+        selectaccount = request.form.getlist('select_account')[0]
+        print 'selectaccount: ', selectaccount
+        selectuser = request.form.getlist('select_user')[0]
+        print 'selectuser: ', selectuser
+        selectdivision = request.form.getlist('select_division')[0]
+        print 'selectdivision: ', selectdivision
+        # if len(selectaccount) > 0:
+        #     selectaccount = [r.encode('utf-8') for r in selectaccount][0]
+        if ((len(selectemployee) == 0) and (len(selectdirector) == 0) and (len(selectaccount) == 0) and (len(selectuser) == 0) and (len(selectdivision) == 0)):
+            return render_template('edituserroles.html', users=users, employees=employees, directors=directors, allusers=allusers)
         else:
-            for employee in selectemployee:
+            if len(selectemployee) > 0:
                 for user in User.query.all():
-                    if employee == user.username:
+                    if selectemployee == user.username:
                         user.role = Role.query.filter_by(permissions=14).first()
                         flash('Employee role has been updated.')
-            for director in selectdirector:
+            if len(selectdirector) > 0:
                 for user in User.query.all():
-                    if director == user.username:
+                    if selectdirector == user.username:
                         user.role = Role.query.filter_by(permissions=0xff).first()
                         flash('Director role has been updated.')
-            if len(selectuser) > 0:
+            if len(selectaccount) > 0:
                 for id in request.form.getlist('select_account'):
                     account = User.query.get_or_404(id)
                     db.session.delete(account)
                     db.session.commit()
                     flash('Account has been deleted.')
+            if (len(selectuser) > 0) and (len(selectdivision) > 0):
+                for user in User.query.all():
+                    if selectuser == user.username:
+                        user.division = selectdivision
+                        flash('User division has been updated.')
             employees = []
             directors = []
             for eachuser in User.query.all():
@@ -540,8 +557,8 @@ def edituserroles():
                     employees.append(eachuser.username)
                 elif eachuser.role.name == 'Director':
                     directors.append(eachuser.username)
-            return render_template('edituserroles.html', users=users, employees=employees, directors=directors)
-    return render_template('edituserroles.html', users=users, employees=employees, directors=directors)
+            return render_template('edituserroles.html', users=users, employees=employees, directors=directors, divisions=divisions, allusers=allusers)
+    return render_template('edituserroles.html', users=users, employees=employees, directors=directors, divisions=divisions, allusers=allusers)
 
 
 @main.route('/profile/<string:username>', methods=['GET', 'POST'])
@@ -557,6 +574,7 @@ def profile(username):
     user = User.query.filter_by(username=username).first().username
     role = User.query.filter_by(username=username).first().role.name
     email = User.query.filter_by(username=username).first().email
+    division = User.query.filter_by(username=username).first().division
     posts = User.query.filter_by(username=username).first().posts.count()
     comments = User.query.filter_by(username=username).first().comments.count()
     avatar = User.query.filter_by(username=username).first().avatar
@@ -566,8 +584,8 @@ def profile(username):
         if len(editusername) > 0:
             editusername = [r.encode('utf-8') for r in editusername][0]
         if (((len(editusername) == 0) or (editusername == user)) and (bool(file) == False)):
-            return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, 
-                                    comments=comments, avatar=avatar, employees=employees, directors=directors)
+            return render_template('profile.html', user=user, users=users, role=role, email=email, division=division, 
+                                    posts=posts, comments=comments, avatar=avatar, employees=employees, directors=directors)
         else:
             if bool(file) == True:
                 avatarfile = "userid" + str(current_user.id) + secure_filename(file.filename)
@@ -590,9 +608,9 @@ def profile(username):
                     flash('Username has been updated.')
                 else:
                     flash('Username is already taken. Please choose another username.')
-            return redirect(url_for('.profile', user=user, users=users, role=role, email=email, posts=posts, 
-                                    comments=comments, avatar=avatar, username=editusername))
-    return render_template('profile.html', user=user, users=users, role=role, email=email, posts=posts, 
+            return redirect(url_for('.profile', user=user, users=users, role=role, email=email, division=division, 
+                                    posts=posts, comments=comments, avatar=avatar, username=editusername))
+    return render_template('profile.html', user=user, users=users, role=role, email=email, division=division, posts=posts, 
                             comments=comments, avatar=avatar, username=username)
 
 

@@ -100,7 +100,25 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                
+                                {% if current_user.role == 'Employee' %}
+
+                                {% elif current_user.role == 'Director' %}
+
+                                {% elif current_user.role == 'Administrator' %}
+
+                                {% endif %}
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Applications<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                {% if current_user.division == 'A' %}
+
+                                {% elif current_user.division == 'B' %}
+
+                                {% elif current_user.division == 'C' %}
+
+                                {% endif %}
                             </ul>
                         </li>
                     </ul>
