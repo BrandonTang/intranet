@@ -51,7 +51,7 @@ def index():
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
         text = post.text
         comments = post.comments.count()
-        author = post.author
+        author = post.author.username
         postTag = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in postTag:
@@ -494,13 +494,11 @@ def allowed_file(filename):
 @login_required
 def edituserinfo():
     """
-    Return a page with ability to uprade user roles.
+    Return a page with ability to uprade user info.
 
-    Only administrators can upgrade user roles.
+    Only administrators can upgrade user info.
     """
     users = User.query.all()
-    # useremployees = User.query.filter_by(role_id='1').all()
-    # userdirectors = User.query.filter_by(role_id='2').all()
     employees = []
     directors = []
     allusers = []
@@ -524,8 +522,6 @@ def edituserinfo():
         print 'selectuser: ', selectuser
         selectdivision = request.form.getlist('select_division')[0]
         print 'selectdivision: ', selectdivision
-        # if len(selectaccount) > 0:
-        #     selectaccount = [r.encode('utf-8') for r in selectaccount][0]
         if ((len(selectemployee) == 0) and (len(selectdirector) == 0) and (len(selectaccount) == 0) and (len(selectuser) == 0) and (len(selectdivision) == 0)):
             return render_template('edituserinfo.html', users=users, employees=employees, directors=directors, allusers=allusers)
         else:
