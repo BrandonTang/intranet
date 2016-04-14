@@ -17,7 +17,7 @@
     <input type="file" name="profile_picture" accept="image/*">
     <div id="requestButton" class="control-group">
         <div>
-            <button type="submit" title="submit_profile_picture" class="ui button">Edit</button>
+            <button type="submit" title="submit_profile_picture" class="ui button">Upload</button>
         </div>
     </div>
     <h4>Username:</h4>
@@ -34,11 +34,16 @@
 <div class="well">
     <h4>
     Avatar:  <br>
-    <img src="{{ url_for('static', filename=avatar) }}" height="250" width="250"><br>
+    <img src="{{ url_for('static', filename=avatar) }}" height="250" width="250"><br><br>
     Username: {{ user }}<br>
     Role: {{ role }}<br>
 	Email: {{ email }}<br>
-    Division: {{ division }}<br>
+    Division: 
+    {% if division != None %}
+        {{ division }}
+    {% else %}
+        N/A
+    {% endif %}<br>
 	{% if role == 'Administrator' or role == 'Director' %}
 	Number of Posts: {{ posts }}<br>
 	{% endif %}
