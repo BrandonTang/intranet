@@ -35,7 +35,7 @@ def index():
     for tweet in recent_tweet:
         tweet_datetime = (tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p')
         if Post.query.filter_by(text=tweet.text).first() == None:
-            tweet_title = 'Twitter - @nycrecords: ' + str((tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p'))
+            tweet_title = 'Twitter - @nycrecords: ' + str((tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y'))
             post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=5)), author=User.query.filter_by(username='testuser1').first())
             db.session.add(post)
             db.session.commit()
@@ -566,6 +566,8 @@ def profile(username):
 
     Users can edit their email, and avatar by uploading a image file.
     """
+    if User.query.filter_by(username=username).first() == None:
+        return render_template('error.html', message='User not found.')
     users = User.query.all()
     user = User.query.filter_by(username=username).first().username
     role = User.query.filter_by(username=username).first().role.name
