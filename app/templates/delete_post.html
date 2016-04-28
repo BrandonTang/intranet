@@ -10,6 +10,7 @@
 <div class="well">
     <h4>Are you sure you want to delete this post?</h4>
     {{ wtf.quick_form(form) }}
+    <input action="action" type="button" value="Cancel" onclick="history.go(-1);" class="btn btn-primary" />
 </div>
 {% endblock %}
 
