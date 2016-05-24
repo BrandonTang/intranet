@@ -1,0 +1,20 @@
+{% extends 'layouts/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Intranet - Tweets{% endblock %}
+
+{% block body %}
+<div class="well">
+    <h2>Recent Tweets</h2>
+    <h5>@nycrecords</h5>
+</div>
+
+<div class="well">
+	{% for tweet in previous_tweets %}
+        {{ tweet.time }}<br>
+        <div class="well">
+            {{ tweet.text }}<br>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

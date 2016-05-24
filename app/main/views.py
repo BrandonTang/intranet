@@ -33,10 +33,10 @@ def index():
     api = tweepy.API(auth)
     recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
     for tweet in recent_tweet:
-        tweet_datetime = (tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y %l:%M%p')
+        tweet_datetime = (tweet.created_at - timedelta(hours=4)).strftime('%B %d, %Y %l:%M%p')
         if Post.query.filter_by(text=tweet.text).first() == None:
-            tweet_title = 'Twitter - @nycrecords: ' + str((tweet.created_at - timedelta(hours=5)).strftime('%B %d, %Y'))
-            post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=5)), author=User.query.filter_by(username='testuser1').first())
+            tweet_title = 'Twitter - @nycrecords: ' + str((tweet.created_at - timedelta(hours=4)).strftime('%B %d, %Y'))
+            post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=4)), author=User.query.filter_by(username='testuser1').first())
             db.session.add(post)
             db.session.commit()
             # addtwittertag = Tag(name='#twitter')
@@ -422,6 +422,24 @@ def error():
     Return the error page.
     """
     return render_template('error.html')
+
+
+@main.route('/tweets')
+def tweets():
+    """
+    Return all tweets posted on the intranet.
+    """
+    auth = tweepy.OAuthHandler(os.environ.get('consumer_key'), os.environ.get('consumer_secret'))
+    auth.set_access_token(os.environ.get('auth_token'), os.environ.get('auth_secret'))
+    api = tweepy.API(auth)
+    previous_tweets = []
+    for post in Post.query.all():
+        if 'Twitter - @nycrecords: ' in post.title:
+            previous_tweets.append(post)
+    for post in previous_tweets:
+        post.time = post.time.strftime('%B %d, %Y %l:%M%p')
+    previous_tweets.reverse()
+    return render_template('tweets.html', previous_tweets=previous_tweets)
 
 
 @main.route('/moderate/<int:id>', methods=['GET', 'POST'])

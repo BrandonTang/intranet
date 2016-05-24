@@ -44,9 +44,10 @@
         @{{ tweet.user.screen_name }}<br>
         {{ tweet_datetime }}<br>
         <div class="well">
-            {{ tweet.text }}<br>
+            {{ tweet.text }}
         </div>
     {% endfor %}
+    <a href="{{ url_for('main.tweets') }}">View Recent Tweets</a>
     </div>
 </div>
 {% endif %}
