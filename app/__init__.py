@@ -1,3 +1,6 @@
+import os
+from os import environ, pardir
+from os.path import abspath, dirname, join
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.mail import Mail
@@ -5,11 +8,9 @@ from flask.ext.moment import Moment
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.pagedown import PageDown
-from config import config
-from os import environ, pardir
-from os.path import abspath, dirname, join
 from dotenv import load_dotenv
-import os
+from config import config
+
 
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
 

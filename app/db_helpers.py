@@ -1,6 +1,7 @@
-from models import *
 import ldap
 from flask import current_app
+from .models import User
+
 
 def authenticate_login(email, password):
     """
@@ -41,7 +42,7 @@ def authenticate_login(email, password):
 
         # check if user exists in LDAP
         user_dn = ctx.search_s(current_app.config['LDAP_BASE_DN'], ldap.SCOPE_SUBTREE,
-                                   'mail=%s' % email)
+                               'mail=%s' % email)
         if user_dn and len(user_dn) == 1:
             # Bind as the user with the provided password
             try:

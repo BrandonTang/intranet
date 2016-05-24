@@ -1,10 +1,9 @@
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask.ext.login import UserMixin, AnonymousUserMixin
-from . import db, login_manager
+import bleach
 from datetime import datetime
 from markdown import markdown
-from flask import current_app, request, url_for
-import bleach
+from flask import current_app
+from flask.ext.login import UserMixin, AnonymousUserMixin
+from . import db, login_manager
 
 
 class Permission:
@@ -109,7 +108,7 @@ class User(UserMixin, db.Model):
             if self.email == current_app.config['ADMIN2']:
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.email == current_app.config['ADMIN3']:
-                self.role = Role.query.filter_by(permissions=0xff).first()                
+                self.role = Role.query.filter_by(permissions=0xff).first()
             if self.email == current_app.config['DIRECTOR1']:
                 self.role = Role.query.filter_by(permissions=14).first()
             if self.email == current_app.config['DIRECTOR2']:
@@ -186,7 +185,7 @@ class Post(db.Model):
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
                         'h1', 'h2', 'h3', 'p']
         target.text_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'), 
+            markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))
 
 
@@ -219,7 +218,7 @@ class PostTag(db.Model):
     post_id -- Column: Integer, ForeignKey = 'Post.id'
     tag_id -- Column: Integer, ForeignKey = 'Tag.id'
     """
-    __tablename__ =  "posttag"
+    __tablename__ = "posttag"
     post_id = db.Column(db.Integer, db.ForeignKey(Post.id), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey(Tag.id), primary_key=True)
 

@@ -41,7 +41,7 @@
     <div class="well">
     <h2>Twitter Ticker</h2>
     {% for tweet in recent_tweet %}
-        @{{ tweet.user.screen_name }}<br>
+        <a href="https://twitter.com/nycrecords/">@{{ tweet.user.screen_name }}</a><br>
         {{ tweet_datetime }}<br>
         <div class="well">
             {{ tweet.text }}

@@ -1,10 +1,10 @@
 from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, SelectMultipleField, BooleanField, SelectField, widgets
 from wtforms.validators import Required, DataRequired
-from flask.ext.pagedown.fields import PageDownField
+
 
 class DeleteForm(Form):
-	submit = SubmitField('Yes')
+    submit = SubmitField('Yes')
 
 
 class CommentForm(Form):
@@ -12,10 +12,10 @@ class CommentForm(Form):
     submit = SubmitField('Submit')
 
 
-type = [('Birth','Birth'), ('Death','Death'), ('Marriage','Marriage'),
+type = [('Birth', 'Birth'), ('Death', 'Death'), ('Marriage', 'Marriage'),
         ('Marriage License', 'Marriage License')]
 
-borough = [('Manhattan','Manhattan'), ('Bronx','Bronx'), ('Brooklyn', 'Brooklyn'),
+borough = [('Manhattan', 'Manhattan'), ('Bronx', 'Bronx'), ('Brooklyn', 'Brooklyn'),
            ('Queens', 'Queens'), ('Richmond', 'Richmond')]
 
 

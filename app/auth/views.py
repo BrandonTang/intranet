@@ -1,17 +1,15 @@
 from flask import render_template, redirect, request, url_for, flash
-from flask.ext.login import login_user, logout_user, login_required, \
-    current_user
+from flask.ext.login import login_user, logout_user, login_required
 from . import auth
 from .. import db
 from ..models import User
-from ..email import send_email
 from .forms import LoginForm, RegistrationForm
 from ..db_helpers import authenticate_login
+# from ..email import send_email
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    registration_form = RegistrationForm()
     email = None
     if form.validate_on_submit():
         if "@" in form.email.data:

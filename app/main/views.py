@@ -1,17 +1,16 @@
-from flask import render_template, redirect, url_for, abort, flash, request, current_app, make_response, session
-from flask.ext.login import login_required, current_user
-from flask.ext.sqlalchemy import get_debug_queries
-from . import main
-from .forms import DeleteForm, CommentForm, NameForm
-from .. import db, moment
-from ..models import Role, User, Post, Tag, Permission, PostTag, Comment
 import datetime
 from datetime import timedelta, datetime
-from ..decorators import admin_required, permission_required
-import tweepy
 import os
-from os import environ, pardir
+from os import environ
+from flask import render_template, redirect, url_for, abort, flash, request, session
+from flask.ext.login import login_required, current_user
+import tweepy
 from werkzeug import secure_filename
+from . import main
+from .forms import DeleteForm, CommentForm, NameForm
+from .. import db
+from ..models import Role, User, Post, Tag, Permission, PostTag, Comment
+from ..decorators import permission_required
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -23,18 +22,18 @@ def index():
     Only directors or administrators will be able to see or use the new post feature.
     """
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=int(os.environ.get('POSTS_PER_PAGE')), 
-                                                                        error_out=False)
+    pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=int(os.environ.get('POSTS_PER_PAGE')),
+                                                                error_out=False)
     posts = pagination.items
     allTags = Tag.query.all()
     page_posts = []
     auth = tweepy.OAuthHandler(os.environ.get('consumer_key'), os.environ.get('consumer_secret'))
     auth.set_access_token(os.environ.get('auth_token'), os.environ.get('auth_secret'))
     api = tweepy.API(auth)
-    recent_tweet = api.user_timeline(screen_name = 'nycrecords', count = 1, include_rts = True)
+    recent_tweet = api.user_timeline(screen_name='nycrecords', count=1, include_rts=True)
     for tweet in recent_tweet:
         tweet_datetime = (tweet.created_at - timedelta(hours=4)).strftime('%B %d, %Y %l:%M%p')
-        if Post.query.filter_by(text=tweet.text).first() == None:
+        if Post.query.filter_by(text=tweet.text).first() is None:
             tweet_title = 'Twitter - @nycrecords: ' + str((tweet.created_at - timedelta(hours=4)).strftime('%B %d, %Y'))
             post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=4)), author=User.query.filter_by(username='testuser1').first())
             db.session.add(post)
@@ -69,8 +68,8 @@ def index():
         selecttags = request.form.getlist('select_tags')
         if searchterm == '':
             if selecttags == '':
-                return render_template('index.html', pagination=pagination, page_posts=page_posts, 
-                                        allTags=allTags)
+                return render_template('index.html', pagination=pagination, page_posts=page_posts,
+                                       allTags=allTags)
         else:
             if searchoption == 'all':
                 for post in Post.query.all():
@@ -157,8 +156,8 @@ def index():
             if page_post not in page_posts_without_duplicates:
                 page_posts_without_duplicates.append(page_post)
         return render_template('tagged_posts.html', page_posts=page_posts_without_duplicates)
-    return render_template('index.html', pagination=pagination, page_posts=page_posts, 
-                            allTags=allTags, recent_tweet=recent_tweet, tweet_datetime=tweet_datetime)
+    return render_template('index.html', pagination=pagination, page_posts=page_posts,
+                           allTags=allTags, recent_tweet=recent_tweet, tweet_datetime=tweet_datetime)
 
 
 @main.route('/newpost', methods=['GET', 'POST'])
@@ -183,7 +182,6 @@ def newpost(data=None):
                 return render_template('error.html', message="Please include tags!")
             title = data['input_title']
             text = data['editor1']
-            textLength = len(text)
             if len(text) > 8000:
                 return render_template('error.html', message='Text is too long! Please lower number of \
                                                                 characters or remove some text formatting.')
@@ -254,9 +252,9 @@ def post(id):
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
         page, per_page=int(os.environ.get('COMMENTS_PER_PAGE')), error_out=False)
     comments = pagination.items
-    return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments, 
-                            allCommentsCount=allCommentsCount, comments=comments, pagination=pagination, 
-                            page_posts=page_posts)
+    return render_template('post.html', post=post, posts=[post], form=form, allComments=allComments,
+                           allCommentsCount=allCommentsCount, comments=comments, pagination=pagination,
+                           page_posts=page_posts)
 
 
 @main.route('/tag/<string:tag>', methods=['GET', 'POST'])
@@ -429,9 +427,6 @@ def tweets():
     """
     Return all tweets posted on the intranet.
     """
-    auth = tweepy.OAuthHandler(os.environ.get('consumer_key'), os.environ.get('consumer_secret'))
-    auth.set_access_token(os.environ.get('auth_token'), os.environ.get('auth_secret'))
-    api = tweepy.API(auth)
     previous_tweets = []
     for post in Post.query.all():
         if 'Twitter - @nycrecords: ' in post.title:
@@ -527,8 +522,8 @@ def edituserinfo():
         elif eachuser.role.name == 'Director':
             directors.append(eachuser.username)
         allusers.append(eachuser.username)
-    print 'employees: ', employees
-    print 'directors: ', directors
+    # print 'employees: ', employees
+    # print 'directors: ', directors
     if request.method == 'POST':
         selectemployee = request.form.getlist('select_employee')[0]
         print 'selectemployee: ', selectemployee
@@ -540,7 +535,7 @@ def edituserinfo():
         print 'selectuser: ', selectuser
         selectdivision = request.form.getlist('select_division')[0]
         print 'selectdivision: ', selectdivision
-        if ((len(selectemployee) == 0) and (len(selectdirector) == 0) and (len(selectaccount) == 0) and (len(selectuser) == 0) and (len(selectdivision) == 0)):
+        if (len(selectemployee) == 0) and (len(selectdirector) == 0) and (len(selectaccount) == 0) and (len(selectuser) == 0) and (len(selectdivision) == 0):
             return render_template('edituserinfo.html', users=users, employees=employees, directors=directors, allusers=allusers)
         else:
             if len(selectemployee) > 0:
@@ -584,7 +579,7 @@ def profile(username):
 
     Users can edit their email, and avatar by uploading a image file.
     """
-    if User.query.filter_by(username=username).first() == None:
+    if User.query.filter_by(username=username).first() is None:
         return render_template('error.html', message='User not found.')
     users = User.query.all()
     user = User.query.filter_by(username=username).first().username
@@ -599,11 +594,11 @@ def profile(username):
         editusername = request.form.getlist('edit_username')
         if len(editusername) > 0:
             editusername = [r.encode('utf-8') for r in editusername][0]
-        if (((len(editusername) == 0) or (editusername == user)) and (bool(file) == False)):
-            return render_template('profile.html', user=user, users=users, role=role, email=email, division=division, 
-                                    posts=posts, comments=comments, avatar=avatar, employees=employees, directors=directors)
+        if ((len(editusername) == 0) or (editusername == user)) and (bool(file) is False):
+            return render_template('profile.html', user=user, users=users, role=role, email=email, division=division,
+                                   posts=posts, comments=comments, avatar=avatar, employees=employees, directors=directors)
         else:
-            if bool(file) == True:
+            if bool(file) is True:
                 avatarfile = "userid" + str(current_user.id) + secure_filename(file.filename)
                 saveaddress = os.path.join(os.environ.get('UPLOAD_FOLDER'), avatarfile)
                 if allowed_file(file.filename):
@@ -619,15 +614,15 @@ def profile(username):
                 else:
                     flash('The uploaded file cannot be used.')
             if editusername != user and (len(editusername) > 1):
-                if User.query.filter_by(username=editusername).first() == None:
+                if User.query.filter_by(username=editusername).first() is None:
                     current_user.username = editusername
                     flash('Username has been updated.')
                 else:
                     flash('Username is already taken. Please choose another username.')
-            return redirect(url_for('.profile', user=user, users=users, role=role, email=email, division=division, 
+            return redirect(url_for('.profile', user=user, users=users, role=role, email=email, division=division,
                                     posts=posts, comments=comments, avatar=avatar, username=editusername))
-    return render_template('profile.html', user=user, users=users, role=role, email=email, division=division, posts=posts, 
-                            comments=comments, avatar=avatar, username=username)
+    return render_template('profile.html', user=user, users=users, role=role, email=email, division=division, posts=posts,
+                           comments=comments, avatar=avatar, username=username)
 
 
 @main.route('/edit/comment/<int:id>', methods=['GET', 'POST'])
@@ -708,7 +703,7 @@ def result():
     """
     Return the Easy Not Found Generator result.
     """
-    session['date']=datetime.today().strftime('%m/%d/%y')
+    session['date'] = datetime.today().strftime('%m/%d/%y')
     return render_template('result.html',
                            date=session.get('date'),
                            type=session.get('type'),
@@ -724,7 +719,7 @@ def result_nosig():
     """
     Return the Easy Not Found Generator result without a signature.
     """
-    session['date']=datetime.today().strftime('%m/%d/%y')
+    session['date'] = datetime.today().strftime('%m/%d/%y')
     return render_template('result_nosig.html',
                            date=session.get('date'),
                            type=session.get('type'),
