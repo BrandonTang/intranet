@@ -25,7 +25,7 @@ def index():
     pagination = Post.query.order_by(Post.time.desc()).paginate(page, per_page=int(os.environ.get('POSTS_PER_PAGE')),
                                                                 error_out=False)
     posts = pagination.items
-    allTags = Tag.query.all()
+    all_tags = Tag.query.all()
     page_posts = []
     auth = tweepy.OAuthHandler(os.environ.get('consumer_key'), os.environ.get('consumer_secret'))
     auth.set_access_token(os.environ.get('auth_token'), os.environ.get('auth_secret'))
@@ -38,11 +38,11 @@ def index():
             post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=4)), author=User.query.filter_by(username='testuser1').first())
             db.session.add(post)
             db.session.commit()
-            # addtwittertag = Tag(name='#twitter')
-            # db.session.add(addtwittertag)
+            # add_twitter_tag = Tag(name='#twitter')
+            # db.session.add(add_twitter_tag)
             # db.session.commit()
-            twittertag = PostTag(post_id=post.id, tag_id=Tag.query.filter_by(name='#twitter').first().id)
-            db.session.add(twittertag)
+            twitter_tag = PostTag(post_id=post.id, tag_id=Tag.query.filter_by(name='#twitter').first().id)
+            db.session.add(twitter_tag)
             db.session.commit()
     for post in posts:
         id = post.id
@@ -51,9 +51,9 @@ def index():
         text = post.text
         comments = post.comments.count()
         author = post.author.username
-        postTag = PostTag.query.filter_by(post_id=post.id).all()
+        post_tags = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
-        for tag in postTag:
+        for tag in post_tags:
             name = Tag.query.filter_by(id=tag.tag_id).first().name
             tags.append([tag.tag_id, name])
         page_posts.append([id, title, time, text, comments, tags, author])
@@ -63,74 +63,74 @@ def index():
                 page_posts.insert(0, page_posts.pop(page_posts.index(page_post)))
     if request.method == 'POST':
         page_posts = []
-        searchterm = request.form.get('search_term')
-        searchoption = request.form.get('select_search_option')
-        selecttags = request.form.getlist('select_tags')
-        if searchterm == '':
-            if selecttags == '':
+        search_term = request.form.get('search_term')
+        search_option = request.form.get('select_search_option')
+        select_tags = request.form.getlist('select_tags')
+        if search_term == '':
+            if select_tags == '':
                 return render_template('index.html', pagination=pagination, page_posts=page_posts,
-                                       allTags=allTags)
+                                       all_tags=all_tags)
         else:
-            if searchoption == 'all':
+            if search_option == 'all':
                 for post in Post.query.all():
-                    if searchterm in post.title:
+                    if search_term in post.title:
                         id = post.id
                         title = post.title
                         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                         text = post.text
                         comments = post.comments.count()
                         author = ' '.join((post.author.username).split('_'))
-                        postTag = PostTag.query.filter_by(post_id=post.id).all()
+                        post_tags = PostTag.query.filter_by(post_id=post.id).all()
                         tags = []
-                        for tag in postTag:
+                        for tag in post_tags:
                             name = Tag.query.filter_by(id=tag.tag_id).first().name
                             tags.append([tag.tag_id, name])
                         page_posts.append([id, title, time, text, comments, tags, author])
-                    elif searchterm in post.text:
+                    elif search_term in post.text:
                         id = post.id
                         title = post.title
                         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                         text = post.text
                         comments = post.comments.count()
                         author = ' '.join((post.author.username).split('_'))
-                        postTag = PostTag.query.filter_by(post_id=post.id).all()
+                        post_tags = PostTag.query.filter_by(post_id=post.id).all()
                         tags = []
-                        for tag in postTag:
+                        for tag in post_tags:
                             name = Tag.query.filter_by(id=tag.tag_id).first().name
                             tags.append([tag.tag_id, name])
                         page_posts.append([id, title, time, text, comments, tags, author])
-            elif searchoption == 'title':
+            elif search_option == 'title':
                 for post in Post.query.all():
-                    if searchterm in post.title:
+                    if search_term in post.title:
                         id = post.id
                         title = post.title
                         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                         text = post.text
                         comments = post.comments.count()
                         author = ' '.join((post.author.username).split('_'))
-                        postTag = PostTag.query.filter_by(post_id=post.id).all()
+                        post_tags = PostTag.query.filter_by(post_id=post.id).all()
                         tags = []
-                        for tag in postTag:
+                        for tag in post_tags:
                             name = Tag.query.filter_by(id=tag.tag_id).first().name
                             tags.append([tag.tag_id, name])
                         page_posts.append([id, title, time, text, comments, tags, author])
-            elif searchoption == 'text':
+            elif search_option == 'text':
                 for post in Post.query.all():
-                    if searchterm in post.text:
+                    if search_term in post.text:
                         id = post.id
                         title = post.title
                         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
                         text = post.text
                         comments = post.comments.count()
                         author = ' '.join((post.author.username).split('_'))
-                        postTag = PostTag.query.filter_by(post_id=post.id).all()
+                        post_tags = PostTag.query.filter_by(post_id=post.id).all()
                         tags = []
-                        for tag in postTag:
+                        for tag in post_tags:
                             name = Tag.query.filter_by(id=tag.tag_id).first().name
                             tags.append([tag.tag_id, name])
                         page_posts.append([id, title, time, text, comments, tags, author])
-        selecttags = request.form.getlist('select_tags')
-        for tag in selecttags:
+        select_tags = request.form.getlist('select_tags')
+        for tag in select_tags:
             tagid = Tag.query.filter_by(name=tag).first().id
             posttags = PostTag.query.filter_by(tag_id=tagid).all()
             posts = []
@@ -145,9 +145,9 @@ def index():
                 text = post.text
                 comments = post.comments.count()
                 author = ' '.join((post.author.username).split('_'))
-                postTag = PostTag.query.filter_by(post_id=post.id).all()
+                post_tags = PostTag.query.filter_by(post_id=post.id).all()
                 tags = []
-                for tag in postTag:
+                for tag in post_tags:
                     name = Tag.query.filter_by(id=tag.tag_id).first().name
                     tags.append([tag.tag_id, name])
                 page_posts.append([id, title, time, text, comments, tags, author])
@@ -157,7 +157,7 @@ def index():
                 page_posts_without_duplicates.append(page_post)
         return render_template('tagged_posts.html', page_posts=page_posts_without_duplicates)
     return render_template('index.html', pagination=pagination, page_posts=page_posts,
-                           allTags=allTags, recent_tweet=recent_tweet, tweet_datetime=tweet_datetime)
+                           all_tags=all_tags, recent_tweet=recent_tweet, tweet_datetime=tweet_datetime)
 
 
 @main.route('/newpost', methods=['GET', 'POST'])
@@ -170,8 +170,8 @@ def newpost(data=None):
     Keyword arguments:
     data -- initialization of data (default None)
     """
-    tagList = Tag.query.with_entities(Tag.name).all()
-    tagList = [r[0].encode('utf-8') for r in tagList]
+    tag_list = Tag.query.with_entities(Tag.name).all()
+    tag_list = [r[0].encode('utf-8') for r in tag_list]
     if data or request.method == 'POST':
         data = request.form.copy()
         post = Post.query.filter_by(text=data['editor1']).first()
@@ -189,26 +189,26 @@ def newpost(data=None):
             post = Post(title=title, text=text, time=time, author=current_user._get_current_object())
             db.session.add(post)
             db.session.commit()
-        tagsplit = data['input_tag'].split(', ')
-        for eachtag in tagsplit:
+        tag_split = data['input_tag'].split(', ')
+        for each_tag in tag_split:
             if Tag.query.filter_by(name='').first() != None:
                 db.session.delete(Tag.query.filter_by(name='').first())
-            if eachtag[0] != '#':
-                eachtag = '#' + eachtag
-            if eachtag not in tagList:
-                newtag = Tag(name=eachtag)
+            if each_tag[0] != '#':
+                each_tag = '#' + each_tag
+            if each_tag not in tag_list:
+                newtag = Tag(name=each_tag)
                 db.session.add(newtag)
                 db.session.commit()
                 posttag = PostTag(post_id=post.id, tag_id=newtag.id)
                 db.session.add(posttag)
                 db.session.commit()
             else:
-                oldtag = Tag.query.filter_by(name=eachtag).first().id
+                oldtag = Tag.query.filter_by(name=each_tag).first().id
                 posttag = PostTag(post_id=post.id, tag_id=oldtag)
                 db.session.add(posttag)
                 db.session.commit()
         return redirect(url_for('.index'))
-    return render_template('new_post.html', tagList=tagList)
+    return render_template('new_post.html', tag_list=tag_list)
 
 
 @main.route('/post/<int:id>', methods=['GET', 'POST'])
@@ -298,18 +298,18 @@ def edit(id):
     Keyword arguments:
     id -- the post id
     """
-    tagList = Tag.query.with_entities(Tag.name).all()
-    tagList = [r[0].encode('utf-8') for r in tagList]
-    previousTagString = ""
-    previousTagList = []
+    tag_list = Tag.query.with_entities(Tag.name).all()
+    tag_list = [r[0].encode('utf-8') for r in tag_list]
+    previous_tag_string = ""
+    previous_tag_list = []
     postids = PostTag.query.filter_by(post_id=id).all()
     for postid in postids:
         tagid = postid.tag_id
         tagname = Tag.query.filter_by(id=tagid).first().name
-        previousTagList.append(tagname)
-        previousTagString += tagname
-        previousTagString += ", "
-    previousTagString = previousTagString[:-2]
+        previous_tag_list.append(tagname)
+        previous_tag_string += tagname
+        previous_tag_string += ", "
+    previous_tag_string = previous_tag_string[:-2]
     post = Post.query.get_or_404(id)
     if current_user != post.author and not current_user.can(Permission.ADMINISTER):
         abort(403)
@@ -319,32 +319,32 @@ def edit(id):
         post.text = data['editor1']
         db.session.add(post)
         db.session.commit()
-        tagsplit = data['input_tag'].split(', ')
-        for eachtag in tagsplit:
+        tag_split = data['input_tag'].split(', ')
+        for each_tag in tag_split:
             if Tag.query.filter_by(name='').first() != None:
                 db.session.delete(Tag.query.filter_by(name='').first())
-            if len(tagsplit[0]) != 0 and eachtag[0] != '#':
-                eachtag = '#' + eachtag
-            if eachtag not in tagList:
-                newtag = Tag(name=eachtag)
+            if len(tag_split[0]) != 0 and each_tag[0] != '#':
+                each_tag = '#' + each_tag
+            if each_tag not in tag_list:
+                newtag = Tag(name=each_tag)
                 db.session.add(newtag)
                 db.session.commit()
                 posttag = PostTag(post_id=post.id, tag_id=newtag.id)
                 db.session.add(posttag)
                 db.session.commit()
-            elif eachtag not in previousTagList:
-                oldtag = Tag.query.filter_by(name=eachtag).first().id
+            elif each_tag not in previous_tag_list:
+                oldtag = Tag.query.filter_by(name=each_tag).first().id
                 posttag = PostTag(post_id=post.id, tag_id=oldtag)
                 db.session.add(posttag)
                 db.session.commit()
-        for eachtag in previousTagList:
-            if eachtag not in tagsplit:
-                oldtag = Tag.query.filter_by(name=eachtag).first().id
+        for each_tag in previous_tag_list:
+            if each_tag not in tag_split:
+                oldtag = Tag.query.filter_by(name=each_tag).first().id
                 PostTag.query.filter_by(post_id=post.id, tag_id=oldtag).delete()
                 db.session.commit()
         flash('The post has been updated.')
         return redirect(url_for('.post', id=post.id))
-    return render_template('edit_post.html', post=post, tagList=tagList, previousTagString=previousTagString)
+    return render_template('edit_post.html', post=post, tag_list=tag_list, previous_tag_string=previous_tag_string)
 
 
 @main.route('/delete/post/<int:id>', methods=['GET', 'POST'])

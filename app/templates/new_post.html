@@ -21,7 +21,7 @@
     <form name="input" class="form-horizontal" id="submitPost" method="post">
         <div class="lead">Tags
             <div class="control-group">
-                <input type="text" name="input_tag" id="tagList" value="" tabindex="-1" style="display: block;">
+                <input type="text" name="input_tag" id="tag_list" value="" tabindex="-1" style="display: block;">
             </div>
         </div>
         <div class="lead">Title
@@ -49,11 +49,11 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/selectize.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/selectize.js') }}"></script>
 <script type="text/javascript">
-var data = {{ tagList | safe }};
+var data = {{ tag_list | safe }};
 var items = data.map(function(x) { return { item: x }; });
 
 $(document).ready(function() {
-$('#tagList').selectize({
+$('#tag_list').selectize({
     delimiter: ', ',
     persist: false,
     options: items,
