@@ -494,9 +494,9 @@ def allowed_file(filename):
 @login_required
 def edituserinfo():
     """
-    Return a page with ability to uprade user info.
+    Return a page with ability to uprade user information.
 
-    Only administrators can upgrade user info.
+    Only administrators can upgrade user information.
     """
     users = User.query.all()
     employees = []
@@ -661,6 +661,9 @@ def delete_comment(id):
 
 @main.route('/enfg/', methods=['GET', 'POST'])
 def enfg():
+    """
+    Return the Easy Not Found Generator template.
+    """
     form = NameForm()
     if form.validate_on_submit():
         session['type'] = form.type.data
@@ -684,6 +687,9 @@ def enfg():
 
 @main.route('/enfg/result', methods=['GET', 'POST'])
 def result():
+    """
+    Return the Easy Not Found Generator result.
+    """
     session['date']=datetime.today().strftime('%m/%d/%y')
     return render_template('result.html',
                            date=session.get('date'),
@@ -697,6 +703,9 @@ def result():
 
 @main.route('/enfg/result_nosig', methods=['GET', 'POST'])
 def result_nosig():
+    """
+    Return the Easy Not Found Generator result without a signature.
+    """
     session['date']=datetime.today().strftime('%m/%d/%y')
     return render_template('result_nosig.html',
                            date=session.get('date'),
