@@ -183,8 +183,7 @@ def newpost(data=None):
             title = data['input_title']
             text = data['editor1']
             if len(text) > 8000:
-                return render_template('error.html', message='Text is too long! Please lower number of \
-                                                                characters or remove some text formatting.')
+                return render_template('error.html', message='Text is too long! Please lower number of characters or remove some text formatting.')
             time = datetime.now()
             post = Post(title=title, text=text, time=time, author=current_user._get_current_object())
             db.session.add(post)
