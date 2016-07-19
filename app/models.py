@@ -4,6 +4,7 @@ from markdown import markdown
 from flask import current_app
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Permission:
@@ -71,16 +72,78 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
-    username = db.Column(db.String(64), unique=True, index=True)
+    first_name = db.Column(db.String(64), index=True)
+    last_name = db.Column(db.String(64), index=True)
+    password_hash = db.Column(db.String(128))
+    validated = db.Column(db.Boolean, default=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
     avatar = db.Column(db.String(64), default="avatars/default.png")
     division = db.Column(db.String(64))
 
+    # @property
+    # def password(self):
+    #     raise AttributeError('password is not a readable attribute')
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
+
+    @password.setter
+    def password(self, password):
+        """
+        Creates and stores password hash.
+        :param password: String to hash.
+        :return: None.
+        """
+        self.password_hash = generate_password_hash(password)
+
+    # generates token with default validity for 1 hour
+    def generate_reset_token(self, expiration=3600):
+        """
+        Generates a token users can use to reset their accounts if locked out.
+        :param expiration: Seconds the token is valid for after being created (default one hour).
+        :return: the token.
+        """
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        session['reset_token'] = {'token': s, 'valid': True}
+        return s.dumps({'reset': self.id})
+
+    def reset_password(self, token, new_password):
+        """
+        Resets a user's password.
+        :param token: The token to verify.
+        :param new_password: The password the user will have after resetting.
+        :return: True if operation is successful, false otherwise.
+        """
+        # checks if the new password is at least 8 characters with at least 1 UPPERCASE AND 1 NUMBER
+        if not re.match(r'^(?=.*?\d)(?=.*?[A-Z])(?=.*?[a-z])[A-Za-z\d]{8,128}$', new_password):
+            return False
+        # If the password has been changed within the last second, the token is invalid.
+        if (datetime.now() - self.password_list.last_changed).seconds < 1:
+            current_app.logger.error('User {} tried to re-use a token.'.format(self.email))
+            raise InvalidResetToken
+        self.password = new_password
+        self.password_list.update(self.password_hash)
+        db.session.add(self)
+        return True
+
+    def verify_password(self, password):
+        """
+        Checks user-entered passwords against hashes stored in the database.
+        :param password: The user-entered password.
+        :return: True if user has entered the correct password, False otherwise.
+        """
+        return check_password_hash(self.password_hash, password)
+
+    def can(self, permissions):
+        """
+        Checks to see if a user has access to certain permissions.
+        :param permissions: An int that specifies the permissions we are checking to see whether or not the user has.
+        :return: True if user is authorized for the given permission, False otherwise.
+        """
+        return self.role is not None and (self.role.permissions & permissions) == permissions
 
     def can(self, permissions):
         return self.role is not None and \
@@ -135,7 +198,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(default=True).first()
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.email
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -153,6 +216,26 @@ class AnonymousUser(AnonymousUserMixin):
 
 
 login_manager.anonymous_user = AnonymousUser
+
+
+class Password(db.Model):
+    __tablename__ = 'passwords'
+    id = db.Column(db.Integer, primary_key=True)
+    p1 = db.Column(db.String(128))
+    p2 = db.Column(db.String(128))
+    p3 = db.Column(db.String(128))
+    p4 = db.Column(db.String(128))
+    p5 = db.Column(db.String(128))
+    last_changed = db.Column(db.DateTime)
+    users = db.relationship('User', backref='password_list', lazy='dynamic')
+
+    def update(self, password_hash):
+        self.p5 = self.p4
+        self.p4 = self.p3
+        self.p3 = self.p2
+        self.p2 = self.p1
+        self.p1 = password_hash
+        self.last_changed = datetime.now()
 
 
 class Post(db.Model):

@@ -11,7 +11,6 @@ from flask.ext.pagedown import PageDown
 from dotenv import load_dotenv
 from config import config
 
-
 load_dotenv(abspath(join(join(dirname(__file__), pardir), '.env')))
 
 bootstrap = Bootstrap()
@@ -20,14 +19,25 @@ moment = Moment()
 db = SQLAlchemy()
 pagedown = PageDown()
 
+
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+
+
+def load_models():
+    import models
+
+
+load_models()
+
 
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
+
+    load_models()
 
     bootstrap.init_app(app)
     mail.init_app(app)

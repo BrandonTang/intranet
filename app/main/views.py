@@ -38,9 +38,9 @@ def index():
             post = Post(title=tweet_title, text=tweet.text, time=(tweet.created_at - timedelta(hours=4)), author=User.query.filter_by(username='testuser1').first())
             db.session.add(post)
             db.session.commit()
-            # add_twitter_tag = Tag(name='#twitter')
-            # db.session.add(add_twitter_tag)
-            # db.session.commit()
+            add_twitter_tag = Tag(name='#twitter')
+            db.session.add(add_twitter_tag)
+            db.session.commit()
             twitter_tag = PostTag(post_id=post.id, tag_id=Tag.query.filter_by(name='#twitter').first().id)
             db.session.add(twitter_tag)
             db.session.commit()
@@ -50,7 +50,7 @@ def index():
         time = post.time.strftime("%B %d, %Y %l:%M%p %Z")
         text = post.text
         comments = post.comments.count()
-        author = post.author.username
+        author = post.author
         post_tags = PostTag.query.filter_by(post_id=post.id).all()
         tags = []
         for tag in post_tags:

@@ -50,6 +50,9 @@
         <li><a href="https://prod.citytime.nycnet/">CityTime</a></li>
         <li><a href="http://timeclock.records.nycnet/timeclock/">TimeClock</a></li>
         <li><a href="https://hrb.nycaps.nycnet/">NYCAPS</a></li>
+        {% if current_user.is_administrator %}
+
+        {% endif %}
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Departments<span class="caret"></span></a>
             <ul class="dropdown-menu">
